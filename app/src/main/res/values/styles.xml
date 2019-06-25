@@ -6,6 +6,34 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorTertiary">@color/black</item>
+    </style>
+
+    <style name="BaseLayoutStyle">
+        <item name="android:padding">@dimen/base_padding</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="ButtonStyle">
+        <item name="android:layout_marginTop">@dimen/padding_10</item>
+        <item name="android:layout_marginBottom">@dimen/padding_10</item>
+        <item name="android:background">@drawable/button_background</item>
+    </style>
+
+    <style name="EditTextStyle">
+        <item name="android:textSize">@dimen/normal_text_size</item>
+        <item name="android:background">@drawable/edit_text_background</item>
+        <item name="android:paddingTop">@dimen/padding_5</item>
+        <item name="android:paddingBottom">@dimen/padding_5</item>
+        <item name="android:paddingLeft">@dimen/padding_10</item>
+        <item name="android:paddingRight">@dimen/padding_10</item>
+    </style>
+
+    <style name="TitleTextStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
+        <item name="android:layout_margin">@dimen/padding_10</item>
+        <item name="android:layout_marginBottom">@dimen/base_padding</item>
     </style>
 
 </resources>

@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">ClassroomUpdates</string>
+    <string name="email">Email*</string>
+    <string name="enter_email">Enter your pcampus email</string>
+    <string name="name">Name</string>
+    <string name="enter_name">Enter your name</string>
+    <string name="password">Password</string>
+    <string name="password_criteria">at least 8 characters long</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="retype_password">Re-type your password</string>
+    <string name="teacher">Teacher</string>
+    <string name="student">Student</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="already_have_account">Already have an acoount? Log in</string>
 </resources>
