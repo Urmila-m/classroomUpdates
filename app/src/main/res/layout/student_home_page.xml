@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_grey"
+    >
+
+    <include layout="@layout/background_image_include"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/BaseLayoutStyle">
+
+        <TextView
+            android:id="@+id/student_home_title"
+            style="@style/TitleTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/updates" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/portrait"
+            android:scaleType="centerCrop"
+            app:civ_border_width="2dp"
+            android:layout_marginTop="@dimen/base_padding"
+            app:civ_border_color="#FF000000"
+            android:layout_below="@id/student_home_title"/>
+
+        <TextView
+            android:id="@+id/tv_student_home_teacher"
+            android:layout_toRightOf="@id/profile_image"
+            android:layout_alignTop="@id/profile_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/teacher"
+            style="@style/NormalTitleStyle"
+            android:layout_marginLeft="@dimen/base_padding"
+            />
+
+        <TextView
+            android:id="@+id/tv_student_home_subject"
+            android:layout_toRightOf="@id/profile_image"
+            android:layout_below="@id/tv_student_home_teacher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/subject"
+            style="@style/NormalTitleStyle"
+            android:layout_marginLeft="@dimen/base_padding"
+            />
+
+        <TextView
+            android:id="@+id/tv_tv_student_home_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/f_hall"
+            android:layout_toRightOf="@id/profile_image"
+            android:layout_below="@id/tv_student_home_subject"
+            android:layout_alignLeft="@id/tv_student_home_subject"
+            android:textSize="@dimen/normal_text_size"
+            />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/date"
+            android:layout_toRightOf="@id/profile_image"
+            android:layout_below="@id/tv_tv_student_home_location"
+            android:layout_alignLeft="@id/tv_student_home_subject"
+            android:textSize="@dimen/normal_text_size"
+            />
+
+        <RadioGroup
+            android:id="@+id/rg_attend"
+            android:layout_below="@id/tv_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="48dp"
+            android:layout_marginTop="@dimen/base_padding"
+            >
+
+            <RadioButton
+                android:id="@+id/rb_attend_student_home"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:clickable="false"
+                android:text="@string/attend" />
+
+            <RadioButton
+                android:id="@+id/rb_not_attend_student_home"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:text="@string/not_attend" />
+        </RadioGroup>
+
+        <!--time if attending-->
+        <TextView
+            android:layout_below="@id/rg_attend"
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/time"
+            android:layout_alignLeft="@id/rg_attend"
+            android:visibility="visible"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/padding_10"
+            />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/time_eg"
+            android:layout_below="@id/time"
+            android:visibility="visible"
+            android:layout_alignLeft="@id/rg_attend"
+            android:textSize="@dimen/normal_text_size"/>
+
+        <!--message if not attending-->
+        <TextView
+            android:layout_below="@id/tv_time"
+            android:id="@+id/message_student_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message"
+            android:layout_alignLeft="@id/rg_attend"
+            android:visibility="visible"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/padding_10"
+            />
+
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/test_msg"
+            android:layout_alignLeft="@id/rg_attend"
+            android:layout_below="@id/message_student_home"
+            android:visibility="visible"
+            android:textSize="@dimen/normal_text_size"
+            />
+
+
+
+    </RelativeLayout>
+</RelativeLayout>

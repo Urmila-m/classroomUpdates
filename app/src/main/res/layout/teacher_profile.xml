@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_grey">
+
+    <include layout="@layout/background_image_include"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/BaseLayoutStyle">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_teacher_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/portrait"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <TextView
+            android:id="@+id/tv_teacher_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TitleTextStyle"
+            android:text="@string/teacher"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/NormalTitleStyle"
+            android:text="@string/name"
+            android:layout_marginTop="@dimen/padding_5"
+            />
+
+        <TextView
+            android:id="@+id/tv_teacher_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/normal_text_size"
+            android:text="@string/teacher"
+            android:paddingLeft="@dimen/padding_10"
+            android:paddingVertical="@dimen/padding_5"
+            android:layout_marginBottom="@dimen/padding_5"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/NormalTitleStyle"
+            android:text="@string/subject"
+            android:layout_marginTop="@dimen/padding_5"
+            />
+
+        <ListView
+            android:id="@+id/lv_teacher_subjects"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
+
+    </LinearLayout>
+
+</RelativeLayout>
