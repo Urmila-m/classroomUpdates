@@ -14,6 +14,8 @@ import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.fragment.SignUpFragment;
 
+import static com.myapp.classroomupdates.Globals.firstInstall;
+
 public class BeforeLoginActivity extends PreferenceInitializingActivity implements OnFragmentClickListener {
 
     private FrameLayout frameLayout;
@@ -23,6 +25,11 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_before_login);
         frameLayout= findViewById(R.id.fl_before_login);
+
+        if (checkFirstInstall()){
+            startActivity(new Intent(BeforeLoginActivity.this, IntroSlideActivity.class));
+            finish();
+        }
 
         setFragment(frameLayout, new FirstPageFragment(),"0");
     }
@@ -64,5 +71,10 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
         else{
 
         }
+    }
+
+    private boolean checkFirstInstall(){
+        boolean first= preferences.getBoolean(firstInstall, true);
+        return first;
     }
 }

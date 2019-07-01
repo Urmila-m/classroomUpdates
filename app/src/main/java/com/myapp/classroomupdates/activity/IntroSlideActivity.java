@@ -15,7 +15,9 @@ import android.widget.TextView;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.adapter.IntroSliderAdapter;
 
-public class IntroSlideActivity extends AppCompatActivity {
+import static com.myapp.classroomupdates.Globals.firstInstall;
+
+public class IntroSlideActivity extends PreferenceInitializingActivity {
 
     private ViewPager viewPager;
     private IntroSliderAdapter adapter;
@@ -45,8 +47,13 @@ public class IntroSlideActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //TODO go to activity
                 startActivity(new Intent(IntroSlideActivity.this, BeforeLoginActivity.class));
+                changeFirstInstallBool();
+                finish();
             }
         });
 
+    }
+    private void changeFirstInstallBool(){
+        editor.putBoolean(firstInstall, false).commit();
     }
 }

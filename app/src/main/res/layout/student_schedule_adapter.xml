@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/corner_radius"
+    app:cardElevation="@dimen/elevation"
+    app:cardUseCompatPadding="true"
+    android:background="@drawable/edit_text_background"
+    android:layout_margin="@dimen/padding_10"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/BaseLayoutStyle">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:text="10:15"
+                android:id="@+id/tv_starting_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TitleTextStyle"
+                />
+
+            <TextView
+                android:id="@+id/dash"
+                android:layout_toRightOf="@id/tv_starting_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:layout_alignBaseline="@id/tv_starting_time"
+                style="@style/TitleTextStyle"
+                />
+
+            <TextView
+                android:text="11:55"
+                android:layout_alignBaseline="@id/tv_starting_time"
+                android:layout_toRightOf="@id/dash"
+                android:id="@+id/tv_ending_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TitleTextStyle"
+
+                />
+        </RelativeLayout>
+
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--style="@style/TitleTextStyle"-->
+            <!--android:text="@string/time_eg"/>-->
+
+        <TextView
+            android:id="@+id/tv_subject_student_schedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/NormalTitleStyle"
+            android:text="Subject(Theory)"
+            android:gravity="center"/>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_teacher_student_schedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/teacher"
+                android:textSize="@dimen/normal_text_size"
+                />
+
+            <TextView
+                android:layout_marginLeft="@dimen/padding_10"
+                android:layout_alignBaseline="@id/tv_teacher_student_schedule"
+                android:layout_toRightOf="@id/tv_teacher_student_schedule"
+                android:id="@+id/tv_location_student_schedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="F_Hall"
+                android:textSize="@dimen/normal_text_size"
+                android:gravity="center"/>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</android.support.design.card.MaterialCardView>

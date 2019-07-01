@@ -1,34 +1,36 @@
 package com.myapp.classroomupdates;
 
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Adapter;
 import android.widget.FrameLayout;
 
+import com.myapp.classroomupdates.adapter.ViewPagerAdapter;
 import com.myapp.classroomupdates.fragment.ChangePasswordFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     private FrameLayout frameLayout;
+    ViewPager viewPager;
+    ViewPagerAdapter adapter;
+    TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_before_login);
 
-        frameLayout= findViewById(R.id.fl_before_login);
-//        Fragment fragment= new TeacherProfileFragment();
-//        ArrayList<String> subjectList= new ArrayList<String>();
-//        subjectList.add("Basic Electronics");
-//        subjectList.add("Basic Electrical");
-//        subjectList.add("Artificial Intelligence");
-//        subjectList.add("Embedded System");
+//        frameLayout= findViewById(R.id.fl_before_login);
+//        viewPager= findViewById(R.id.viewPager_test);
+//        tabLayout= findViewById(R.id.test_tab);
 //
-//        Bundle bundle= new Bundle();
-//        bundle.putStringArrayList("subjectList", subjectList);
-//        fragment.setArguments(bundle);
-        setFragment(new ChangePasswordFragment(), "0");
+//        adapter= new ViewPagerAdapter(getSupportFragmentManager());
+//        viewPager.setAdapter(adapter);
+//        tabLayout.setupWithViewPager(viewPager);
 
     }
 

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 public class PreferenceInitializingActivity extends AppCompatActivity {
@@ -21,6 +22,7 @@ public class PreferenceInitializingActivity extends AppCompatActivity {
     }
 
     public void setFragment(FrameLayout frameLayout, Fragment fragment, String backstack){
+        Log.e("TAG", "setFragment: " );
         FragmentTransaction transaction= getSupportFragmentManager().beginTransaction();
         transaction.replace(frameLayout.getId(), fragment);
         if (backstack=="1"){

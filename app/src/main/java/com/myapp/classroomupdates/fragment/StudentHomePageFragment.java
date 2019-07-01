@@ -46,7 +46,7 @@ public class StudentHomePageFragment extends Fragment {
         imageView= view.findViewById(R.id.profile_image);
         tvTeacher=  view.findViewById(R.id.tv_student_home_teacher);
         tvSubject= view.findViewById(R.id.tv_student_home_subject);
-        tvLocation= view.findViewById(R.id.tv_tv_student_home_location);
+        tvLocation= view.findViewById(R.id.tv_student_home_location);
         tvMessage= view.findViewById(R.id.tv_message);
         tvTime= view.findViewById(R.id.tv_time);
         time= view.findViewById(R.id.time);
