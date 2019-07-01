@@ -7,37 +7,38 @@
     <include layout="@layout/background_image_include"/>
 
     <LinearLayout
+        android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         style="@style/BaseLayoutStyle">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:layout_margin="@dimen/padding_10"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            android:src="@drawable/tu_logo"
+            android:src="@drawable/tu_logo2"
+            android:scaleType="centerCrop"
             android:layout_gravity="center"/>
 
-    </LinearLayout>
-    <Button
-        android:id="@+id/btn_login_first"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
-        style="@style/ButtonStyle"
-        android:text="@string/login"
-        android:layout_above="@id/btn_sign_up_first"
-        android:layout_marginHorizontal="@dimen/base_padding"
-        />
+        <Button
+            android:id="@+id/btn_login_first"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            style="@style/ButtonStyle"
+            android:text="@string/login"
+            android:layout_marginHorizontal="@dimen/base_padding"
+            />
 
-    <Button
-        android:id="@+id/btn_sign_up_first"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
-        style="@style/ButtonStyle"
-        android:text="@string/sign_up"
-        android:layout_alignParentBottom="true"
-        android:layout_marginHorizontal="@dimen/base_padding"
-        android:layout_marginBottom="@dimen/base_padding"
-        />
+        <Button
+            android:id="@+id/btn_sign_up_first"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            style="@style/ButtonStyle"
+            android:text="@string/sign_up"
+            android:layout_marginHorizontal="@dimen/base_padding"
+            android:layout_marginBottom="@dimen/base_padding"
+            />
+
+    </LinearLayout>
 
 </RelativeLayout>

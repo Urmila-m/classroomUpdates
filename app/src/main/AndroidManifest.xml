@@ -10,25 +10,29 @@
         android:roundIcon="@mipmap/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.AfterLoginTeacherActivity"
-            android:label="@string/title_activity_after_login"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
-        <activity
-            android:name=".activity.AfterLoginActivityStudent"
-            android:label="@string/title_activity_after_login"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".activity.PreferenceInitializingActivity" />
-        <activity android:name=".activity.BeforeLoginActivity">
-
-        </activity>
-        <activity android:name=".activity.SplashScreenActivity" android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".activity.IntroSlideActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.AfterLoginTeacherActivity"
+            android:label="@string/title_activity_after_login"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.AfterLoginActivityStudent"
+            android:label="@string/title_activity_after_login"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".activity.PreferenceInitializingActivity" />
+        <activity android:name=".activity.BeforeLoginActivity"></activity>
+        <activity
+            android:name=".activity.SplashScreenActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
     </application>
 

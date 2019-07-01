@@ -1,6 +1,7 @@
 package com.myapp.classroomupdates.activity;
 
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,6 +20,8 @@ import com.myapp.classroomupdates.fragment.StudentHomePageFragment;
 import com.myapp.classroomupdates.fragment.StudentProfileFragment;
 import com.myapp.classroomupdates.fragment.TeacherAttendFragment;
 import com.myapp.classroomupdates.fragment.TeacherProfileFragment;
+
+import java.util.ArrayList;
 
 public class AfterLoginTeacherActivity extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -88,7 +91,17 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
             setFragment(frameLayout, new TeacherAttendFragment(), "0");
 
         } else if (id == R.id.nav_profile) {
-            setFragment(frameLayout, new TeacherProfileFragment(), "0");
+            Fragment fragment= new TeacherProfileFragment();
+            ArrayList<String> subjectList= new ArrayList<String>();
+            subjectList.add("Basic Electronics");
+            subjectList.add("Basic Electrical");
+            subjectList.add("Artificial Intelligence");
+            subjectList.add("Embedded System");
+
+            Bundle bundle= new Bundle();
+            bundle.putStringArrayList("subjectList", subjectList);
+            fragment.setArguments(bundle);
+            setFragment(frameLayout, fragment, "0");
             //TODO check student or teacher and then load appropriate fragment
         } else if (id == R.id.nav_schedule) {
 

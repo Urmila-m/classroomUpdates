@@ -14,7 +14,7 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_student_profile"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/nav_header_height"
             android:src="@drawable/portrait"
             android:layout_gravity="center_horizontal"
             />
