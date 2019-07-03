@@ -4,37 +4,45 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
-import com.myapp.classroomupdates.fragment.FirstPageFragment;
-import com.myapp.classroomupdates.fragment.ScheduleFragment;
+import com.myapp.classroomupdates.fragment.StudentScheduleFragment;
+import com.myapp.classroomupdates.fragment.TeacherScheduleFragment;
 
 import java.util.List;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    List<ScheduleFragment> fragmentList;
+    private List<StudentScheduleFragment> fragmentList1;
+    private List<TeacherScheduleFragment> fragmentList2;
 
-    public ViewPagerAdapter(FragmentManager fm, List<ScheduleFragment> list) {
+    public ViewPagerAdapter(FragmentManager fm, List<StudentScheduleFragment> list) {
         super(fm);
-        this.fragmentList= list;
+        this.fragmentList1 = list;
+    }
+
+    public ViewPagerAdapter(List<TeacherScheduleFragment> list, FragmentManager fm) {
+        super(fm);
+        this.fragmentList2 = list;
     }
 
     @Override
     public Fragment getItem(int i) {
-        Log.e("TAG", fragmentList.get(i).getArguments().toString() );
-        if (fragmentList.get(i)!=null){
-            Log.e("TAG", "getItem: not null"+i);
+        Fragment fragment = null;
+        if (fragmentList1!=null){
+            fragment= fragmentList1.get(i);
+
         }
-        return fragmentList.get(i);
-//        return new FirstPageFragment();
+        else if (fragmentList2!=null){
+            fragment= fragmentList2.get(i);
+        }
+        return fragment;
     }
 
 
     @Override
     public int getCount() {
-        return fragmentList.size();
-//        return 3;
+//        return fragmentList1.size();
+        return 6;
     }
 
     @Nullable

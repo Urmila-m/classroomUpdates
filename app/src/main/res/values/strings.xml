@@ -1,51 +1,70 @@
 <resources>
     <string name="app_name">ClassroomUpdates</string>
-    <string name="email">Email*</string>
-    <string name="enter_email">Enter your pcampus email</string>
-    <string name="name">Name</string>
+
+    <!--edit text hints-->
     <string name="enter_name">Enter your name</string>
-    <string name="password">Password</string>
+    <string name="enter_email">Enter your pcampus email</string>
     <string name="password_criteria">at least 8 characters long</string>
-    <string name="confirm_password">Confirm Password</string>
     <string name="retype_password">Re-type your password</string>
-    <string name="teacher">Teacher</string>
-    <string name="student">Student</string>
+    <string name="enter_new_pass">Enter your new password</string>
+
+    <!--page title-->
     <string name="sign_up">Sign Up</string>
-    <string name="already_have_account">Already have an acoount? Log in</string>
     <string name="login">Login</string>
     <string name="forgot_password">Forgot Password?</string>
+    <string name="change_password">Change password</string>
+    <string name="student_sign_up">Student Sign Up</string>
+    <string name="provide_feedback">Provide Feedback</string>
+
+    <!--login required string-->
+    <string name="email">Email*</string>
+    <string name="name">Name</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="teacher">Teacher</string>
+    <string name="student">Student</string>
     <string name="dont_have_account">Dont have an account? Sign up</string>
-    <string name="reset_password">Reset Password</string>
+
+    <!--student sign up required string-->
     <string name="batch">Batch</string>
-    <string name="program">Program</string>
     <string name="roll">Roll No</string>
     <string name="bct520">e.g. 520</string>
     <string name="bct">e.g. BCT</string>
+    <string name="program">Program</string>
     <string name="batch_eg">073(in B.S.)</string>
-    <string name="submit">Submit</string>
-    <string name="student_sign_up">Student Sign Up</string>
-    <string name="updates">Updates</string>
+
+    <!--sign up string required-->
+    <string name="already_have_account">Already have an acoount? Log in</string>
+
+    <!--profile string required-->
     <string name="subject">Subject</string>
     <string name="f_hall">F-hall</string>
+    <string name="time_eg">03:50pm-05:00pm</string>
+    <string name="time">Time</string>
+    <string name="semester">Semester</string>
+    <string name="fifth">5th</string>
+
+    <!--forgot/change password string required-->
+    <string name="reset_password">Reset Password</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New Password</string>
+
+    <!--buttons-->
+    <string name="submit">Submit</string>
+    <string name="save">Save</string>
+
+    <!-- teacher arrival info + schedule-->
+    <string name="class_details">BCT-5th Lib-3</string>
     <string name="date">2019/06/28</string>
     <string name="attend">Attend</string>
     <string name="not_attend">Not attend</string>
-    <string name="time_eg">03:50pm-05:00pm</string>
-    <string name="time">Time</string>
     <string name="message">Message</string>
     <string name="test_msg">This is a sample test message. Hey!</string>
-    <string name="change_password">Change password</string>
-    <string name="current_password">Current password</string>
-    <string name="new_password">New Password</string>
-    <string name="enter_new_pass">Enter your new password</string>
-    <string name="save">Save</string>
-    <string name="semester">Semester</string>
-    <string name="fifth">5th</string>
     <string name="expected_time">Expected time:</string>
-    <string name="class_details">BCT-5th Lib-3</string>
     <string name="class_details_for_student">Teacher, F-hall</string>
+    <string name="updates">Updates</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- navigation activity-->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_after_login">AfterLoginActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -58,4 +77,15 @@
     <string name="profile">Profile</string>
     <string name="schedule">Schedule</string>
     <string name="logout">Log out</string>
+
+    <!--feedback-->
+    <string name="feedback_form">Feedback Form</string>
+    <string name="question1">Was the teacher regular?</string>
+    <string name="question2">Was the teacher interactive?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="question3">Say something to the teacher</string>
+    <string name="attendance">Attendance</string>
+    <string name="semester_not_ended">The semester hasn\'t ended yet. You can only give feedback at the end of semester</string>
+
 </resources>

@@ -1,5 +1,7 @@
 package com.myapp.classroomupdates.activity;
 
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -25,28 +27,24 @@ import java.util.ArrayList;
 
 public class AfterLoginTeacherActivity extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    FrameLayout frameLayout;
+    private FrameLayout frameLayout;
+    NavigationView navigationView;
+    DrawerLayout drawer;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_login_teacher);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setViews();
         setSupportActionBar(toolbar);
-
-        View view= LayoutInflater.from(this).inflate(R.layout.content_after_login, null);
-        frameLayout= view.findViewById(R.id.fl_after_login);
-
         setFragment(frameLayout, new TeacherAttendFragment(), "0");
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -92,6 +90,8 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
 
         } else if (id == R.id.nav_profile) {
             Fragment fragment= new TeacherProfileFragment();
+
+            //TODO retreive from database and add to bundle
             ArrayList<String> subjectList= new ArrayList<String>();
             subjectList.add("Basic Electronics");
             subjectList.add("Basic Electrical");
@@ -102,8 +102,9 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
             bundle.putStringArrayList("subjectList", subjectList);
             fragment.setArguments(bundle);
             setFragment(frameLayout, fragment, "0");
-            //TODO check student or teacher and then load appropriate fragment
+
         } else if (id == R.id.nav_schedule) {
+            //TODO same as student schedule, just replace teacher with student program+sem
 
         } else if (id == R.id.nav_feedback) {
 
@@ -114,8 +115,19 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void setViews(){
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        CoordinatorLayout cl= findViewById(R.id.include_app_bar);
+        ConstraintLayout col= cl.findViewById(R.id.include_content);
+        frameLayout= col.findViewById(R.id.fl_after_login);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+
+
     }
 }

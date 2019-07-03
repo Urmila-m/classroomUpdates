@@ -30,8 +30,9 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
             startActivity(new Intent(BeforeLoginActivity.this, IntroSlideActivity.class));
             finish();
         }
-
-        setFragment(frameLayout, new FirstPageFragment(),"0");
+        else {
+            setFragment(frameLayout, new FirstPageFragment(), "0");
+        }
     }
 
     @Override
@@ -39,10 +40,12 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
         if (source_id == R.id.tv_forgot_password){
             Fragment fragment= new ForgotPasswordFragment();
             setFragment(frameLayout, fragment, "0");
+
         }
         else if (source_id== R.id.tv_no_account_yet||source_id==R.id.btn_sign_up_first){
             Fragment fragment= new SignUpFragment();
             setFragment(frameLayout, fragment, "0");
+
         }
         else if (source_id== R.id.btn_login){
             //TODO bundle bata aako name, password database ma check garne
@@ -52,20 +55,24 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
             else {
                 startActivity(new Intent(BeforeLoginActivity.this, AfterLoginTeacherActivity.class));
             }
+
         }
         else if (source_id== R.id.tv_already_have_account|| source_id==R.id.btn_reset_password|| source_id==R.id.btn_login_first){
             setFragment(frameLayout, new LoginFragment(), "0");
-        }
 
+        }
         else if (source_id==R.id.btn_sign_up){
             if (bundle.getString("teacherStudent").equals("student")){
                 setFragment(frameLayout, new StudentSignUpFragment(), "0");
             }
             else {
+                //TODO database ma teacher register garne
                 startActivity(new Intent(BeforeLoginActivity.this, AfterLoginTeacherActivity.class));
             }
+
         }
         else if (source_id==R.id.btn_student_sign_up){
+            //TODO database ma student register garne
             startActivity(new Intent(BeforeLoginActivity.this, AfterLoginActivityStudent.class));
         }
         else{

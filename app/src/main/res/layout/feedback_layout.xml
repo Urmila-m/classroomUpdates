@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/background_image_include"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/BaseLayoutStyle">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TitleTextStyle"
+            android:text="@string/feedback_form"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/normal_text_size"
+            android:text="@string/question1"
+            />
+
+        <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/rb_question1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/yes"
+                android:checked="true"
+                />
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no"
+                />
+
+
+    </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/normal_text_size"
+            android:text="@string/question2"
+            />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/rb_question2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/yes"
+                android:checked="true"
+                />
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no"
+                />
+
+
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/question3"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_question3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/EditTextStyle"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_feedback_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ButtonStyle"
+            android:text="@string/submit"/>
+    </LinearLayout>
+</RelativeLayout>

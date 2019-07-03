@@ -45,7 +45,6 @@ public class IntroSlideActivity extends PreferenceInitializingActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO go to activity
                 startActivity(new Intent(IntroSlideActivity.this, BeforeLoginActivity.class));
                 changeFirstInstallBool();
                 finish();

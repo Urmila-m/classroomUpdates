@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Basic theme colors-->
     <color name="colorPrimary">#00796B</color>
     <color name="colorPrimaryDark">#004D40</color>
     <color name="colorAccent">#79000E</color>
+
+    <!--light theme colors-->
     <color name="lightColorAccent">#9979000E</color>
     <color name="lightColorPrimary">#3300796B</color>
+
+    <!--Black and white color shades-->
     <color name="transparent_grey">#66C0C0C0</color>
     <color name="transparent_black">#22000000</color>
     <color name="transparent_white">#88ffffff</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+
     <color name="status_bar_color_intro_slide">#0F262E</color>
 </resources>
