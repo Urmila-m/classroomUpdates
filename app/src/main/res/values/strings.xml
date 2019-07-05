@@ -84,8 +84,18 @@
     <string name="question2">Was the teacher interactive?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="question3">Say something to the teacher</string>
+    <string name="question3">Say something to the teacher(optional)</string>
     <string name="attendance">Attendance</string>
     <string name="semester_not_ended">The semester hasn\'t ended yet. You can only give feedback at the end of semester</string>
+
+    <string-array name="program_array">
+        <item>Computer</item>
+        <item>Electrical</item>
+        <item>Electronics</item>
+        <item>Civil</item>
+        <item>Mechanical</item>
+    </string-array>
+
+
 
 </resources>

@@ -1,5 +1,7 @@
 package com.myapp.classroomupdates.activity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -22,9 +24,11 @@ import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.adapter.ViewPagerAdapter;
 import com.myapp.classroomupdates.fragment.ChangePasswordFragment;
 import com.myapp.classroomupdates.fragment.FeedbackFormFragment;
+import com.myapp.classroomupdates.fragment.ImageDisplayFragment;
 import com.myapp.classroomupdates.fragment.StudentScheduleFragment;
 import com.myapp.classroomupdates.fragment.StudentHomePageFragment;
 import com.myapp.classroomupdates.fragment.StudentProfileFragment;
+import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 import com.myapp.classroomupdates.model.StudentScheduleModel;
 
 import java.io.Serializable;
@@ -32,8 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.myapp.classroomupdates.Globals.IS_SEMESTER_END;
+import static com.myapp.classroomupdates.Globals.SELECT_IMAGE;
+import static com.myapp.classroomupdates.Globals.TAKE_PHOTO;
 
-public class AfterLoginActivityStudent extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class AfterLoginActivityStudent extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener, OnFragmentClickListener {
 
     private FrameLayout frameLayout;
     private List<StudentScheduleModel> sundayList, mondayList;
@@ -129,6 +135,8 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         return super.onOptionsItemSelected(item);
     }
 
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -201,6 +209,18 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
             if (fragment != null) {
                 getSupportFragmentManager().beginTransaction().remove(fragment).commit();
             }
+        }
+    }
+
+    @Override
+    public void onFragmentClicked(Bundle bundle, int source_id) {
+        if (source_id== TAKE_PHOTO|| source_id== SELECT_IMAGE){
+            ImageDisplayFragment fragment= new ImageDisplayFragment();
+            fragment.setArguments(bundle);
+            setFragment(frameLayout, fragment, "0");
+        }
+        else if (source_id== R.id.btn_change_image){
+            setFragment(frameLayout, new StudentProfileFragment(), "0");
         }
     }
 }

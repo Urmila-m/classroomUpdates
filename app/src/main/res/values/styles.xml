@@ -50,6 +50,11 @@
         <item name="android:statusBarColor">@color/status_bar_color_intro_slide</item>
     </style>
 
+    <style name="ErrorTextAppearanceStyle">
+        <item name="android:textColor">@color/red_color</item>
+        <!--<item name=""-->
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

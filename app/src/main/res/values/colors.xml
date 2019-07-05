@@ -17,4 +17,5 @@
     <color name="white">#ffffff</color>
 
     <color name="status_bar_color_intro_slide">#0F262E</color>
+    <color name="red_color">#dd794D4C</color>
 </resources>

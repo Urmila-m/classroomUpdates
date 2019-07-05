@@ -29,7 +29,9 @@
             android:textColorHint="@color/lightColorAccent"
             app:errorEnabled="true"
             app:hintEnabled="true"
-            app:passwordToggleEnabled="true">
+            app:passwordToggleEnabled="true"
+            app:errorTextAppearance="@style/ErrorTextAppearanceStyle"
+            >
 
             <android.support.design.widget.TextInputEditText
                 style="@style/EditTextStyle"
@@ -44,22 +46,14 @@
             android:layout_height="wrap_content"
             android:text="@string/program" />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_program_student_signup"
+        <Spinner
+            android:id="@+id/sp_program"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/lightColorAccent"
-            app:errorEnabled="true"
-            app:hintEnabled="true"
-            app:passwordToggleEnabled="true">
-
-            <android.support.design.widget.TextInputEditText
-                style="@style/EditTextStyle"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/edit_text_height"
-                android:hint="@string/bct"
-                />
-        </android.support.design.widget.TextInputLayout>
+            style="@style/EditTextStyle"
+            android:entries="@array/program_array"
+            android:spinnerMode="dialog"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -73,7 +67,9 @@
             android:textColorHint="@color/lightColorAccent"
             app:errorEnabled="true"
             app:hintEnabled="true"
-            app:passwordToggleEnabled="true">
+            app:passwordToggleEnabled="true"
+            app:errorTextAppearance="@style/ErrorTextAppearanceStyle"
+            >
 
             <android.support.design.widget.TextInputEditText
                 style="@style/EditTextStyle"

@@ -10,9 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.myapp.classroomupdates.interfaces.MultipleEditTextWatcher;
 import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 import com.myapp.classroomupdates.R;
+
+import static com.myapp.classroomupdates.Globals.isEmpty;
 
 public class ChangePasswordFragment extends Fragment {
     private TextInputLayout tilCurrentPassword, tilNewPassword, tilConfirmPass;
@@ -59,14 +63,29 @@ public class ChangePasswordFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        tilConfirmPass.getEditText().addTextChangedListener(new MultipleEditTextWatcher(tilConfirmPass));
+        tilCurrentPassword.getEditText().addTextChangedListener(new MultipleEditTextWatcher(tilCurrentPassword));
+        tilNewPassword.getEditText().addTextChangedListener(new MultipleEditTextWatcher(tilNewPassword));
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String currentPass= tilCurrentPassword.getEditText().getText().toString();
-                String newPassword= tilNewPassword.getEditText().getText().toString();
-                String confirmNewPass= tilNewPassword.getEditText().getText().toString();
-                bundle.putString("newPassword", newPassword);
-                mListener.onFragmentClicked(bundle, btnSave.getId());
+                if (tilConfirmPass.getError()==null && tilCurrentPassword.getError()== null && tilNewPassword== null) {
+                    if (isAllFilled()) {
+                        if (tilNewPassword.getEditText().getText().toString().equals(tilConfirmPass.getEditText().getText().toString())) {
+                            String currentPass = tilCurrentPassword.getEditText().getText().toString();
+                            String newPassword = tilNewPassword.getEditText().getText().toString();
+                            String confirmNewPass = tilNewPassword.getEditText().getText().toString();
+                            bundle.putString("newPassword", newPassword);
+                            mListener.onFragmentClicked(bundle, btnSave.getId());
+                        }
+                        else {
+                            Toast.makeText(getContext(), "Passwords don't match!!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else{
+                        Toast.makeText(getContext(), "Fill all the fields", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
     }
@@ -75,6 +94,16 @@ public class ChangePasswordFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private boolean isAllFilled(){
+        if (!isEmpty(tilConfirmPass.getEditText().getText().toString())&&
+                !isEmpty(tilNewPassword.getEditText().getText().toString())&&
+                !isEmpty(tilCurrentPassword.getEditText().getText().toString())){
+            return true;
+        }
+        else
+            return false;
     }
 
 }
