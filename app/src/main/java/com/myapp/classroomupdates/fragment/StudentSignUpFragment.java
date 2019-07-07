@@ -19,12 +19,13 @@ import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.interfaces.MultipleEditTextWatcher;
 import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 
+import static com.myapp.classroomupdates.Globals.getStringFromTIL;
 import static com.myapp.classroomupdates.Globals.isEmpty;
 
 public class StudentSignUpFragment extends Fragment {
 
     private OnFragmentClickListener listener;
-    private TextInputLayout tilBatch, tilRoll;
+    private TextInputLayout tilBatch, tilRoll, tilGroup;
     private Spinner program;
     private Button btnSubmit;
 
@@ -50,6 +51,7 @@ public class StudentSignUpFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tilBatch= view.findViewById(R.id.til_batch_student_signup);
+        tilGroup= view.findViewById(R.id.til_group_student_signup);
         program= view.findViewById(R.id.sp_program);
         tilRoll= view.findViewById(R.id.til_roll_student_signup);
         btnSubmit= view.findViewById(R.id.btn_student_sign_up);
@@ -60,21 +62,26 @@ public class StudentSignUpFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         tilRoll.getEditText().addTextChangedListener(new MultipleEditTextWatcher(tilRoll));
         tilBatch.getEditText().addTextChangedListener(new MultipleEditTextWatcher(tilBatch));
+        tilGroup.getEditText().addTextChangedListener(new MultipleEditTextWatcher(tilGroup));
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (tilBatch.getError()==null && tilRoll.getError()==null) {
-                    if (!isEmpty(tilBatch.getEditText().getText().toString())&&!isEmpty(tilRoll.getEditText().getText().toString())) {
+                if (tilBatch.getError()== null && tilRoll.getError()== null && tilGroup.getError()== null) {
+                    if (!isEmpty(tilBatch.getEditText().getText().toString())&&
+                            !isEmpty(tilRoll.getEditText().getText().toString())&&
+                            !isEmpty(getStringFromTIL(tilGroup))) {
                         String batch = tilBatch.getEditText().getText().toString();
                         int position = program.getSelectedItemPosition();
                         String programOptions[] = {"Computer", "Electrical", "Electronics", "Civil", "Mechanical"};
                         String program = programOptions[position];
                         String roll = tilRoll.getEditText().getText().toString();
+                        String group= getStringFromTIL(tilGroup);
                         Bundle b = new Bundle();
                         b.putString("batch", batch);
                         b.putString("roll", roll);
                         b.putString("program", program);
+                        b.putString("group", group);
                         listener.onFragmentClicked(b, btnSubmit.getId());
                     }
                     else {

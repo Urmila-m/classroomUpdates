@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,11 +15,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+import com.myapp.classroomupdates.Globals;
+import com.myapp.classroomupdates.R;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class PreferenceInitializingActivity extends AppCompatActivity {
 
@@ -42,10 +49,19 @@ public class PreferenceInitializingActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    public void getExternalCardWritePermission(){
-        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-        }
+    public void showSnackbar(String msg){
+        Snackbar snackbar= Snackbar.make(Globals.view, "No internet connection! "+msg, Snackbar.LENGTH_LONG);
+        snackbar.getView().setBackgroundColor(getColor(R.color.grey));
+        snackbar.setActionTextColor(getColor(R.color.yellow));
+        snackbar.show();
+    }
+
+    public String getTodaysDay(){
+        Calendar calendar= Calendar.getInstance();
+        Date currentDate= calendar.getTime();
+        SimpleDateFormat dateFormat= new SimpleDateFormat("EEEE");
+        String day= dateFormat.format(currentDate);
+        return day;
     }
 
 }

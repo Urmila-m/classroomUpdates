@@ -8,11 +8,14 @@
     <!--light theme colors-->
     <color name="lightColorAccent">#9979000E</color>
     <color name="lightColorPrimary">#3300796B</color>
+    <color name="mediumColorPrimary">#7700796B</color>
 
     <!--Black and white color shades-->
     <color name="transparent_grey">#66C0C0C0</color>
     <color name="transparent_black">#22000000</color>
     <color name="transparent_white">#88ffffff</color>
+    <color name="grey">#525357</color>
+    <color name="yellow">#ebc944</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
 

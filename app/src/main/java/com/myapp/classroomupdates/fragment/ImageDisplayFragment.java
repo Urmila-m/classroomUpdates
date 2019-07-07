@@ -77,7 +77,7 @@ public class ImageDisplayFragment extends Fragment {
                     Toast.makeText(getContext(), "No write permissions!!", Toast.LENGTH_SHORT).show();
                 }
                 listener.onFragmentClicked(new Bundle(), button.getId());
-                //TODO upload image to server+ write to external card
+                //TODO upload image to server
             }
         });
     }

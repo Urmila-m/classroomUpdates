@@ -20,7 +20,9 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.myapp.classroomupdates.ApiBackgroundTask;
 import com.myapp.classroomupdates.R;
+import com.myapp.classroomupdates.adapter.StudentHomeViewPagerAdapter;
 import com.myapp.classroomupdates.adapter.ViewPagerAdapter;
 import com.myapp.classroomupdates.fragment.ChangePasswordFragment;
 import com.myapp.classroomupdates.fragment.FeedbackFormFragment;
@@ -28,18 +30,26 @@ import com.myapp.classroomupdates.fragment.ImageDisplayFragment;
 import com.myapp.classroomupdates.fragment.StudentScheduleFragment;
 import com.myapp.classroomupdates.fragment.StudentHomePageFragment;
 import com.myapp.classroomupdates.fragment.StudentProfileFragment;
+import com.myapp.classroomupdates.interfaces.OnDataRetrivedListener;
 import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
+import com.myapp.classroomupdates.model.StudentHomeModel;
 import com.myapp.classroomupdates.model.StudentScheduleModel;
+import com.myapp.classroomupdates.utility.NetworkUtils;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import static com.myapp.classroomupdates.Globals.GET_DAILY_STUDENT_SCHEDULE;
+import static com.myapp.classroomupdates.Globals.GET_STUDENT_HOME;
 import static com.myapp.classroomupdates.Globals.IS_SEMESTER_END;
 import static com.myapp.classroomupdates.Globals.SELECT_IMAGE;
 import static com.myapp.classroomupdates.Globals.TAKE_PHOTO;
 
-public class AfterLoginActivityStudent extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener, OnFragmentClickListener {
+public class AfterLoginActivityStudent extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener, OnFragmentClickListener, OnDataRetrivedListener {
 
     private FrameLayout frameLayout;
     private List<StudentScheduleModel> sundayList, mondayList;
@@ -50,15 +60,32 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
     private View feedbackTextView;
     private Toolbar toolbar;
     private NavigationView navigationView;
+    private ApiBackgroundTask task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_login_student);
+        task= new ApiBackgroundTask();
 
         findView();
         setSupportActionBar(toolbar);
-        setFragment(frameLayout, new StudentHomePageFragment(), "0");
+
+//        task.getStudentHome(getTodaysDay(), this);
+
+        List<StudentHomePageFragment> list= new ArrayList<>();
+        StudentHomePageFragment fragment1= new StudentHomePageFragment();
+        StudentHomePageFragment fragment2= new StudentHomePageFragment();
+        StudentHomePageFragment fragment3= new StudentHomePageFragment();
+        list.add(fragment1);
+        list.add(fragment2);
+        list.add(fragment3);
+
+        StudentHomeViewPagerAdapter adapter= new StudentHomeViewPagerAdapter(getSupportFragmentManager(), list, this);
+        viewPager.setVisibility(View.VISIBLE);
+        tabLayout.setVisibility(View.VISIBLE);
+        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -147,7 +174,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
             ((ViewGroup)feedbackTextView.getParent()).removeView(feedbackTextView);
         }
 
-        if (id!= R.id.nav_schedule){
+        if (id!= R.id.nav_schedule|| id!= R.id.nav_home){
             tabLayout.setVisibility(View.GONE);
             viewPager.setVisibility(View.GONE);
         }
@@ -157,7 +184,6 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
 
         } else if (id == R.id.nav_profile) {
                 setFragment(frameLayout, new StudentProfileFragment(), "0");
-                //TODO check student or teacher and then load appropriate fragment
 
         } else if (id == R.id.nav_schedule) {
             //its a frame layout and to avoid the previous loaded fragment be displayed in background
@@ -220,7 +246,52 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
             setFragment(frameLayout, fragment, "0");
         }
         else if (source_id== R.id.btn_change_image){
+            //TODO upload image to server
             setFragment(frameLayout, new StudentProfileFragment(), "0");
         }
+
+        else if (source_id== R.id.btn_feedback_submit){
+            //TODO submit the feedback to server
+        }
+
+        else if (source_id== R.id.btn_change_password){
+            if (NetworkUtils.isNetworkConnected(this)){
+                //TODO change password in server
+            }
+            else {
+                showSnackbar("password change failed");
+            }
+            setFragment(frameLayout, new StudentHomePageFragment(), "0");
+
+        }
     }
+
+
+    @Override
+    public void onDataRetrieved(Bundle bundle, String source_id) {
+        if (source_id.equals(GET_STUDENT_HOME)){
+            List<StudentHomeModel> list= (List<StudentHomeModel>) bundle.getSerializable("StudentHomeList");
+            List<StudentHomePageFragment> fragmentList= new ArrayList<>();
+
+            for (StudentHomeModel s: list
+                 ) {
+                StudentHomePageFragment fragment= new StudentHomePageFragment();
+                Bundle b= new Bundle();
+                b.putSerializable("StudentHomeModel", (Serializable) s);
+                fragment.setArguments(b);
+                fragmentList.add(fragment);
+            }
+            StudentHomeViewPagerAdapter adapter= new StudentHomeViewPagerAdapter(getSupportFragmentManager(), fragmentList, this);
+            viewPager.setVisibility(View.VISIBLE);
+            tabLayout.setVisibility(View.VISIBLE);
+            viewPager.setAdapter(adapter);
+            tabLayout.setupWithViewPager(viewPager);
+        }
+
+        else if(source_id.equals(GET_DAILY_STUDENT_SCHEDULE)){
+
+        }
+
+    }
+
 }

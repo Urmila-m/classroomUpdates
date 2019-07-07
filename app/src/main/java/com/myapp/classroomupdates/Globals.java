@@ -11,6 +11,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.View;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,15 +23,21 @@ import java.util.regex.Pattern;
 
 public class Globals extends Application {
     public static String firstInstall="firstInstall";
+    public static String GET_STUDENT_HOME="getStudentHomeModelList";
+    public static String GET_DAILY_STUDENT_SCHEDULE="GetDailyStudentSchedule";
+    public static String GET_STUDENT="GetStudentModel";
+
     public static boolean IS_SEMESTER_END= false;
     public static int TAKE_PHOTO = 100;
     public static int SELECT_IMAGE = 101;
     public static Context context;
+    public static View view;
 
     @Override
     public void onCreate() {
         super.onCreate();
         context= getApplicationContext();
+        view= new View(context);
     }
 
     public static void saveBitmapToCard(Bitmap imageSelected){
@@ -84,5 +91,13 @@ public class Globals extends Application {
     public static String getStringFromTIL(TextInputLayout layout){
         String text= layout.getEditText().getText().toString();
         return text;
+    }
+
+    public static boolean isGroupFormat(CharSequence group){
+        String REGEX= "A|B|C|D|E|F";
+        Pattern pattern= Pattern.compile(REGEX);
+        Matcher matcher= pattern.matcher(group);
+        return matcher.matches();
+
     }
 }

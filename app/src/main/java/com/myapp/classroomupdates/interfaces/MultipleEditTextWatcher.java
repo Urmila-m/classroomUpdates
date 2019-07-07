@@ -63,6 +63,14 @@ public class MultipleEditTextWatcher implements TextWatcher {
                 inputLayout.setError(null);
             }
         }
+        else if (inputLayout.getId()== R.id.til_group_student_signup){
+            if (!Globals.isGroupFormat(s)){
+                inputLayout.setError("Please match the format");
+            }
+            else {
+                inputLayout.setError(null);
+            }
+        }
     }
 
     @Override

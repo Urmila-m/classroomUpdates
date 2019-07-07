@@ -71,6 +71,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/NormalTitleStyle"
+            android:text="@string/group"
+            android:layout_marginTop="@dimen/padding_5"
+            />
+
+        <TextView
+            android:id="@+id/tv_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/normal_text_size"
+            android:text="@string/example_group"
+            android:paddingLeft="@dimen/padding_10"
+            android:paddingVertical="@dimen/padding_5"
+            android:layout_marginBottom="@dimen/padding_5"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/NormalTitleStyle"
             android:text="@string/semester"
             android:layout_marginTop="@dimen/padding_5"
             />

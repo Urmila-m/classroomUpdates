@@ -2,6 +2,7 @@ package com.myapp.classroomupdates.fragment;
 
 
 import android.content.Context;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,7 +21,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class StudentHomePageFragment extends Fragment {
 
     private CircleImageView imageView;
-    private TextView tvTeacher, tvSubject, tvLocation, tvDate, message, tvMessage, time, tvTime;
+    private TextView tvTeacher, tvSubject, tvLocation, tvDate, message, tvMessage, time, tvTime, tvTitle;
     private RadioButton rbAttend, rbNotAttend;
 
     public StudentHomePageFragment() {
@@ -53,6 +54,7 @@ public class StudentHomePageFragment extends Fragment {
         message= view.findViewById(R.id.message_student_home);
         rbAttend= view.findViewById(R.id.rb_attend_student_home);
         tvDate= view.findViewById(R.id.tv_date);
+        tvTitle= view.findViewById(R.id.student_home_title);
         rbNotAttend= view.findViewById(R.id.rb_not_attend_student_home);
     }
 
@@ -60,6 +62,8 @@ public class StudentHomePageFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //TODO set all the values
+        Calendar.getInstance();
+        tvTitle.setText("Day");//set day
 //        rbAttend.setChecked(true);
         rbNotAttend.setChecked(true);
         if (rbAttend.isChecked()){

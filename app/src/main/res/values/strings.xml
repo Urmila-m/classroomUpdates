@@ -87,6 +87,9 @@
     <string name="question3">Say something to the teacher(optional)</string>
     <string name="attendance">Attendance</string>
     <string name="semester_not_ended">The semester hasn\'t ended yet. You can only give feedback at the end of semester</string>
+    <string name="group">Group</string>
+    <string name="example_group">e.g. A</string>
+    <string name="feedback">Feedback</string>
 
     <string-array name="program_array">
         <item>Computer</item>

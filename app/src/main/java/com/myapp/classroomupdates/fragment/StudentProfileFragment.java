@@ -39,7 +39,7 @@ import static com.myapp.classroomupdates.Globals.TAKE_PHOTO;
 
 public class StudentProfileFragment extends Fragment {
 
-    private TextView tvName, tvRoll, tvSemester, tvEmail;
+    private TextView tvName, tvRoll, tvSemester, tvEmail, tvGroup;
     private CircleImageView ivStudent;
     private Bundle bundle, imageBundle;
     private Bitmap imageSelected;
@@ -74,6 +74,7 @@ public class StudentProfileFragment extends Fragment {
         tvRoll= view.findViewById(R.id.tv_roll);
         tvSemester= view.findViewById(R.id.tv_semester);
         ivStudent= view.findViewById(R.id.iv_student_profile);
+        tvGroup= view.findViewById(R.id.tv_group);
 
         builder= new AlertDialog.Builder(getContext());
         imageBundle= new Bundle();
@@ -87,6 +88,7 @@ public class StudentProfileFragment extends Fragment {
             tvEmail.setText(bundle.getString("email"));
             tvSemester.setText(bundle.getString("batch"));//TODO calculate sem from batch and display
             tvRoll.setText(bundle.getString("roll"));
+            tvGroup.setText(bundle.getString("group"));
 
             //TODO to set image from server, use picasso
             Picasso.get().load("").placeholder(R.drawable.portrait).into(ivStudent);
