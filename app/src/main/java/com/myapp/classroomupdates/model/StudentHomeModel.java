@@ -1,6 +1,8 @@
 package com.myapp.classroomupdates.model;
 
-public class StudentHomeModel {
+import java.io.Serializable;
+
+public class StudentHomeModel implements Serializable {
     private String teacher, subject, location, date, msg, time;
     private Boolean attend;
 

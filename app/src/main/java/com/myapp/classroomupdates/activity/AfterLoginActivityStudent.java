@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.myapp.classroomupdates.ApiBackgroundTask;
 import com.myapp.classroomupdates.R;
@@ -35,6 +36,7 @@ import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 import com.myapp.classroomupdates.model.StudentHomeModel;
 import com.myapp.classroomupdates.model.StudentScheduleModel;
 import com.myapp.classroomupdates.utility.NetworkUtils;
+import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -42,6 +44,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.myapp.classroomupdates.Globals.GET_DAILY_STUDENT_SCHEDULE;
 import static com.myapp.classroomupdates.Globals.GET_STUDENT_HOME;
@@ -61,6 +65,8 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
     private Toolbar toolbar;
     private NavigationView navigationView;
     private ApiBackgroundTask task;
+    private TextView headerEmail;
+    private CircleImageView headerImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +98,9 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        Picasso.get().load("").placeholder(R.drawable.portrait).into(headerImage);
+        headerEmail.setText("123abc@gmail.com");//TODO extract from preference
 
         //All for the schedule. Hardcoded values
         sundayList= new ArrayList<>();
@@ -227,6 +236,8 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         viewPager= frameLayout.findViewById(R.id.viewpager_schedule);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
+        headerImage= navigationView.getHeaderView(0).findViewById(R.id.header_imageView);
+        headerEmail= navigationView.getHeaderView(0).findViewById(R.id.header_email);
         feedbackTextView= LayoutInflater.from(this).inflate(R.layout.just_a_text_view_layout, null);
     }
 

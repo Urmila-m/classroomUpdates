@@ -7,7 +7,9 @@ import com.myapp.classroomupdates.model.PostResponse;
 import com.myapp.classroomupdates.model.StudentHomeModel;
 import com.myapp.classroomupdates.model.StudentModel;
 import com.myapp.classroomupdates.model.StudentScheduleModel;
+import com.myapp.classroomupdates.model.TeacherAttendModel;
 import com.myapp.classroomupdates.model.TeacherModel;
+import com.myapp.classroomupdates.model.TeacherScheduleModel;
 
 import java.util.List;
 
@@ -23,10 +25,14 @@ import retrofit2.http.POST;
 public interface ApiInterface {
 
     @GET("")//api url
-    Call<List<StudentScheduleModel>> getDailySchedule(@Field("day") String day,
+    Call<List<StudentScheduleModel>> getStudentDailySchedule(@Field("day") String day,
                                                       @Field("semester") String semester,
                                                       @Field("program") String program,
                                                       @Field("group") String group);
+
+    @GET("")
+    Call<List<TeacherScheduleModel>> getteacherDailySchedule(@Field("day") String day,
+                                                             @Field("email") String teacherEmail);
 
     @GET("")
     Call<List<StudentHomeModel>> getStudentHome(@Field("day") String day,
@@ -47,17 +53,22 @@ public interface ApiInterface {
     Call<PostResponse> changePassword(@Field("profession") String teacherOrStudent,
                                       @Field("email") String email,
                                       @Field("newPassword") String newPassword);
+//
+//    @POST("")
+//    @FormUrlEncoded
+//    Call<PostResponse> postTeacherAttend(@Field("attend") Boolean attend,
+//                                         @Field("time") String time,
+//                                         @Field("message") String message,
+//                                         @Field("email") String teacherEmail,
+//                                         @Field("subject") String subject,
+//                                         @Field("date") String date,
+//                                         @Field("semester") String semester,
+//                                         @Field("program") String program);
+
 
     @POST("")
     @FormUrlEncoded
-    Call<PostResponse> postTeacherAttend(@Field("attend") Boolean attend,
-                                         @Field("time") String time,
-                                         @Field("message") String message,
-                                         @Field("email") String teacherEmail,
-                                         @Field("subject") String subject,
-                                         @Field("date") String date,
-                                         @Field("semester") String semester,
-                                         @Field("program") String program);
+    Call<PostResponse> postTeacherAttend(@Body TeacherAttendModel teacherAttendModel);
 
     @GET("")
     Call<List<FeedbackModel>> getFeedback(@Field("email") String teacherEmail);//Filter using date may be, or subjects

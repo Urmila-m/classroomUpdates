@@ -25,7 +25,17 @@ public class Globals extends Application {
     public static String firstInstall="firstInstall";
     public static String GET_STUDENT_HOME="getStudentHomeModelList";
     public static String GET_DAILY_STUDENT_SCHEDULE="GetDailyStudentSchedule";
+    public static String GET_DAILY_TEACHER_SCHEDULE="GetDailyTeacherSchedule";
     public static String GET_STUDENT="GetStudentModel";
+    public static String GET_TEACHER="GetTeacherModel";
+    public static String CHANGE_PASSWORD="ChangePassword";
+    public static String GET_FEEDBACK="GetFeedback";
+    public static String SEND_FEEDBACK="SendFeedback";
+    public static String REGISTER_STUDENT="RegisterStudent";
+    public static String CHANGE_PICTURE="ChangePicture";
+    public static String GET_ATTENDANCE="GetAttendance";
+    public static String REGISTER_TEACHER="RegisterTeacher";
+    public static String POST_TEACHER_ATTEND="PostTeacherAttend";
 
     public static boolean IS_SEMESTER_END= false;
     public static int TAKE_PHOTO = 100;

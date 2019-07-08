@@ -19,6 +19,8 @@ import android.widget.TimePicker;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 
+import java.util.ArrayList;
+
 import static android.view.View.GONE;
 
 public class TeacherAttendFragment extends Fragment {
@@ -29,10 +31,15 @@ public class TeacherAttendFragment extends Fragment {
     private TimePicker timePicker;
     private Button btnSubmit;
     private OnFragmentClickListener listener;
+    private Bundle bundle;
+    private String subject, startingTime;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        bundle= getArguments();
+        subject= bundle.getString("subject");
+        startingTime= bundle.getString("startingTime");
         if (context instanceof OnFragmentClickListener){
             listener= (OnFragmentClickListener) context;
         }
@@ -64,8 +71,8 @@ public class TeacherAttendFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        tvsubject.setText("Software Engineering");
-        tvExpectedTime.setText("12:00 pm");//TODO server bata time extract garera show garne
+        tvsubject.setText(subject);
+        tvExpectedTime.setText(startingTime);//TODO server bata time extract garera show garne
 
         rbNotAttend.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

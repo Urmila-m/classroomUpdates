@@ -1,6 +1,8 @@
 package com.myapp.classroomupdates.model;
 
-public class AttendanceModel {
+import java.io.Serializable;
+
+public class AttendanceModel implements Serializable {
     private int totalClasses, attendedClasses;
 
     public int getTotalClasses() {

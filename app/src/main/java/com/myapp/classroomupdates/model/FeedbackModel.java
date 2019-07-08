@@ -1,6 +1,8 @@
 package com.myapp.classroomupdates.model;
 
-public class FeedbackModel {
+import java.io.Serializable;
+
+public class FeedbackModel implements Serializable {
     private Boolean regular, interactive;
     private String suggestion;
 

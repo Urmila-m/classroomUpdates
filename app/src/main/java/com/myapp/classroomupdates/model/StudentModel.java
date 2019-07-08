@@ -1,7 +1,40 @@
 package com.myapp.classroomupdates.model;
 
-public class StudentModel {
-    private String name, email, password, batch, program, roll, group, ppLoc;
+import java.io.Serializable;
+
+public class StudentModel implements Serializable {
+    private String name;
+    private String email;
+    private String password;
+    private String batch;
+    private String program;
+    private String roll;
+    private String group;
+    private String ppLoc;
+    private String token;
+
+    @Override
+    public String toString() {
+        return "StudentModel{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", batch='" + batch + '\'' +
+                ", program='" + program + '\'' +
+                ", roll='" + roll + '\'' +
+                ", group='" + group + '\'' +
+                ", ppLoc='" + ppLoc + '\'' +
+                ", token='" + token + '\'' +
+                '}';
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public String getName() {
         return name;
@@ -78,17 +111,4 @@ public class StudentModel {
         this.ppLoc = ppLoc;
     }
 
-    @Override
-    public String toString() {
-        return "StudentModel{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", batch='" + batch + '\'' +
-                ", program='" + program + '\'' +
-                ", roll='" + roll + '\'' +
-                ", group='" + group + '\'' +
-                ", ppLoc='" + ppLoc + '\'' +
-                '}';
-    }
 }

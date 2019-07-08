@@ -1,6 +1,8 @@
 package com.myapp.classroomupdates.model;
 
-public class PostResponse {
+import java.io.Serializable;
+
+public class PostResponse implements Serializable {
     private boolean success;
     private String message;
 

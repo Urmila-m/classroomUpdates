@@ -1,9 +1,10 @@
 package com.myapp.classroomupdates.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class TeacherModel {
-    String email, name, password, ppLoc;
+public class TeacherModel implements Serializable {
+    String email, name, password, ppLoc, token;
     List<String> subjects;
 
     public TeacherModel(String email, String name, String password, String ppLoc, List<String> subjects) {
@@ -61,7 +62,17 @@ public class TeacherModel {
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 ", ppLoc='" + ppLoc + '\'' +
+                ", token='" + token + '\'' +
                 ", subjects=" + subjects +
                 '}';
     }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
 }

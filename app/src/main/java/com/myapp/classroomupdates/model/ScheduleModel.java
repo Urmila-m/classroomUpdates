@@ -2,7 +2,7 @@ package com.myapp.classroomupdates.model;
 
 import java.io.Serializable;
 
-public class ScheduleModel {
+public class ScheduleModel implements Serializable{
 
     protected String startTime, endTime, subject, location;
 
