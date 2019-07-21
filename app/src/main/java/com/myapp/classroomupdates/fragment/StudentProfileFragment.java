@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.myapp.classroomupdates.R;
+import com.myapp.classroomupdates.activity.BeforeLoginActivity;
 import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 import com.squareup.picasso.Picasso;
 
@@ -78,6 +79,8 @@ public class StudentProfileFragment extends Fragment {
 
         builder= new AlertDialog.Builder(getContext());
         imageBundle= new Bundle();
+
+
     }
 
     @Override

@@ -3,10 +3,12 @@ package com.myapp.classroomupdates;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.gson.JsonObject;
 import com.myapp.classroomupdates.interfaces.ApiInterface;
 import com.myapp.classroomupdates.interfaces.OnDataRetrivedListener;
 import com.myapp.classroomupdates.model.AttendanceModel;
 import com.myapp.classroomupdates.model.FeedbackModel;
+import com.myapp.classroomupdates.model.LoginResponseModel;
 import com.myapp.classroomupdates.model.PostResponse;
 import com.myapp.classroomupdates.model.StudentHomeModel;
 import com.myapp.classroomupdates.model.StudentModel;
@@ -15,9 +17,12 @@ import com.myapp.classroomupdates.model.TeacherAttendModel;
 import com.myapp.classroomupdates.model.TeacherModel;
 import com.myapp.classroomupdates.model.TeacherScheduleModel;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -104,43 +109,104 @@ public class ApiBackgroundTask {
     }
 
     public void getStudentDetails(String email, String password, final OnDataRetrivedListener listener){
-        apiInterface.getStudentDetails(email, password).enqueue(new Callback<StudentModel>() {
+        apiInterface.getStudentDetails(email, password).enqueue(new Callback<LoginResponseModel>() {
             @Override
-            public void onResponse(Call<StudentModel> call, Response<StudentModel> response) {
-                StudentModel student= response.body();
+            public void onResponse(Call<LoginResponseModel> call, Response<LoginResponseModel> response) {
+                StudentModel student= response.body().getStudent_detail();
                 Bundle b= new Bundle();
                 b.putSerializable("student", (Serializable) student);
+                b.putString("token", response.body().getToken());
                 if (listener!=null){
                     listener.onDataRetrieved(b, GET_STUDENT);
                 }
             }
 
             @Override
-            public void onFailure(Call<StudentModel> call, Throwable t) {
+            public void onFailure(Call<LoginResponseModel> call, Throwable t) {
                 Log.e("TAG", "onFailure: "+ t.getMessage());
 
             }
         });
     }
 
-    public void getTeacherDetails(String email, String password, final OnDataRetrivedListener listener){
-        apiInterface.getTeacherDetails(email, password).enqueue(new Callback<TeacherModel>() {
+//    public void getTeacherDetails(String email, String password, final OnDataRetrivedListener listener){
+////        HashMap<String, String> hashMap= new HashMap<>();
+////        hashMap.put("username", email);
+////        hashMap.put("password", password);
+//        apiInterface.getTeacherDetails(email, password).enqueue(new Callback<LoginResponseModel>() {
+//            Bundle b = new Bundle();
+//            @Override
+//            public void onResponse(Call<LoginResponseModel> call, Response<LoginResponseModel> response) {
+//                if (response.isSuccessful()) {
+//                    TeacherModel teacher = response.body().getTeacher_detail();
+//                    b.putSerializable("teacher", (Serializable) teacher);
+//                    b.putSerializable("token", response.body().getToken());
+//                    Log.e("TAG", "onResponse: successful");
+//                }
+//                else {
+//                    Log.e("TAG", "onResponse: "+response.message());
+////                    Log.e("TAG", "onResponse: on not succesful"+response.errorBody().toString() );
+//                    b.putString("errorMsg", "Email or Password didn't match.");
+//                }
+//                if (listener != null) {
+//                    listener.onDataRetrieved(b, GET_TEACHER);
+//                }
+//            }
+
+////            @Override
+////            public void onFailure(Call<LoginResponseModel> call, Throwable t) {
+////                Log.e("TAG", "onFailure: "+ t.getMessage());
+////
+////            }
+////        });
+//    }
+
+    public void getTeacherDetails(String email, String password, OnDataRetrivedListener listener){
+        Log.e("TAG", "getTeacherDetails: "+email+ " "+ password);
+        apiInterface.getTeacherDetails(email, password).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<TeacherModel> call, Response<TeacherModel> response) {
-                TeacherModel teacher= response.body();
-                Bundle b= new Bundle();
-                b.putSerializable("teacher", (Serializable) teacher);
-                if (listener!=null){
-                    listener.onDataRetrieved(b, GET_TEACHER);
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.d("OOPS",response.raw().toString());
+                try {
+                    if (response.body()!=null) {
+                        Log.e("TAG", "onResponse: " + response.body().string());
+                    }
+                    else {
+                        Log.e("TAG", "onResponse: "+response.code());
+                        Log.e("TAG", "onResponse: null response" );
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<TeacherModel> call, Throwable t) {
-                Log.e("TAG", "onFailure: "+ t.getMessage());
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             }
         });
+    }
+
+    public  void getTeacherDetailsBody()
+    {
+        TeacherModel model=new TeacherModel();
+        model.username="ooad@gmail.com";
+        model.setPassword("687569");
+        apiInterface.getTeacherDetailsBody(model)
+                .enqueue(
+                        new Callback<LoginResponseModel>() {
+                            @Override
+                            public void onResponse(Call<LoginResponseModel> call, Response<LoginResponseModel> response) {
+
+                                Log.e("OOPS",response.body().getTeacher_detail().getName());
+                            }
+
+                            @Override
+                            public void onFailure(Call<LoginResponseModel> call, Throwable t) {
+
+                            }
+                        }
+                );
     }
 
     public void changePassword(String profession, String email, String newPassword, final OnDataRetrivedListener listener){

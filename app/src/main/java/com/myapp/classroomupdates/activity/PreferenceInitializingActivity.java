@@ -17,6 +17,8 @@ import android.widget.FrameLayout;
 
 import com.myapp.classroomupdates.Globals;
 import com.myapp.classroomupdates.R;
+import com.myapp.classroomupdates.model.StudentModel;
+import com.myapp.classroomupdates.model.TeacherModel;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,6 +28,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 public class PreferenceInitializingActivity extends AppCompatActivity {
 
@@ -62,6 +65,31 @@ public class PreferenceInitializingActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat= new SimpleDateFormat("EEEE");
         String day= dateFormat.format(currentDate);
         return day;
+    }
+
+    public void saveUserToPreference(String token, StudentModel student){
+        editor.putString("user_type", "Student");
+        editor.putString("name", student.getName());
+        editor.putString("password", student.getPassword());
+        editor.putString("batch", student.getBatch());
+        editor.putString("email", student.getEmail());
+        editor.putString("roll", student.getRoll());
+        editor.putString("group", student.getGroup());
+        editor.putString("program", student.getProgram());
+        editor.putString("token", token);
+        editor.commit();
+
+    }
+
+    public void saveUserToPreference(String token, TeacherModel teacher){
+        editor.putString("user_type", "Teacher");
+        editor.putString("name", teacher.getName());
+        editor.putString("email", teacher.getEmail());
+        editor.putString("password", teacher.getPassword());
+        editor.putString("phone", teacher.getPhone());
+        editor.putString("subjects", teacher.getSubjects());
+        editor.putString("token", token);
+        editor.commit();
     }
 
 }

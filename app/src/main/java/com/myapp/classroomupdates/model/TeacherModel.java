@@ -1,18 +1,41 @@
 package com.myapp.classroomupdates.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.List;
 
 public class TeacherModel implements Serializable {
-    String email, name, password, ppLoc, token;
-    List<String> subjects;
 
-    public TeacherModel(String email, String name, String password, String ppLoc, List<String> subjects) {
+    private String email;
+    private String name;
+    private String phone;
+    private String password;
+    public String username;
+//    @SerializedName("user_type")
+//    private String ppLoc;
+    private String subjects;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public TeacherModel(String email, String name, String password, String phone, String subjects) {
         this.email = email;
         this.name = name;
         this.password = password;
-        this.ppLoc = ppLoc;
+//        this.ppLoc = ppLoc;
+        this.phone= phone;
         this.subjects = subjects;
+    }
+
+    public TeacherModel()
+    {
+
     }
 
     public String getEmail() {
@@ -39,19 +62,19 @@ public class TeacherModel implements Serializable {
         this.password = password;
     }
 
-    public String getPpLoc() {
-        return ppLoc;
-    }
+//    public String getPpLoc() {
+//        return ppLoc;
+//    }
+//
+//    public void setPpLoc(String ppLoc) {
+//        this.ppLoc = ppLoc;
+//    }
 
-    public void setPpLoc(String ppLoc) {
-        this.ppLoc = ppLoc;
-    }
-
-    public List<String> getSubjects() {
+    public String getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(List<String> subjects) {
+    public void setSubjects(String subjects) {
         this.subjects = subjects;
     }
 
@@ -61,18 +84,8 @@ public class TeacherModel implements Serializable {
                 "email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
-                ", ppLoc='" + ppLoc + '\'' +
-                ", token='" + token + '\'' +
+//                ", ppLoc='" + ppLoc + '\'' +
                 ", subjects=" + subjects +
                 '}';
     }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
 }

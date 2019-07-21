@@ -37,7 +37,7 @@ public class Globals extends Application {
     public static String REGISTER_TEACHER="RegisterTeacher";
     public static String POST_TEACHER_ATTEND="PostTeacherAttend";
 
-    public static boolean IS_SEMESTER_END= false;
+    public static boolean IS_SEMESTER_END= true;
     public static int TAKE_PHOTO = 100;
     public static int SELECT_IMAGE = 101;
     public static Context context;

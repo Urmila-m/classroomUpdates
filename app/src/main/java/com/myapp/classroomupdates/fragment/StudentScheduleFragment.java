@@ -36,6 +36,10 @@ public class StudentScheduleFragment extends Fragment {
         if (getArguments()!=null){
             Bundle b= getArguments();
             list = (ArrayList<StudentScheduleModel>) b.getSerializable("scheduleList");
+            for (StudentScheduleModel s:list
+                 ) {
+                Log.e("TAG", s.toString()+"\n" );
+            }
         }
     }
 

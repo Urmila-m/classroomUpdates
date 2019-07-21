@@ -1,5 +1,7 @@
 package com.myapp.classroomupdates.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class StudentModel implements Serializable {
@@ -7,11 +9,15 @@ public class StudentModel implements Serializable {
     private String email;
     private String password;
     private String batch;
+
+    @SerializedName("programme_name")
     private String program;
+
+    @SerializedName("roll_number")
     private String roll;
+
     private String group;
-    private String ppLoc;
-    private String token;
+//    private String ppLoc;
 
     @Override
     public String toString() {
@@ -23,17 +29,8 @@ public class StudentModel implements Serializable {
                 ", program='" + program + '\'' +
                 ", roll='" + roll + '\'' +
                 ", group='" + group + '\'' +
-                ", ppLoc='" + ppLoc + '\'' +
-                ", token='" + token + '\'' +
+//                ", ppLoc='" + ppLoc + '\'' +
                 '}';
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public String getName() {
@@ -64,9 +61,9 @@ public class StudentModel implements Serializable {
         return group;
     }
 
-    public String getPpLoc() {
-        return ppLoc;
-    }
+//    public String getPpLoc() {
+//        return ppLoc;
+//    }
 
     public void setName(String name) {
         this.name = name;
@@ -96,11 +93,11 @@ public class StudentModel implements Serializable {
         this.group = group;
     }
 
-    public void setPpLoc(String ppLoc) {
-        this.ppLoc = ppLoc;
-    }
+//    public void setPpLoc(String ppLoc) {
+//        this.ppLoc = ppLoc;
+//    }
 
-    public StudentModel(String name, String email, String password, String batch, String program, String roll, String group, String ppLoc) {
+    public StudentModel(String name, String email, String password, String batch, String program, String roll, String group) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -108,7 +105,7 @@ public class StudentModel implements Serializable {
         this.program = program;
         this.roll = roll;
         this.group = group;
-        this.ppLoc = ppLoc;
+//        this.ppLoc = ppLoc;
     }
 
 }

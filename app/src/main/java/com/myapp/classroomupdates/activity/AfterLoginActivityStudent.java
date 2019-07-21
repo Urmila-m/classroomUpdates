@@ -8,6 +8,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -99,7 +100,8 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        Picasso.get().load("").placeholder(R.drawable.portrait).into(headerImage);
+        headerImage.setImageResource(R.drawable.portrait);
+//        Picasso.get().load("jkdsjfk").placeholder(R.drawable.portrait).into(headerImage);
         headerEmail.setText("123abc@gmail.com");//TODO extract from preference
 
         //All for the schedule. Hardcoded values
@@ -196,6 +198,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
 
         } else if (id == R.id.nav_schedule) {
             //its a frame layout and to avoid the previous loaded fragment be displayed in background
+            Log.e("TAG", "nav_schedule");
             clearAllFragmentTransactions();
 
             tabLayout.setVisibility(View.VISIBLE);
@@ -266,12 +269,12 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         }
 
         else if (source_id== R.id.btn_change_password){
-            if (NetworkUtils.isNetworkConnected(this)){
-                //TODO change password in server
-            }
-            else {
-                showSnackbar("password change failed");
-            }
+//            if (NetworkUtils.isNetworkConnected(this)){
+//                //TODO change password in server
+//            }
+//            else {
+//                showSnackbar("password change failed");
+//            }
             setFragment(frameLayout, new StudentHomePageFragment(), "0");
 
         }

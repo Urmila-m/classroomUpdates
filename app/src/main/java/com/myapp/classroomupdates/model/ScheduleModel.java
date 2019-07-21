@@ -1,10 +1,21 @@
 package com.myapp.classroomupdates.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class ScheduleModel implements Serializable{
 
-    protected String startTime, endTime, subject, location;
+    @SerializedName("from_time")
+    protected String startTime;
+
+    @SerializedName("to_time")
+    protected String endTime;
+
+    protected String subject;
+
+    @SerializedName("room")
+    protected String location;
 
     public ScheduleModel(String startTime, String endTime, String subject, String location) {
         this.startTime = startTime;

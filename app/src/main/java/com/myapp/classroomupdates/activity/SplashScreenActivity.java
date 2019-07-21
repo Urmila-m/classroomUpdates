@@ -32,7 +32,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 startActivity(new Intent(SplashScreenActivity.this, BeforeLoginActivity.class));
                 finish();
             }
-        }, 3000);
+        }, 000);//TODO make it 3000
 
     }
 }

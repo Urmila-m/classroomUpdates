@@ -38,7 +38,7 @@ public class MultipleEditTextWatcher implements TextWatcher {
                     || inputLayout.getId()== R.id.til_current_password
                     || inputLayout.getId()== R.id.til_password_sign_up
                     || inputLayout.getId()== R.id.til_confirm_pass_sign_up){
-            if (s.length()<8){
+            if (s.length()<6){//TODO 8 instead of 6
                 inputLayout.setError("Password should be at least 8 chars long");
             }
             else {
