@@ -1,6 +1,7 @@
 package com.myapp.classroomupdates.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,16 +11,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.myapp.classroomupdates.activity.AfterLoginTeacherActivity;
+import com.myapp.classroomupdates.activity.BeforeLoginActivity;
 import com.myapp.classroomupdates.interfaces.MultipleEditTextWatcher;
 import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 import com.myapp.classroomupdates.R;
+import com.myapp.classroomupdates.utility.NetworkUtils;
 
 import static com.myapp.classroomupdates.Globals.getStringFromTIL;
 import static com.myapp.classroomupdates.Globals.isEmpty;
+import static com.myapp.classroomupdates.Globals.showSnackbar;
 
 public class SignUpFragment extends Fragment implements View.OnClickListener {
 
@@ -27,8 +33,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
     private RadioButton rbTeacher, rbStudent;
     private Button signUp;
     private TextView tvAlreadyHaveAcc;
-    private OnFragmentClickListener listener;
-    private Bundle bundle;
+    private FrameLayout frameLayout;
 
     public SignUpFragment() {
         // Required empty public constructor
@@ -39,14 +44,6 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.sign_up_layout, container, false);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentClickListener){
-            listener= (OnFragmentClickListener) context;
-        }
     }
 
     @Override
@@ -61,7 +58,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
         tvAlreadyHaveAcc= view.findViewById(R.id.tv_already_have_account);
         signUp= view.findViewById(R.id.btn_sign_up);
 
-        bundle= new Bundle();
+        frameLayout= ((BeforeLoginActivity)getContext()).getFrameLayout();
     }
 
     @Override
@@ -78,39 +75,51 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v==signUp){
-            if (tilName.getError()== null &&
-                    tilEmail.getError()== null
-                    && tilPassword.getError()== null
-                    && tilConfirmPassword.getError()== null) {
-                if (!isEmpty(getStringFromTIL(tilName))&&
-                        !isEmpty(getStringFromTIL(tilConfirmPassword))&&
-                        !isEmpty(getStringFromTIL(tilPassword)) &&
-                        !isEmpty(getStringFromTIL(tilEmail))){
-
+            if (SignUpFragment.this.isValidData()){
                     if (!getStringFromTIL(tilPassword).equals(getStringFromTIL(tilConfirmPassword))) {
                         Toast.makeText(getContext(), "passwords dont match!!", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        String email = tilEmail.getEditText().getText().toString();
-                        String name = tilName.getEditText().getText().toString();
-                        String password = tilPassword.getEditText().getText().toString();
-                        String confirmPassword = tilConfirmPassword.getEditText().toString();
-                        String teacherStudent = rbTeacher.isChecked() ? "teacher" : "student";
-                        bundle.putString("email", email);
-                        bundle.putString("name", name);
-                        bundle.putString("password", password);
-                        bundle.putString("teacherStudent", teacherStudent);
-                        listener.onFragmentClicked(bundle, signUp.getId());
+                        if (NetworkUtils.isNetworkConnected(getContext())) {
+                            String email = tilEmail.getEditText().getText().toString();
+                            String name = tilName.getEditText().getText().toString();
+                            String password = tilPassword.getEditText().getText().toString();
+                            String confirmPassword = tilConfirmPassword.getEditText().toString();
+                            String teacherStudent = rbTeacher.isChecked() ? "teacher" : "student";
+                            if (teacherStudent.equals("student")) {
+                                ((BeforeLoginActivity) getContext()).setFragment(frameLayout, new StudentSignUpFragment(), "0");
+                            } else {
+                                startActivity(new Intent(getContext(), AfterLoginTeacherActivity.class));
+                            }
+                        }
+                        else {
+                            showSnackbar(v, "Couldn't register account!!");
+                        }
                     }
                 }
                 else {
-                    Toast.makeText(getContext(), "Fields can't be empty", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Make sure there are no errors and fields can't be empty.", Toast.LENGTH_LONG).show();
                 }
 
-            }
         }
         else {
-            listener.onFragmentClicked(new Bundle(), tvAlreadyHaveAcc.getId());
+            ((BeforeLoginActivity)getContext()).setFragment(frameLayout, new LoginFragment(), "0");
+        }
+    }
+
+    private boolean isValidData(){
+        if (tilName.getError()== null &&
+                tilEmail.getError()== null &&
+                tilPassword.getError()== null &&
+                tilConfirmPassword.getError()== null &&
+                !isEmpty(getStringFromTIL(tilName))&&
+                !isEmpty(getStringFromTIL(tilConfirmPassword))&&
+                !isEmpty(getStringFromTIL(tilPassword)) &&
+                !isEmpty(getStringFromTIL(tilEmail))){
+            return true;
+        }
+        else {
+            return false;
         }
     }
 }

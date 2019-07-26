@@ -31,6 +31,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             style="@style/NormalTitleStyle"
             android:text="@string/name"
             android:layout_marginTop="@dimen/padding_5"
@@ -40,6 +41,7 @@
             android:id="@+id/tv_student_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:textSize="@dimen/normal_text_size"
             android:text="@string/student"
             android:paddingLeft="@dimen/padding_10"
@@ -47,63 +49,149 @@
             android:layout_marginBottom="@dimen/padding_5"
             />
 
-        <TextView
+        <LinearLayout
+            android:layout_marginTop="@dimen/base_padding"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/NormalTitleStyle"
-            android:text="@string/roll"
-            android:layout_marginTop="@dimen/padding_5"
+            android:orientation="horizontal">
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    style="@style/NormalTitleStyle"
+                    android:text="@string/roll"
+                    android:layout_marginTop="@dimen/padding_5"
+
+                    />
+
+                <TextView
+                    android:id="@+id/tv_roll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/normal_text_size"
+                    android:text="@string/bct520"
+                    android:paddingLeft="@dimen/padding_10"
+                    android:paddingVertical="@dimen/padding_5"
+                    android:layout_marginBottom="@dimen/padding_5"
+                    />
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/stroke_width"
+                android:layout_height="match_parent"
+                android:background="@color/grey"
+                />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/NormalTitleStyle"
+                    android:gravity="center"
+                    android:text="@string/group"
+                    android:layout_marginTop="@dimen/padding_5"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/normal_text_size"
+                    android:text="@string/example_group"
+                    android:paddingLeft="@dimen/padding_10"
+                    android:paddingVertical="@dimen/padding_5"
+                    android:layout_marginBottom="@dimen/padding_5"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/stroke_width"
+            android:background="@color/grey"
             />
 
-        <TextView
-            android:id="@+id/tv_roll"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/normal_text_size"
-            android:text="@string/bct520"
-            android:paddingLeft="@dimen/padding_10"
-            android:paddingVertical="@dimen/padding_5"
-            android:layout_marginBottom="@dimen/padding_5"
-            />
+            android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/NormalTitleStyle"
-            android:text="@string/group"
-            android:layout_marginTop="@dimen/padding_5"
-            />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/normal_text_size"
-            android:text="@string/example_group"
-            android:paddingLeft="@dimen/padding_10"
-            android:paddingVertical="@dimen/padding_5"
-            android:layout_marginBottom="@dimen/padding_5"
-            />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    style="@style/NormalTitleStyle"
+                    android:text="@string/batch"
+                    android:layout_marginTop="@dimen/padding_5"
+                    />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/NormalTitleStyle"
-            android:text="@string/semester"
-            android:layout_marginTop="@dimen/padding_5"
-            />
+                <TextView
+                    android:id="@+id/tv_semester"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/normal_text_size"
+                    android:text="@string/batch_eg"
+                    android:paddingLeft="@dimen/padding_10"
+                    android:paddingVertical="@dimen/padding_5"
+                    android:layout_marginBottom="@dimen/padding_5"
+                    />
 
-        <TextView
-            android:id="@+id/tv_semester"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/normal_text_size"
-            android:text="@string/fifth"
-            android:paddingLeft="@dimen/padding_10"
-            android:paddingVertical="@dimen/padding_5"
-            android:layout_marginBottom="@dimen/padding_5"
-            />
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/stroke_width"
+                android:layout_height="match_parent"
+                android:background="@color/grey"
+                />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    style="@style/NormalTitleStyle"
+                    android:text="@string/program"
+                    android:layout_marginTop="@dimen/padding_5"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_program"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/normal_text_size"
+                    android:text="@string/bct"
+                    android:paddingLeft="@dimen/padding_10"
+                    android:paddingVertical="@dimen/padding_5"
+                    android:layout_marginBottom="@dimen/padding_5"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 

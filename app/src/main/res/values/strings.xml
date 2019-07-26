@@ -90,6 +90,8 @@
     <string name="group">Group</string>
     <string name="example_group">e.g. A</string>
     <string name="feedback">Feedback</string>
+    <string name="full_time_teacher">Full time teacher</string>
+    <string name="teacher_department">Department of Electronics and Computer Engineering</string>
 
     <string-array name="program_array">
         <item>Computer</item>

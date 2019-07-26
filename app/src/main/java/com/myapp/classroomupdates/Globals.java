@@ -4,14 +4,26 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.myapp.classroomupdates.interfaces.ApiInterface;
+import com.myapp.classroomupdates.model.StudentModel;
+import com.myapp.classroomupdates.model.TeacherModel;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,18 +48,27 @@ public class Globals extends Application {
     public static String GET_ATTENDANCE="GetAttendance";
     public static String REGISTER_TEACHER="RegisterTeacher";
     public static String POST_TEACHER_ATTEND="PostTeacherAttend";
+    public static ApiInterface apiInterface;
+    public  static SharedPreferences preferences;
+    public static SharedPreferences.Editor editor;
+    private static Gson gson;
 
     public static boolean IS_SEMESTER_END= true;
-    public static int TAKE_PHOTO = 100;
-    public static int SELECT_IMAGE = 101;
-    public static Context context;
-    public static View view;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        context= getApplicationContext();
-        view= new View(context);
+        preferences= getSharedPreferences("loggedInUser", MODE_PRIVATE);
+        editor= preferences.edit();
+        gson= new Gson();
+        apiInterface= RetrofitClient.getRetrofitObj().create(ApiInterface.class);
+    }
+
+    public static void showSnackbar(View view, String msg){
+        Snackbar snackbar= Snackbar.make(view, "No internet connection! "+msg, Snackbar.LENGTH_LONG);
+        snackbar.getView().setBackgroundColor(view.getContext().getColor(R.color.grey));
+        snackbar.setActionTextColor(view.getContext().getColor(R.color.yellow));
+        snackbar.show();
     }
 
     public static void saveBitmapToCard(Bitmap imageSelected){
@@ -109,5 +130,39 @@ public class Globals extends Application {
         Matcher matcher= pattern.matcher(group);
         return matcher.matches();
 
+    }
+
+    public static void saveUserToPreference(StudentModel student, String token){
+        editor.putString("user_type", "Student");
+        editor.putString("Student", toJson(student));
+        editor.putString("token", token);
+        editor.commit();
+    }
+
+    public static void saveUserToPreference(TeacherModel teacher, String token){
+        editor.putString("user_type", "Teacher");
+        editor.putString("Teacher", toJson(teacher));
+        editor.putString("token", token);
+        editor.commit();
+    }
+
+    public static String toJson(StudentModel student){
+        String studentJsonModel= gson.toJson(student);
+        return studentJsonModel;
+    }
+
+    public static String toJson(TeacherModel teacher){
+        String teacherJsonModel= gson.toJson(teacher);
+        return teacherJsonModel;
+    }
+
+    public static StudentModel fromJsonToStudent(String json){
+        StudentModel student= gson.fromJson(json, StudentModel.class);
+        return student;
+    }
+
+    public static TeacherModel fromJsonToTeacher(String json){
+        TeacherModel teacher= gson.fromJson(json, TeacherModel.class);
+        return teacher;
     }
 }

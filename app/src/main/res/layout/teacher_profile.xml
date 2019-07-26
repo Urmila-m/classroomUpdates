@@ -54,11 +54,40 @@
             android:layout_marginTop="@dimen/padding_5"
             />
 
-        <ListView
-            android:id="@+id/lv_teacher_subjects"
+        <!--<ListView-->
+            <!--android:id="@+id/lv_teacher_subjects"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+        <!--</ListView>-->
+
+        <TextView
+            android:id="@+id/tv_teacher_subjects"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </ListView>
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/normal_text_size"
+            android:text="@string/teacher"
+            android:paddingLeft="@dimen/padding_10"
+            android:paddingVertical="@dimen/padding_5"
+            android:layout_marginBottom="@dimen/padding_5"
+            />
+
+        <TextView
+            android:id="@+id/tv_teacher_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/NormalTitleStyle"
+            android:text="@string/full_time_teacher"
+            android:layout_marginTop="@dimen/padding_5"
+            />
+
+        <TextView
+            android:id="@+id/tv_teacher_department"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/NormalTitleStyle"
+            android:text="@string/teacher_department"
+            android:layout_marginTop="@dimen/padding_5"
+            />
 
     </LinearLayout>
 

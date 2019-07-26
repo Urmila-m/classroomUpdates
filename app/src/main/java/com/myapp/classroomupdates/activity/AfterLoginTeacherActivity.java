@@ -1,5 +1,6 @@
 package com.myapp.classroomupdates.activity;
 
+import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -30,6 +31,7 @@ import com.myapp.classroomupdates.fragment.TeacherAttendFragment;
 import com.myapp.classroomupdates.fragment.TeacherProfileFragment;
 import com.myapp.classroomupdates.interfaces.OnDataRetrivedListener;
 import com.myapp.classroomupdates.model.TeacherAttendModel;
+import com.myapp.classroomupdates.model.TeacherModel;
 import com.myapp.classroomupdates.model.TeacherScheduleModel;
 import com.squareup.picasso.Picasso;
 
@@ -41,6 +43,9 @@ import javax.security.auth.Subject;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.myapp.classroomupdates.Globals.GET_DAILY_TEACHER_SCHEDULE;
+import static com.myapp.classroomupdates.Globals.editor;
+import static com.myapp.classroomupdates.Globals.fromJsonToTeacher;
+import static com.myapp.classroomupdates.Globals.preferences;
 
 public class AfterLoginTeacherActivity extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener, OnDataRetrivedListener {
 
@@ -60,21 +65,40 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_login_teacher);
 
-        task= new ApiBackgroundTask();
         setViews();
+        setUserDetails();
         setSupportActionBar(toolbar);
 //        setFragment(frameLayout, new TeacherAttendFragment(), "0");
 
-        task.getTeacherSchedule(getTodaysDay(), this);
+        TeacherAttendFragment fragment= new TeacherAttendFragment();
+        Bundle b= new Bundle();
+        b.putString("subject", "Software Engineering");
+        b.putString("startingTime", "12:00");
+        fragment.setArguments(b);
+
+        TeacherAttendFragment fragment2= new TeacherAttendFragment();
+        Bundle b2= new Bundle();
+        b2.putString("subject", "Artificial Engineering");
+        b2.putString("startingTime", "14:00");
+        fragment2.setArguments(b2);
+
+        List<TeacherAttendFragment> list= new ArrayList<>();
+
+        list.add(fragment);
+        list.add(fragment2);
+        StudentHomeViewPagerAdapter adapter= new StudentHomeViewPagerAdapter(getSupportFragmentManager(), this, list);
+        viewPager.setVisibility(View.VISIBLE);
+        tabLayout.setVisibility(View.VISIBLE);
+        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
+
+//        task.getTeacherSchedule(getTodaysDay(), this);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-
-        Picasso.get().load("").placeholder(R.drawable.portrait).into(headerImage);
-        headerEmail.setText("123abc@gmail.com");//TODO extract from preference
     }
 
     @Override
@@ -114,21 +138,25 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        if (id!= R.id.nav_home){
+            tabLayout.setVisibility(View.GONE);
+            viewPager.setVisibility(View.GONE);
+        }
+
         if (id == R.id.nav_home) {
-            setFragment(frameLayout, new TeacherAttendFragment(), "0");
+//            startActivity(new Intent(this, AfterLoginTeacherActivity.class));
+//            finish();
+            clearAllFragmentTransactions();
+            this.recreate();
 
         } else if (id == R.id.nav_profile) {
             Fragment fragment= new TeacherProfileFragment();
 
             //TODO retreive from database and add to bundle
-            ArrayList<String> subjectList= new ArrayList<String>();
-            subjectList.add("Basic Electronics");
-            subjectList.add("Basic Electrical");
-            subjectList.add("Artificial Intelligence");
-            subjectList.add("Embedded System");
 
+            String subjectList= "Economics, OOAD, Software Engineering";
             Bundle bundle= new Bundle();
-            bundle.putStringArrayList("subjectList", subjectList);
+            bundle.putString("subjectList", subjectList);
             fragment.setArguments(bundle);
             setFragment(frameLayout, fragment, "0");
 
@@ -141,7 +169,11 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
             setFragment(frameLayout, new ChangePasswordFragment(), "0");
 
         } else if (id == R.id.nav_log_out) {
-
+            editor.remove("token");
+            editor.remove("Teacher");
+            editor.remove("user_type");
+            editor.commit();
+            startActivity(new Intent(this, BeforeLoginActivity.class));
         }
 
         drawer.closeDrawer(GravityCompat.START);
@@ -190,5 +222,16 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
             viewPager.setAdapter(adapter);
 
          }
+    }
+
+    private void setUserDetails(){
+        headerImage.setImageDrawable(getDrawable(R.drawable.portrait));
+//        Picasso.get().load("").placeholder(R.drawable.portrait).into(headerImage);
+        TeacherModel teacher= fromJsonToTeacher(preferences.getString("Teacher", ""));
+        headerEmail.setText(teacher.getEmail());
+    }
+
+    public FrameLayout getFrameLayout() {
+        return frameLayout;
     }
 }

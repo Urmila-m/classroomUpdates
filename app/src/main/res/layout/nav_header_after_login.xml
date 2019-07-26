@@ -18,7 +18,7 @@
         android:layout_width="@dimen/header_image"
         android:layout_height="@dimen/header_image"
         android:contentDescription="@string/nav_header_desc"
-        android:src="@drawable/portrait"
+        android:src="@drawable/feedback_icon"
         />
 
     <!--<TextView-->

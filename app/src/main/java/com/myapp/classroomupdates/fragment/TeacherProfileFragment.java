@@ -2,46 +2,46 @@ package com.myapp.classroomupdates.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.myapp.classroomupdates.R;
+import com.myapp.classroomupdates.activity.AfterLoginActivityStudent;
+import com.myapp.classroomupdates.activity.AfterLoginTeacherActivity;
+import com.myapp.classroomupdates.model.TeacherModel;
+import static com.myapp.classroomupdates.Globals.fromJsonToTeacher;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class TeacherProfileFragment extends Fragment {
+import static android.app.Activity.RESULT_OK;
+import static com.myapp.classroomupdates.Globals.preferences;
 
-    private ListView listView;
-    private TextView tvName, tvEmail;
+public class TeacherProfileFragment extends BaseFragment {
+
+    private TextView tvName, tvEmail, tvSubjects, tvTime, tvDepartment;
     private CircleImageView iv_teacher;
-    private Bundle bundle;
-    private List<String> subjectList;
-    private Adapter adapter;
+    private FrameLayout frameLayout;
 
     public TeacherProfileFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        bundle= getArguments();
-        if (bundle!=null){
-            subjectList= bundle.getStringArrayList("subjectList");
-        }
     }
 
     @Override
@@ -56,27 +56,50 @@ public class TeacherProfileFragment extends Fragment {
         tvName= view.findViewById(R.id.tv_teacher_name);
         tvEmail= view.findViewById(R.id.tv_teacher_email);
         iv_teacher= view.findViewById(R.id.iv_teacher_profile);
-        listView= view.findViewById(R.id.lv_teacher_subjects);
-        adapter= new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, subjectList);
+        tvSubjects= view.findViewById(R.id.tv_teacher_subjects);
+        tvTime= view.findViewById(R.id.tv_teacher_time);
+        tvDepartment= view.findViewById(R.id.tv_teacher_department);
+        frameLayout= ((AfterLoginTeacherActivity)getContext()).getFrameLayout();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        TeacherModel teacher= fromJsonToTeacher(preferences.getString("Teacher", ""));
+        String name= teacher.getShort_name().equals("")?teacher.getName():teacher.getName()+" ( "+teacher.getShort_name()+" )";
+        String time= teacher.getIs_full_timer()?"Full time Teacher":"Part Time Teacher";
+        tvName.setText(name);
+        tvEmail.setText(teacher.getEmail());
+        tvSubjects.setText(teacher.getSubjects());
+        tvTime.setText(time);
+        tvDepartment.setText(teacher.getDepartment());
+        iv_teacher.setImageResource(R.drawable.portrait);
+//        Picasso.get().load("").placeholder(R.drawable.portrait).into(iv_teacher);
 
-        if (bundle!=null){
-            tvEmail.setText(bundle.getString("email"));
-            tvName.setText(bundle.getString("name"));
-            listView.setAdapter((ArrayAdapter) adapter);
-
-            iv_teacher.setImageResource(R.drawable.portrait);
-//            Picasso.get().load("").placeholder(R.drawable.portrait).into(iv_teacher);
-        }
         iv_teacher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO let user upload photo
+                buildAlertDialog(new AlertDialog.Builder(getContext()));
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==1 && resultCode== RESULT_OK && data!=null){
+            Uri path= data.getData();
+            try {
+                ImageDisplayFragment fragment= convertPathToFragment(path);
+                ((AfterLoginTeacherActivity)getContext()).setFragment(frameLayout, fragment, "0");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        else if (requestCode==2 && resultCode== RESULT_OK && data!=null){
+            ImageDisplayFragment fragment= convertIntentDataToFragment(data);
+            ((AfterLoginTeacherActivity) getContext()).setFragment(frameLayout, fragment, "0");
+        }
     }
 }

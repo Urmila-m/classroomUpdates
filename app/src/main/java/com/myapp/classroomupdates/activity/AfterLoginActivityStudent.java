@@ -1,12 +1,10 @@
 package com.myapp.classroomupdates.activity;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,21 +21,20 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.myapp.classroomupdates.ApiBackgroundTask;
+import com.myapp.classroomupdates.Globals;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.adapter.StudentHomeViewPagerAdapter;
 import com.myapp.classroomupdates.adapter.ViewPagerAdapter;
 import com.myapp.classroomupdates.fragment.ChangePasswordFragment;
 import com.myapp.classroomupdates.fragment.FeedbackFormFragment;
-import com.myapp.classroomupdates.fragment.ImageDisplayFragment;
 import com.myapp.classroomupdates.fragment.StudentScheduleFragment;
 import com.myapp.classroomupdates.fragment.StudentHomePageFragment;
 import com.myapp.classroomupdates.fragment.StudentProfileFragment;
 import com.myapp.classroomupdates.interfaces.OnDataRetrivedListener;
-import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 import com.myapp.classroomupdates.model.StudentHomeModel;
+import com.myapp.classroomupdates.model.StudentModel;
 import com.myapp.classroomupdates.model.StudentScheduleModel;
 import com.myapp.classroomupdates.utility.NetworkUtils;
-import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -51,10 +48,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.myapp.classroomupdates.Globals.GET_DAILY_STUDENT_SCHEDULE;
 import static com.myapp.classroomupdates.Globals.GET_STUDENT_HOME;
 import static com.myapp.classroomupdates.Globals.IS_SEMESTER_END;
-import static com.myapp.classroomupdates.Globals.SELECT_IMAGE;
-import static com.myapp.classroomupdates.Globals.TAKE_PHOTO;
+import static com.myapp.classroomupdates.Globals.editor;
+import static com.myapp.classroomupdates.Globals.fromJsonToStudent;
+import static com.myapp.classroomupdates.Globals.preferences;
 
-public class AfterLoginActivityStudent extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener, OnFragmentClickListener, OnDataRetrivedListener {
+public class AfterLoginActivityStudent extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener, OnDataRetrivedListener {
 
     private FrameLayout frameLayout;
     private List<StudentScheduleModel> sundayList, mondayList;
@@ -65,7 +63,6 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
     private View feedbackTextView;
     private Toolbar toolbar;
     private NavigationView navigationView;
-    private ApiBackgroundTask task;
     private TextView headerEmail;
     private CircleImageView headerImage;
 
@@ -73,12 +70,11 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_login_student);
-        task= new ApiBackgroundTask();
 
         findView();
+        setUserDetails();
+//        headerEmail.setText(student.getEmail());
         setSupportActionBar(toolbar);
-
-//        task.getStudentHome(getTodaysDay(), this);
 
         List<StudentHomePageFragment> list= new ArrayList<>();
         StudentHomePageFragment fragment1= new StudentHomePageFragment();
@@ -99,10 +95,6 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-
-        headerImage.setImageResource(R.drawable.portrait);
-//        Picasso.get().load("jkdsjfk").placeholder(R.drawable.portrait).into(headerImage);
-        headerEmail.setText("123abc@gmail.com");//TODO extract from preference
 
         //All for the schedule. Hardcoded values
         sundayList= new ArrayList<>();
@@ -191,9 +183,11 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         }
 
         if (id == R.id.nav_home) {
-            setFragment(frameLayout, new StudentHomePageFragment(), "0");
+            finish();
+            startActivity(new Intent(this, AfterLoginActivityStudent.class));
 
         } else if (id == R.id.nav_profile) {
+            Log.e("TAG", "onNavigationItemSelected: profile");
                 setFragment(frameLayout, new StudentProfileFragment(), "0");
 
         } else if (id == R.id.nav_schedule) {
@@ -224,7 +218,11 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
             }
         }
         else if (id == R.id.nav_log_out) {
-
+            editor.remove("token");
+            editor.remove("Student");
+            editor.remove("user_type");
+            editor.commit();
+            startActivity(new Intent(this, BeforeLoginActivity.class));
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -243,43 +241,6 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         headerEmail= navigationView.getHeaderView(0).findViewById(R.id.header_email);
         feedbackTextView= LayoutInflater.from(this).inflate(R.layout.just_a_text_view_layout, null);
     }
-
-    private void clearAllFragmentTransactions(){
-        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            if (fragment != null) {
-                getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-            }
-        }
-    }
-
-    @Override
-    public void onFragmentClicked(Bundle bundle, int source_id) {
-        if (source_id== TAKE_PHOTO|| source_id== SELECT_IMAGE){
-            ImageDisplayFragment fragment= new ImageDisplayFragment();
-            fragment.setArguments(bundle);
-            setFragment(frameLayout, fragment, "0");
-        }
-        else if (source_id== R.id.btn_change_image){
-            //TODO upload image to server
-            setFragment(frameLayout, new StudentProfileFragment(), "0");
-        }
-
-        else if (source_id== R.id.btn_feedback_submit){
-            //TODO submit the feedback to server
-        }
-
-        else if (source_id== R.id.btn_change_password){
-//            if (NetworkUtils.isNetworkConnected(this)){
-//                //TODO change password in server
-//            }
-//            else {
-//                showSnackbar("password change failed");
-//            }
-            setFragment(frameLayout, new StudentHomePageFragment(), "0");
-
-        }
-    }
-
 
     @Override
     public void onDataRetrieved(Bundle bundle, String source_id) {
@@ -308,4 +269,14 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
 
     }
 
+    private void setUserDetails(){
+        StudentModel student= fromJsonToStudent(preferences.getString("Student", ""));
+        headerEmail.setText(student.getEmail());
+        headerImage.setImageResource(R.drawable.portrait);
+//        Picasso.get().load("jkdsjfk").placeholder(R.drawable.portrait).into(headerImage);
+    }
+
+    public FrameLayout getFrameLayout() {
+        return frameLayout;
+    }
 }

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.adapter.IntroSliderAdapter;
 
+import static com.myapp.classroomupdates.Globals.editor;
 import static com.myapp.classroomupdates.Globals.firstInstall;
 
 public class IntroSlideActivity extends PreferenceInitializingActivity {

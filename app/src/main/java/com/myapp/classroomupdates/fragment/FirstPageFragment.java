@@ -10,25 +10,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
+import com.myapp.classroomupdates.activity.BeforeLoginActivity;
 import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 import com.myapp.classroomupdates.R;
+import com.myapp.classroomupdates.utility.NetworkUtils;
 
 public class FirstPageFragment extends Fragment implements View.OnClickListener {
 
     private Button btnLogin, btnSignUp;
-    private OnFragmentClickListener listener;
+    private FrameLayout frameLayout;
 
     public FirstPageFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentClickListener){
-            listener= (OnFragmentClickListener) context;
-        }
     }
 
     @Override
@@ -42,6 +37,7 @@ public class FirstPageFragment extends Fragment implements View.OnClickListener 
         super.onViewCreated(view, savedInstanceState);
         btnLogin= view.findViewById(R.id.btn_login_first);
         btnSignUp= view.findViewById(R.id.btn_sign_up_first);
+        frameLayout= ((BeforeLoginActivity)getContext()).getFrameLayout();
 
     }
 
@@ -54,11 +50,10 @@ public class FirstPageFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        if (v==btnLogin){
-            listener.onFragmentClicked(new Bundle(), btnLogin.getId());
-        }
-        else if (v==btnSignUp){
-            listener.onFragmentClicked(new Bundle(), btnSignUp.getId());
+        if (v == btnLogin) {
+            ((BeforeLoginActivity) getContext()).setFragment(frameLayout, new LoginFragment(), "0");
+        } else if (v == btnSignUp) {
+            ((BeforeLoginActivity) getContext()).setFragment(frameLayout, new SignUpFragment(), "0");
         }
     }
 }

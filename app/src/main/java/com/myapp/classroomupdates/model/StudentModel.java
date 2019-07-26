@@ -5,107 +5,117 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class StudentModel implements Serializable {
-    private String name;
-    private String email;
     private String password;
+
+    private String programme_name;
+
+    private boolean is_class_representative;
+
+    private String phone;
+
+    private String name;
+
     private String batch;
 
-    @SerializedName("programme_name")
-    private String program;
+    private String roll_number;
 
-    @SerializedName("roll_number")
-    private String roll;
+    private String email;
 
     private String group;
-//    private String ppLoc;
 
-    @Override
-    public String toString() {
-        return "StudentModel{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", batch='" + batch + '\'' +
-                ", program='" + program + '\'' +
-                ", roll='" + roll + '\'' +
-                ", group='" + group + '\'' +
-//                ", ppLoc='" + ppLoc + '\'' +
-                '}';
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
+    public String getPassword ()
+    {
         return password;
     }
 
-    public String getBatch() {
+    public void setPassword (String password)
+    {
+        this.password = password;
+    }
+
+    public String getProgramme_name ()
+    {
+        return programme_name;
+    }
+
+    public void setProgramme_name (String programme_name)
+    {
+        this.programme_name = programme_name;
+    }
+
+    public boolean getIs_class_representative ()
+    {
+        return is_class_representative;
+    }
+
+    public void setIs_class_representative (boolean is_class_representative)
+    {
+        this.is_class_representative = is_class_representative;
+    }
+
+    public String getPhone ()
+    {
+        return phone;
+    }
+
+    public void setPhone (String phone)
+    {
+        this.phone = phone;
+    }
+
+    public String getName ()
+    {
+        return name;
+    }
+
+    public void setName (String name)
+    {
+        this.name = name;
+    }
+
+    public String getBatch ()
+    {
         return batch;
     }
 
-    public String getProgram() {
-        return program;
+    public void setBatch (String batch)
+    {
+        this.batch = batch;
     }
 
-    public String getRoll() {
-        return roll;
+    public String getRoll_number ()
+    {
+        return roll_number;
     }
 
-    public String getGroup() {
+    public void setRoll_number (String roll_number)
+    {
+        this.roll_number = roll_number;
+    }
+
+    public String getEmail ()
+    {
+        return email;
+    }
+
+    public void setEmail (String email)
+    {
+        this.email = email;
+    }
+
+    public String getGroup ()
+    {
         return group;
     }
 
-//    public String getPpLoc() {
-//        return ppLoc;
-//    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setBatch(String batch) {
-        this.batch = batch;
-    }
-
-    public void setProgram(String program) {
-        this.program = program;
-    }
-
-    public void setRoll(String roll) {
-        this.roll = roll;
-    }
-
-    public void setGroup(String group) {
+    public void setGroup (String group)
+    {
         this.group = group;
     }
 
-//    public void setPpLoc(String ppLoc) {
-//        this.ppLoc = ppLoc;
-//    }
-
-    public StudentModel(String name, String email, String password, String batch, String program, String roll, String group) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.batch = batch;
-        this.program = program;
-        this.roll = roll;
-        this.group = group;
-//        this.ppLoc = ppLoc;
+    @Override
+    public String toString()
+    {
+        return "StudentModel [password = "+password+", programme_name = "+programme_name+", is_class_representative = "+is_class_representative+", phone = "+phone+", name = "+name+", batch = "+batch+", roll_number = "+roll_number+", email = "+email+", group = "+group+"]";
     }
-
 }

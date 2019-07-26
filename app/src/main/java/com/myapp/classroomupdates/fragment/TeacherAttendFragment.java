@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,18 +31,16 @@ public class TeacherAttendFragment extends Fragment {
     private TextInputLayout tilMessage;
     private TimePicker timePicker;
     private Button btnSubmit;
-    private OnFragmentClickListener listener;
     private Bundle bundle;
     private String subject, startingTime;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        bundle= getArguments();
-        subject= bundle.getString("subject");
-        startingTime= bundle.getString("startingTime");
-        if (context instanceof OnFragmentClickListener){
-            listener= (OnFragmentClickListener) context;
+        if (getArguments()!=null) {
+            bundle = getArguments();
+            subject = bundle.getString("subject");
+            startingTime = bundle.getString("startingTime");
         }
     }
 
@@ -74,33 +73,21 @@ public class TeacherAttendFragment extends Fragment {
         tvsubject.setText(subject);
         tvExpectedTime.setText(startingTime);//TODO server bata time extract garera show garne
 
-        rbNotAttend.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        rbAttend.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    message.setVisibility(View.VISIBLE);
-                    tilMessage.setVisibility(View.VISIBLE);
-                    timePicker.setVisibility(GONE);
+                    tilMessage.setVisibility(View.GONE);
+                    message.setVisibility(GONE);
+                    timePicker.setVisibility(View.VISIBLE);
                 }
                 else {
-                    message.setVisibility(GONE);
-                    tilMessage.setVisibility(GONE);
-                    timePicker.setVisibility(View.VISIBLE);
+                    tilMessage.setVisibility(View.VISIBLE);
+                    message.setVisibility(View.VISIBLE);
+                    timePicker.setVisibility(View.GONE);
                 }
             }
         });
-
-//        rbAttend.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked){
-//                    timePicker.setVisibility(GONE);
-//                }
-//                else {
-//                    timePicker.setVisibility(View.VISIBLE);
-//                }
-//            }
-//        });
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,7 +105,8 @@ public class TeacherAttendFragment extends Fragment {
                     String message= tilMessage.getEditText().getText().toString();
                     b.putString("message", message);
                 }
-                listener.onFragmentClicked(b, btnSubmit.getId());
+                //TODO do something display what teacher filled may be
+//                listener.onFragmentClicked(b, btnSubmit.getId());
             }
         });
     }

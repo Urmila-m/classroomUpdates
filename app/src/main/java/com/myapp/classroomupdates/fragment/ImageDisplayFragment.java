@@ -16,11 +16,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.myapp.classroomupdates.Globals;
 import com.myapp.classroomupdates.R;
+import com.myapp.classroomupdates.activity.AfterLoginActivityStudent;
+import com.myapp.classroomupdates.activity.AfterLoginTeacherActivity;
 import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 
 /**
@@ -32,7 +35,7 @@ public class ImageDisplayFragment extends Fragment {
     private Button button;
     private Bundle bundle;
     private Bitmap bitmap;
-    private OnFragmentClickListener listener;
+    private FrameLayout frameLayout;
 
     public ImageDisplayFragment() {
         // Required empty public constructor
@@ -41,9 +44,6 @@ public class ImageDisplayFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentClickListener){
-            listener= (OnFragmentClickListener) context;
-        }
         bundle= getArguments();
         byte[] byteArray= bundle.getByteArray("imageByte");
         bitmap= byteToBitmap(byteArray);
@@ -60,6 +60,12 @@ public class ImageDisplayFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         imageView= view.findViewById(R.id.iv_change_image);
         button= view.findViewById(R.id.btn_change_image);
+        if (getContext() instanceof AfterLoginActivityStudent) {
+            frameLayout = ((AfterLoginActivityStudent) getContext()).getFrameLayout();
+        }
+        else if (getContext() instanceof AfterLoginTeacherActivity){
+            frameLayout= ((AfterLoginTeacherActivity) getContext()).getFrameLayout();
+        }
     }
 
     @Override
@@ -76,8 +82,13 @@ public class ImageDisplayFragment extends Fragment {
                 else {
                     Toast.makeText(getContext(), "No write permissions!!", Toast.LENGTH_SHORT).show();
                 }
-                listener.onFragmentClicked(new Bundle(), button.getId());
                 //TODO upload image to server
+                if (getContext() instanceof AfterLoginActivityStudent) {
+                    ((AfterLoginActivityStudent) getContext()).setFragment(frameLayout, new StudentProfileFragment(), "0");
+                }
+                else if (getContext() instanceof AfterLoginTeacherActivity){
+                    ((AfterLoginTeacherActivity) getContext()).setFragment(frameLayout, new TeacherProfileFragment(), "0");
+                }
             }
         });
     }

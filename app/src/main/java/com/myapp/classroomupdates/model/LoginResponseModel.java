@@ -2,11 +2,21 @@ package com.myapp.classroomupdates.model;
 
 public class LoginResponseModel {
     String token;
+    String user_type;
     StudentModel student_detail;
     TeacherModel teacher_detail;
 
-    public LoginResponseModel(String token, StudentModel student_detail, TeacherModel teacher_detail) {
+    public String getUser_type() {
+        return user_type;
+    }
+
+    public void setUser_type(String user_type) {
+        this.user_type = user_type;
+    }
+
+    public LoginResponseModel(String token, String user_type, StudentModel student_detail, TeacherModel teacher_detail) {
         this.token = token;
+        this.user_type= user_type;
         this.student_detail = student_detail;
         this.teacher_detail = teacher_detail;
     }

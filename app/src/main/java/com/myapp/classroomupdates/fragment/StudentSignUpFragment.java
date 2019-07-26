@@ -2,6 +2,7 @@ package com.myapp.classroomupdates.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,15 +17,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.myapp.classroomupdates.R;
+import com.myapp.classroomupdates.activity.AfterLoginActivityStudent;
+import com.myapp.classroomupdates.activity.BeforeLoginActivity;
 import com.myapp.classroomupdates.interfaces.MultipleEditTextWatcher;
 import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
+import com.myapp.classroomupdates.utility.NetworkUtils;
 
 import static com.myapp.classroomupdates.Globals.getStringFromTIL;
 import static com.myapp.classroomupdates.Globals.isEmpty;
+import static com.myapp.classroomupdates.Globals.showSnackbar;
 
 public class StudentSignUpFragment extends Fragment {
 
-    private OnFragmentClickListener listener;
     private TextInputLayout tilBatch, tilRoll, tilGroup;
     private Spinner program;
     private Button btnSubmit;
@@ -37,14 +41,6 @@ public class StudentSignUpFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.student_sign_up, container, false);
         return view;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentClickListener){
-            listener= (OnFragmentClickListener) context;
-        }
     }
 
     @Override
@@ -67,29 +63,38 @@ public class StudentSignUpFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (tilBatch.getError()== null && tilRoll.getError()== null && tilGroup.getError()== null) {
-                    if (!isEmpty(tilBatch.getEditText().getText().toString())&&
-                            !isEmpty(tilRoll.getEditText().getText().toString())&&
-                            !isEmpty(getStringFromTIL(tilGroup))) {
+                    if (StudentSignUpFragment.this.isValidData()) {
                         String batch = tilBatch.getEditText().getText().toString();
                         int position = program.getSelectedItemPosition();
                         String programOptions[] = {"Computer", "Electrical", "Electronics", "Civil", "Mechanical"};
                         String program = programOptions[position];
                         String roll = tilRoll.getEditText().getText().toString();
                         String group= getStringFromTIL(tilGroup);
-                        Bundle b = new Bundle();
-                        b.putString("batch", batch);
-                        b.putString("roll", roll);
-                        b.putString("program", program);
-                        b.putString("group", group);
-                        listener.onFragmentClicked(b, btnSubmit.getId());
+                        if (NetworkUtils.isNetworkConnected(getContext())) {
+                            //TODO upload to server
+                            startActivity(new Intent(getContext(), AfterLoginActivityStudent.class));
+                        }
+                        else {
+                            showSnackbar(v, "Registration failed!");
+                        }
                     }
                     else {
-                        Toast.makeText(getContext(), "Roll or batch can't be empty!!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Make sure that there are no errors and Roll or batch can't be empty!!", Toast.LENGTH_LONG).show();
                     }
                 }
-            }
         });
 
+    }
+
+    private boolean isValidData(){
+        if (tilBatch.getError()== null && tilRoll.getError()== null && tilGroup.getError()== null &&
+                !isEmpty(tilBatch.getEditText().getText().toString())&&
+                !isEmpty(tilRoll.getEditText().getText().toString())&&
+                !isEmpty(getStringFromTIL(tilGroup))){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

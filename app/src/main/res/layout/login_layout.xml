@@ -73,25 +73,25 @@
             android:text="@string/forgot_password"
             android:textColor="@color/colorAccent"/>
 
-        <RadioGroup
-            android:id="@+id/rg_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+        <!--<RadioGroup-->
+            <!--android:id="@+id/rg_login"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--&gt;-->
 
-            <RadioButton
-                android:id="@+id/rb_teacher_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/teacher" />
+            <!--<RadioButton-->
+                <!--android:id="@+id/rb_teacher_login"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:checked="true"-->
+                <!--android:text="@string/teacher" />-->
 
-            <RadioButton
-                android:id="@+id/rb_student_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/student" />
-        </RadioGroup>
+            <!--<RadioButton-->
+                <!--android:id="@+id/rb_student_login"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/student" />-->
+        <!--</RadioGroup>-->
 
         <Button
             android:id="@+id/btn_login"

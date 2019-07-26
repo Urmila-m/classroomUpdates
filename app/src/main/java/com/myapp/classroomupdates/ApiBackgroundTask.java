@@ -190,7 +190,7 @@ public class ApiBackgroundTask {
     public  void getTeacherDetailsBody()
     {
         TeacherModel model=new TeacherModel();
-        model.username="ooad@gmail.com";
+//        model.username="ooad@gmail.com";
         model.setPassword("687569");
         apiInterface.getTeacherDetailsBody(model)
                 .enqueue(

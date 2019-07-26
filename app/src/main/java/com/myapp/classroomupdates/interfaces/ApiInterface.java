@@ -30,6 +30,11 @@ import retrofit2.http.POST;
 
 public interface ApiInterface {
 
+    @POST("login/")
+    @FormUrlEncoded
+    Call<LoginResponseModel> getUserDetails(@Field("username") String email,
+                                            @Field("password") String password);
+
     @GET("")//api url
     @FormUrlEncoded
     Call<List<StudentScheduleModel>> getStudentDailySchedule(@Field("day") String day,

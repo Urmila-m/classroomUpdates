@@ -6,86 +6,139 @@ import java.io.Serializable;
 import java.util.List;
 
 public class TeacherModel implements Serializable {
+        private String password;
 
-    private String email;
-    private String name;
-    private String phone;
-    private String password;
-    public String username;
-//    @SerializedName("user_type")
-//    private String ppLoc;
-    private String subjects;
+        private String phone;
 
-    public String getPhone() {
+        private String subjects;
+
+        private String name;
+
+        private boolean is_full_timer;
+
+        private String short_name;
+
+//        private String id;
+
+        private String department;
+
+        private String user;
+
+        private String email;
+
+        public String getPassword ()
+        {
+            return password;
+        }
+
+        public void setPassword (String password)
+        {
+            this.password = password;
+        }
+
+        public String getPhone ()
+    {
         return phone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+        public void setPhone (String phone)
+        {
+            this.phone = phone;
+        }
 
-    public TeacherModel(String email, String name, String password, String phone, String subjects) {
-        this.email = email;
-        this.name = name;
-        this.password = password;
-//        this.ppLoc = ppLoc;
-        this.phone= phone;
-        this.subjects = subjects;
-    }
+        public String getSubjects ()
+        {
+            return subjects;
+        }
 
-    public TeacherModel()
+        public void setSubjects (String subjects)
+        {
+            this.subjects = subjects;
+        }
+
+        public String getName ()
+        {
+            return name;
+        }
+
+        public void setName (String name)
+        {
+            this.name = name;
+        }
+
+        public boolean getIs_full_timer ()
+        {
+            return is_full_timer;
+        }
+
+        public void setIs_full_timer (boolean is_full_timer)
+        {
+            this.is_full_timer = is_full_timer;
+        }
+
+        public String getShort_name ()
     {
-
+        if (short_name==null){
+            return "";
+        }
+        else {
+            return short_name;
+        }
     }
 
-    public String getEmail() {
-        return email;
+        public void setShort_name (String short_name)
+        {
+            this.short_name = short_name;
+        }
+
+//        public String getId ()
+//        {
+//            return id;
+//        }
+
+//        public void setId (String id)
+//        {
+//            this.id = id;
+//        }
+
+        public String getDepartment ()
+    {
+        if (department==null){
+            return "";
+        }
+        else {
+            return department;
+        }
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+        public void setDepartment (String department)
+        {
+            this.department = department;
+        }
 
-    public String getName() {
-        return name;
-    }
+        public String getUser ()
+        {
+            return user;
+        }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+        public void setUser (String user)
+        {
+            this.user = user;
+        }
 
-    public String getPassword() {
-        return password;
-    }
+        public String getEmail ()
+        {
+            return email;
+        }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+        public void setEmail (String email)
+        {
+            this.email = email;
+        }
 
-//    public String getPpLoc() {
-//        return ppLoc;
-//    }
-//
-//    public void setPpLoc(String ppLoc) {
-//        this.ppLoc = ppLoc;
-//    }
-
-    public String getSubjects() {
-        return subjects;
-    }
-
-    public void setSubjects(String subjects) {
-        this.subjects = subjects;
-    }
-
-    @Override
-    public String toString() {
-        return "TeacherModel{" +
-                "email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-//                ", ppLoc='" + ppLoc + '\'' +
-                ", subjects=" + subjects +
-                '}';
-    }
+        @Override
+        public String toString()
+        {
+            return "TeacherModel [password = "+password+", phone = "+phone+", subjects = "+subjects+", name = "+name+", is_full_timer = "+is_full_timer+", short_name = "+short_name+", department = "+department+", user = "+user+", email = "+email+"]";
+        }
 }
