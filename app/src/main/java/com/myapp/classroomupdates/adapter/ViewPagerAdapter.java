@@ -5,25 +5,24 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.myapp.classroomupdates.fragment.StudentScheduleFragment;
-import com.myapp.classroomupdates.fragment.TeacherScheduleFragment;
+import com.myapp.classroomupdates.fragment.ScheduleFragment;
 
 import java.util.List;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    private List<StudentScheduleFragment> fragmentList1;
-    private List<TeacherScheduleFragment> fragmentList2;
+    private List<ScheduleFragment> fragmentList1;
+//    private List<TeacherScheduleFragment> fragmentList2;
 
-    public ViewPagerAdapter(FragmentManager fm, List<StudentScheduleFragment> list) {
+    public ViewPagerAdapter(FragmentManager fm, List<ScheduleFragment> list) {
         super(fm);
         this.fragmentList1 = list;
     }
 
-    public ViewPagerAdapter(List<TeacherScheduleFragment> list, FragmentManager fm) {
-        super(fm);
-        this.fragmentList2 = list;
-    }
+//    public ViewPagerAdapter(List<TeacherScheduleFragment> list, FragmentManager fm) {
+//        super(fm);
+////        this.fragmentList2 = list;
+//    }
 
     @Override
     public Fragment getItem(int i) {
@@ -32,9 +31,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             fragment= fragmentList1.get(i);
 
         }
-        else if (fragmentList2!=null){
-            fragment= fragmentList2.get(i);
-        }
+//        else if (fragmentList2!=null){
+//            fragment= fragmentList2.get(i);
+//        }
         return fragment;
     }
 

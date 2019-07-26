@@ -1,5 +1,5 @@
 package com.myapp.classroomupdates.interfaces;
-
+//used nowhere at the moment
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 

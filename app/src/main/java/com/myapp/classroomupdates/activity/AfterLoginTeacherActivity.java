@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,19 +22,26 @@ import android.widget.TextView;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.adapter.StudentHomeViewPagerAdapter;
 import com.myapp.classroomupdates.fragment.ChangePasswordFragment;
+import com.myapp.classroomupdates.fragment.ScheduleFragment;
 import com.myapp.classroomupdates.fragment.TeacherAttendFragment;
 import com.myapp.classroomupdates.fragment.TeacherProfileFragment;
 import com.myapp.classroomupdates.interfaces.OnDataRetrivedListener;
+import com.myapp.classroomupdates.model.ScheduleModel;
 import com.myapp.classroomupdates.model.TeacherModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.myapp.classroomupdates.Globals.GET_DAILY_TEACHER_SCHEDULE;
+import static com.myapp.classroomupdates.Globals.apiInterface;
 import static com.myapp.classroomupdates.Globals.editor;
 import static com.myapp.classroomupdates.Globals.fromJsonToTeacher;
+import static com.myapp.classroomupdates.Globals.getTodaysDateStringFormat;
 import static com.myapp.classroomupdates.Globals.preferences;
 
 public class AfterLoginTeacherActivity extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -141,8 +149,24 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
             setFragment(frameLayout, new TeacherProfileFragment(), "0");
 
         } else if (id == R.id.nav_schedule) {
-            //TODO same as student schedule, just replace teacher with student program+sem
+            apiInterface.getUserRoutine(preferences.getString("token", ""), getTodaysDateStringFormat())
+                    .enqueue(new Callback<List<ScheduleModel>>() {
+                        @Override
+                        public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
+                            if (response.isSuccessful()){
+                                Log.e("TAG", "onResponse: successful" );
+                                sendRoutineResponseToFragment(response, new ScheduleFragment(), frameLayout);
+                            }
+                            else {
+                                Log.e("TAG", "onResponse:unsuccessful "+response.message());
+                            }
+                        }
 
+                        @Override
+                        public void onFailure(Call<List<ScheduleModel>> call, Throwable t) {
+                            Log.e("TAG", "onFailure: "+t.getMessage());
+                        }
+                    });
         } else if (id == R.id.nav_feedback) {
 
         } else if (id == R.id.nav_change_password) {

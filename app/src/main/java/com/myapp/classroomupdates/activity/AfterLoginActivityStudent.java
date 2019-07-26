@@ -22,18 +22,15 @@ import android.widget.TextView;
 
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.adapter.StudentHomeViewPagerAdapter;
-import com.myapp.classroomupdates.adapter.ViewPagerAdapter;
 import com.myapp.classroomupdates.fragment.ChangePasswordFragment;
 import com.myapp.classroomupdates.fragment.FeedbackFormFragment;
-import com.myapp.classroomupdates.fragment.StudentScheduleFragment;
+import com.myapp.classroomupdates.fragment.ScheduleFragment;
 import com.myapp.classroomupdates.fragment.StudentHomePageFragment;
 import com.myapp.classroomupdates.fragment.StudentProfileFragment;
-import com.myapp.classroomupdates.interfaces.OnDataRetrivedListener;
 import com.myapp.classroomupdates.model.ScheduleModel;
 import com.myapp.classroomupdates.model.StudentModel;
 import com.myapp.classroomupdates.utility.NetworkUtils;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +39,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.myapp.classroomupdates.Globals.GET_DAILY_STUDENT_SCHEDULE;
-import static com.myapp.classroomupdates.Globals.GET_STUDENT_HOME;
 import static com.myapp.classroomupdates.Globals.IS_SEMESTER_END;
 import static com.myapp.classroomupdates.Globals.apiInterface;
 import static com.myapp.classroomupdates.Globals.editor;
@@ -55,7 +50,7 @@ import static com.myapp.classroomupdates.Globals.showSnackbar;
 public class AfterLoginActivityStudent extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private FrameLayout frameLayout;
-    private ArrayList<StudentScheduleFragment> fragmentList;
+    private ArrayList<ScheduleFragment> fragmentList;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private DrawerLayout drawer;
@@ -111,22 +106,22 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
 //        mondayList.add(schedule1);
 //        mondayList.add(schedule1);
 //
-//        StudentScheduleFragment scheduleFragment1= new StudentScheduleFragment();
+//        ScheduleFragment scheduleFragment1= new ScheduleFragment();
 //        Bundle b= new Bundle();
 //        b.putSerializable("scheduleList", (Serializable) sundayList);
 //        scheduleFragment1.setArguments(b);
 //
-//        StudentScheduleFragment scheduleFragment3= new StudentScheduleFragment();
+//        ScheduleFragment scheduleFragment3= new ScheduleFragment();
 //        Bundle b3= new Bundle();
 //        b3.putSerializable("scheduleList", (Serializable) sundayList);
 //        scheduleFragment3.setArguments(b3);
 //
-//        StudentScheduleFragment scheduleFragment2= new StudentScheduleFragment();
+//        ScheduleFragment scheduleFragment2= new ScheduleFragment();
 //        Bundle b2= new Bundle();
 //        b2.putSerializable("scheduleList", (Serializable) mondayList);
 //        scheduleFragment2.setArguments(b2);
 //
-//        fragmentList= new ArrayList<StudentScheduleFragment>();
+//        fragmentList= new ArrayList<ScheduleFragment>();
 //
 //        fragmentList.add(scheduleFragment1);
 //        fragmentList.add(scheduleFragment2);
@@ -198,14 +193,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                             @Override
                             public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
                                 if (response.isSuccessful()) {
-                                    Log.e("TAG", "onResponse: successful");
-                                    ArrayList<ScheduleModel> list = (ArrayList<ScheduleModel>) response.body();
-                                    Log.e("TAG", "onResponse: list null?"+(list==null));
-                                    StudentScheduleFragment fragment = new StudentScheduleFragment();
-                                    Bundle b = new Bundle();
-                                    b.putSerializable("scheduleList", list);
-                                    fragment.setArguments(b);
-                                    setFragment(frameLayout, fragment, "0");
+                                    sendRoutineResponseToFragment(response, new ScheduleFragment(), frameLayout);
                                 } else {
                                     Log.e("TAG", "onResponse: " + response.message());
                                 }

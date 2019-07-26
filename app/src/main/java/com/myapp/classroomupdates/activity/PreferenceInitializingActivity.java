@@ -8,9 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+import com.myapp.classroomupdates.model.ScheduleModel;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import retrofit2.Response;
 
 public class PreferenceInitializingActivity extends AppCompatActivity {
 
@@ -35,6 +41,14 @@ public class PreferenceInitializingActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().remove(fragment).commit();
             }
         }
+    }
+
+    public void sendRoutineResponseToFragment(Response<List<ScheduleModel>> response, Fragment fragment, FrameLayout frameLayout){
+        ArrayList<ScheduleModel> list = (ArrayList<ScheduleModel>) response.body();
+        Bundle b = new Bundle();
+        b.putSerializable("scheduleList", list);
+        fragment.setArguments(b);
+        setFragment(frameLayout, fragment, "0");
     }
 
 }

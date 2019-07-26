@@ -174,4 +174,5 @@ public class Globals extends Application {
         TeacherModel teacher= gson.fromJson(json, TeacherModel.class);
         return teacher;
     }
+
 }

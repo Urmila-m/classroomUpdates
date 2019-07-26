@@ -32,7 +32,7 @@ import static com.myapp.classroomupdates.Globals.apiInterface;
 import static com.myapp.classroomupdates.Globals.getTodaysDay;
 import static com.myapp.classroomupdates.Globals.preferences;
 
-public class StudentScheduleFragment extends Fragment {
+public class ScheduleFragment extends Fragment {
 
     RecyclerView recyclerView;
     TextView tvDay;
@@ -41,7 +41,7 @@ public class StudentScheduleFragment extends Fragment {
     LinearLayoutManager linearLayoutManager;
     Bundle bundle;
 
-    public StudentScheduleFragment() {
+    public ScheduleFragment() {
         // Required empty public constructor
     }
 
