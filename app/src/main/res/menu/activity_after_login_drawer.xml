@@ -15,7 +15,7 @@
         <item
             android:id="@+id/nav_schedule"
             android:icon="@drawable/schedule_icon"
-            android:title="@string/schedule" />
+            android:title="@string/today_schedule" />
 
         <item
             android:id="@+id/nav_attendance"

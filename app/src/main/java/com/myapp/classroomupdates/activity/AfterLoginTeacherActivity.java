@@ -10,35 +10,24 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.myapp.classroomupdates.ApiBackgroundTask;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.adapter.StudentHomeViewPagerAdapter;
 import com.myapp.classroomupdates.fragment.ChangePasswordFragment;
-import com.myapp.classroomupdates.fragment.StudentHomePageFragment;
-import com.myapp.classroomupdates.fragment.StudentProfileFragment;
 import com.myapp.classroomupdates.fragment.TeacherAttendFragment;
 import com.myapp.classroomupdates.fragment.TeacherProfileFragment;
 import com.myapp.classroomupdates.interfaces.OnDataRetrivedListener;
-import com.myapp.classroomupdates.model.TeacherAttendModel;
 import com.myapp.classroomupdates.model.TeacherModel;
-import com.myapp.classroomupdates.model.TeacherScheduleModel;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.security.auth.Subject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -47,7 +36,7 @@ import static com.myapp.classroomupdates.Globals.editor;
 import static com.myapp.classroomupdates.Globals.fromJsonToTeacher;
 import static com.myapp.classroomupdates.Globals.preferences;
 
-public class AfterLoginTeacherActivity extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener, OnDataRetrivedListener {
+public class AfterLoginTeacherActivity extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private FrameLayout frameLayout;
     private NavigationView navigationView;
@@ -56,7 +45,6 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private StudentHomeViewPagerAdapter adapter;
-    private ApiBackgroundTask task;
     private TextView headerEmail;
     private CircleImageView headerImage;
 
@@ -150,15 +138,7 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
             this.recreate();
 
         } else if (id == R.id.nav_profile) {
-            Fragment fragment= new TeacherProfileFragment();
-
-            //TODO retreive from database and add to bundle
-
-            String subjectList= "Economics, OOAD, Software Engineering";
-            Bundle bundle= new Bundle();
-            bundle.putString("subjectList", subjectList);
-            fragment.setArguments(bundle);
-            setFragment(frameLayout, fragment, "0");
+            setFragment(frameLayout, new TeacherProfileFragment(), "0");
 
         } else if (id == R.id.nav_schedule) {
             //TODO same as student schedule, just replace teacher with student program+sem
@@ -193,36 +173,36 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
         viewPager= frameLayout.findViewById(R.id.viewpager_schedule);
     }
 
-    @Override
-    public void onDataRetrieved(Bundle bundle, String source_id) {
-        if (source_id.equals(GET_DAILY_TEACHER_SCHEDULE)){
-            List<TeacherScheduleModel> list= (List<TeacherScheduleModel>) bundle.getSerializable("DailyTeacherSchedule");
-            List<TeacherAttendFragment> fragmentList= new ArrayList<>();
-            ArrayList<String> subjectList= new ArrayList<>();
-            ArrayList<String> startingTimeList= new ArrayList<>();
-            for (TeacherScheduleModel s: list
-                 ) {
-               subjectList.add(s.getSubject());
-               startingTimeList.add(s.getStartTime());
-            }
-
-            for (int i=0; i<subjectList.size(); i++){
-                TeacherAttendFragment fragment= new TeacherAttendFragment();
-                Bundle b= new Bundle();
-                b.putString("subject", subjectList.get(i));
-                b.putString("startingTime", startingTimeList.get(i));
-                fragment.setArguments(b);
-                fragmentList.add(fragment);
-            }
-            adapter= new StudentHomeViewPagerAdapter(getSupportFragmentManager(), this, fragmentList);
-            viewPager.setVisibility(View.VISIBLE);
-            tabLayout.setVisibility(View.VISIBLE);
-            tabLayout.setupWithViewPager(viewPager);
-
-            viewPager.setAdapter(adapter);
-
-         }
-    }
+//    @Override
+//    public void onDataRetrieved(Bundle bundle, String source_id) {
+//        if (source_id.equals(GET_DAILY_TEACHER_SCHEDULE)){
+//            List<TeacherScheduleModel> list= (List<TeacherScheduleModel>) bundle.getSerializable("DailyTeacherSchedule");
+//            List<TeacherAttendFragment> fragmentList= new ArrayList<>();
+//            ArrayList<String> subjectList= new ArrayList<>();
+//            ArrayList<String> startingTimeList= new ArrayList<>();
+//            for (TeacherScheduleModel s: list
+//                 ) {
+//               subjectList.add(s.getSubject());
+//               startingTimeList.add(s.getStartTime());
+//            }
+//
+//            for (int i=0; i<subjectList.size(); i++){
+//                TeacherAttendFragment fragment= new TeacherAttendFragment();
+//                Bundle b= new Bundle();
+//                b.putString("subject", subjectList.get(i));
+//                b.putString("startingTime", startingTimeList.get(i));
+//                fragment.setArguments(b);
+//                fragmentList.add(fragment);
+//            }
+//            adapter= new StudentHomeViewPagerAdapter(getSupportFragmentManager(), this, fragmentList);
+//            viewPager.setVisibility(View.VISIBLE);
+//            tabLayout.setVisibility(View.VISIBLE);
+//            tabLayout.setupWithViewPager(viewPager);
+//
+//            viewPager.setAdapter(adapter);
+//
+//         }
+//    }
 
     private void setUserDetails(){
         headerImage.setImageDrawable(getDrawable(R.drawable.portrait));

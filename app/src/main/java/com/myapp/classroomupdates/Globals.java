@@ -1,26 +1,15 @@
 package com.myapp.classroomupdates;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.myapp.classroomupdates.interfaces.ApiInterface;
 import com.myapp.classroomupdates.model.StudentModel;
 import com.myapp.classroomupdates.model.TeacherModel;
@@ -30,6 +19,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -144,6 +136,23 @@ public class Globals extends Application {
         editor.putString("Teacher", toJson(teacher));
         editor.putString("token", token);
         editor.commit();
+    }
+
+
+    public static String getTodaysDay(){
+        Calendar calendar= Calendar.getInstance();
+        Date currentDate= calendar.getTime();
+        SimpleDateFormat dateFormat= new SimpleDateFormat("EEEE");
+        String day= dateFormat.format(currentDate);
+        return day;
+    }
+
+    public static String getTodaysDateStringFormat(){
+        Calendar calendar= Calendar.getInstance();
+        Date currentDate= calendar.getTime();
+        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
+        String date= dateFormat.format(currentDate);
+        return date;
     }
 
     public static String toJson(StudentModel student){

@@ -20,8 +20,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.myapp.classroomupdates.ApiBackgroundTask;
-import com.myapp.classroomupdates.Globals;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.adapter.StudentHomeViewPagerAdapter;
 import com.myapp.classroomupdates.adapter.ViewPagerAdapter;
@@ -31,31 +29,32 @@ import com.myapp.classroomupdates.fragment.StudentScheduleFragment;
 import com.myapp.classroomupdates.fragment.StudentHomePageFragment;
 import com.myapp.classroomupdates.fragment.StudentProfileFragment;
 import com.myapp.classroomupdates.interfaces.OnDataRetrivedListener;
-import com.myapp.classroomupdates.model.StudentHomeModel;
+import com.myapp.classroomupdates.model.ScheduleModel;
 import com.myapp.classroomupdates.model.StudentModel;
-import com.myapp.classroomupdates.model.StudentScheduleModel;
 import com.myapp.classroomupdates.utility.NetworkUtils;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.myapp.classroomupdates.Globals.GET_DAILY_STUDENT_SCHEDULE;
 import static com.myapp.classroomupdates.Globals.GET_STUDENT_HOME;
 import static com.myapp.classroomupdates.Globals.IS_SEMESTER_END;
+import static com.myapp.classroomupdates.Globals.apiInterface;
 import static com.myapp.classroomupdates.Globals.editor;
 import static com.myapp.classroomupdates.Globals.fromJsonToStudent;
+import static com.myapp.classroomupdates.Globals.getTodaysDateStringFormat;
 import static com.myapp.classroomupdates.Globals.preferences;
+import static com.myapp.classroomupdates.Globals.showSnackbar;
 
-public class AfterLoginActivityStudent extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener, OnDataRetrivedListener {
+public class AfterLoginActivityStudent extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private FrameLayout frameLayout;
-    private List<StudentScheduleModel> sundayList, mondayList;
     private ArrayList<StudentScheduleFragment> fragmentList;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -97,41 +96,41 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         navigationView.setNavigationItemSelectedListener(this);
 
         //All for the schedule. Hardcoded values
-        sundayList= new ArrayList<>();
-        mondayList= new ArrayList<>();
-
-        StudentScheduleModel schedule1= new StudentScheduleModel("10:15", "11:55", "Software Engineering(Theory)", "Lecture 3", "Aman Shakya");
-        StudentScheduleModel schedule2= new StudentScheduleModel("11:55", "01:35", "DBMS(Theory)", "Lecture 4", "Ranjita Gurung");
-        sundayList.add(schedule1);
-        sundayList.add(schedule2);
-        sundayList.add(schedule1);
-        sundayList.add(schedule2);
-
-        mondayList.add(schedule2);
-        mondayList.add(schedule1);
-        mondayList.add(schedule1);
-        mondayList.add(schedule1);
-
-        StudentScheduleFragment scheduleFragment1= new StudentScheduleFragment();
-        Bundle b= new Bundle();
-        b.putSerializable("scheduleList", (Serializable) sundayList);
-        scheduleFragment1.setArguments(b);
-
-        StudentScheduleFragment scheduleFragment3= new StudentScheduleFragment();
-        Bundle b3= new Bundle();
-        b3.putSerializable("scheduleList", (Serializable) sundayList);
-        scheduleFragment3.setArguments(b3);
-
-        StudentScheduleFragment scheduleFragment2= new StudentScheduleFragment();
-        Bundle b2= new Bundle();
-        b2.putSerializable("scheduleList", (Serializable) mondayList);
-        scheduleFragment2.setArguments(b2);
-
-        fragmentList= new ArrayList<StudentScheduleFragment>();
-
-        fragmentList.add(scheduleFragment1);
-        fragmentList.add(scheduleFragment2);
-        fragmentList.add(scheduleFragment3);
+//        sundayList= new ArrayList<>();
+//        mondayList= new ArrayList<>();
+//
+//        StudentScheduleModel schedule1= new StudentScheduleModel("10:15", "11:55", "Software Engineering(Theory)", "Lecture 3", "Aman Shakya");
+//        StudentScheduleModel schedule2= new StudentScheduleModel("11:55", "01:35", "DBMS(Theory)", "Lecture 4", "Ranjita Gurung");
+//        sundayList.add(schedule1);
+//        sundayList.add(schedule2);
+//        sundayList.add(schedule1);
+//        sundayList.add(schedule2);
+//
+//        mondayList.add(schedule2);
+//        mondayList.add(schedule1);
+//        mondayList.add(schedule1);
+//        mondayList.add(schedule1);
+//
+//        StudentScheduleFragment scheduleFragment1= new StudentScheduleFragment();
+//        Bundle b= new Bundle();
+//        b.putSerializable("scheduleList", (Serializable) sundayList);
+//        scheduleFragment1.setArguments(b);
+//
+//        StudentScheduleFragment scheduleFragment3= new StudentScheduleFragment();
+//        Bundle b3= new Bundle();
+//        b3.putSerializable("scheduleList", (Serializable) sundayList);
+//        scheduleFragment3.setArguments(b3);
+//
+//        StudentScheduleFragment scheduleFragment2= new StudentScheduleFragment();
+//        Bundle b2= new Bundle();
+//        b2.putSerializable("scheduleList", (Serializable) mondayList);
+//        scheduleFragment2.setArguments(b2);
+//
+//        fragmentList= new ArrayList<StudentScheduleFragment>();
+//
+//        fragmentList.add(scheduleFragment1);
+//        fragmentList.add(scheduleFragment2);
+//        fragmentList.add(scheduleFragment3);
 
     }
 
@@ -177,7 +176,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
             ((ViewGroup)feedbackTextView.getParent()).removeView(feedbackTextView);
         }
 
-        if (id!= R.id.nav_schedule|| id!= R.id.nav_home){
+        if (id!= R.id.nav_home){
             tabLayout.setVisibility(View.GONE);
             viewPager.setVisibility(View.GONE);
         }
@@ -192,15 +191,35 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
 
         } else if (id == R.id.nav_schedule) {
             //its a frame layout and to avoid the previous loaded fragment be displayed in background
-            Log.e("TAG", "nav_schedule");
             clearAllFragmentTransactions();
+            if (NetworkUtils.isNetworkConnected(this)) {
+                apiInterface.getUserRoutine("Token " + preferences.getString("token", ""), getTodaysDateStringFormat())
+                        .enqueue(new Callback<List<ScheduleModel>>() {
+                            @Override
+                            public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
+                                if (response.isSuccessful()) {
+                                    Log.e("TAG", "onResponse: successful");
+                                    ArrayList<ScheduleModel> list = (ArrayList<ScheduleModel>) response.body();
+                                    Log.e("TAG", "onResponse: list null?"+(list==null));
+                                    StudentScheduleFragment fragment = new StudentScheduleFragment();
+                                    Bundle b = new Bundle();
+                                    b.putSerializable("scheduleList", list);
+                                    fragment.setArguments(b);
+                                    setFragment(frameLayout, fragment, "0");
+                                } else {
+                                    Log.e("TAG", "onResponse: " + response.message());
+                                }
+                            }
 
-            tabLayout.setVisibility(View.VISIBLE);
-            viewPager.setVisibility(View.VISIBLE);
-
-            ViewPagerAdapter adapter= new ViewPagerAdapter(getSupportFragmentManager(), fragmentList);
-            viewPager.setAdapter(adapter);
-            tabLayout.setupWithViewPager(viewPager);
+                            @Override
+                            public void onFailure(Call<List<ScheduleModel>> call, Throwable t) {
+                                Log.e("TAG", "onFailure: " + t.getMessage());
+                            }
+                        });
+            }
+            else {
+                showSnackbar(headerEmail, "Unable to fetch routine!!");
+            }
 
         } else if (id == R.id.nav_change_password) {
             setFragment(frameLayout, new ChangePasswordFragment(), "0");
@@ -242,32 +261,32 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         feedbackTextView= LayoutInflater.from(this).inflate(R.layout.just_a_text_view_layout, null);
     }
 
-    @Override
-    public void onDataRetrieved(Bundle bundle, String source_id) {
-        if (source_id.equals(GET_STUDENT_HOME)){
-            List<StudentHomeModel> list= (List<StudentHomeModel>) bundle.getSerializable("StudentHomeList");
-            List<StudentHomePageFragment> fragmentList= new ArrayList<>();
-
-            for (StudentHomeModel s: list
-                 ) {
-                StudentHomePageFragment fragment= new StudentHomePageFragment();
-                Bundle b= new Bundle();
-                b.putSerializable("StudentHomeModel", (Serializable) s);
-                fragment.setArguments(b);
-                fragmentList.add(fragment);
-            }
-            StudentHomeViewPagerAdapter adapter= new StudentHomeViewPagerAdapter(getSupportFragmentManager(), fragmentList, this);
-            viewPager.setVisibility(View.VISIBLE);
-            tabLayout.setVisibility(View.VISIBLE);
-            viewPager.setAdapter(adapter);
-            tabLayout.setupWithViewPager(viewPager);
-        }
-
-        else if(source_id.equals(GET_DAILY_STUDENT_SCHEDULE)){
-
-        }
-
-    }
+//    @Override
+//    public void onDataRetrieved(Bundle bundle, String source_id) {
+//        if (source_id.equals(GET_STUDENT_HOME)){
+//            List<StudentHomeModel> list= (List<StudentHomeModel>) bundle.getSerializable("StudentHomeList");
+//            List<StudentHomePageFragment> fragmentList= new ArrayList<>();
+//
+//            for (StudentHomeModel s: list
+//                 ) {
+//                StudentHomePageFragment fragment= new StudentHomePageFragment();
+//                Bundle b= new Bundle();
+//                b.putSerializable("StudentHomeModel", (Serializable) s);
+//                fragment.setArguments(b);
+//                fragmentList.add(fragment);
+//            }
+//            StudentHomeViewPagerAdapter adapter= new StudentHomeViewPagerAdapter(getSupportFragmentManager(), fragmentList, this);
+//            viewPager.setVisibility(View.VISIBLE);
+//            tabLayout.setVisibility(View.VISIBLE);
+//            viewPager.setAdapter(adapter);
+//            tabLayout.setupWithViewPager(viewPager);
+//        }
+//
+//        else if(source_id.equals(GET_DAILY_STUDENT_SCHEDULE)){
+//
+//        }
+//
+//    }
 
     private void setUserDetails(){
         StudentModel student= fromJsonToStudent(preferences.getString("Student", ""));

@@ -1,29 +1,13 @@
 package com.myapp.classroomupdates.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.myapp.classroomupdates.ApiBackgroundTask;
 import com.myapp.classroomupdates.fragment.FirstPageFragment;
-import com.myapp.classroomupdates.fragment.ForgotPasswordFragment;
-import com.myapp.classroomupdates.fragment.LoginFragment;
-import com.myapp.classroomupdates.fragment.StudentSignUpFragment;
-import com.myapp.classroomupdates.interfaces.OnDataRetrivedListener;
-import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 import com.myapp.classroomupdates.R;
-import com.myapp.classroomupdates.fragment.SignUpFragment;
-import com.myapp.classroomupdates.model.TeacherModel;
-import com.myapp.classroomupdates.utility.NetworkUtils;
 
-import static com.myapp.classroomupdates.Globals.GET_TEACHER;
 import static com.myapp.classroomupdates.Globals.firstInstall;
 import static com.myapp.classroomupdates.Globals.preferences;
 
