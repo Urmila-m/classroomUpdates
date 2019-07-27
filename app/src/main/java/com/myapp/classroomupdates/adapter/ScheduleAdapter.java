@@ -14,6 +14,7 @@ import com.myapp.classroomupdates.model.ScheduleModel;
 
 import java.util.List;
 
+import static com.myapp.classroomupdates.Globals.fromJsonToTeacher;
 import static com.myapp.classroomupdates.Globals.preferences;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
@@ -57,17 +58,24 @@ public class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             h.location.setText(list.get(i).getRoom());
             if (preferences.getString("user_type", "").equals("Student")) {
                 h.teacherOrBatch.setText(list.get(i).getTeachers());
+                h.subject.setText(list.get(i).getSubject());
             }
             else if (preferences.getString("user_type", "").equals("Teacher")){
                 RoutineOfModel routine= list.get(i).getRoutine_of();
+                String myName= fromJsonToTeacher(preferences.getString("Teacher", "")).getName();
                 String year= routine.getYear();
                 String part= routine.getPart();
                 String group= routine.getGroup();
                 String program= routine.getProgramme().getShort_form();
                 String batch= program+" year:"+year+" part:"+part+" group:"+group;
                 h.teacherOrBatch.setText(batch);
+                if (myName.equals(list.get(i).getTeachers())) {
+                    h.subject.setText(list.get(i).getSubject());
+                }
+                else {
+                    h.subject.setText(list.get(i).getSubject()+"  ("+list.get(i).getTeachers()+")");
+                }
             }
-            h.subject.setText(list.get(i).getSubject());
         }
         else {
             EmptyViewHolder h= (EmptyViewHolder) viewHolder;

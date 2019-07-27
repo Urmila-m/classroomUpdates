@@ -1,37 +1,30 @@
 package com.myapp.classroomupdates.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class PostResponse implements Serializable {
-    private boolean success;
-    private String message;
+    @SerializedName("detail")
+    private String detail;
 
-    public PostResponse(boolean success, String message) {
-        this.success = success;
-        this.message = message;
+    public PostResponse(String detail) {
+        this.detail = detail;
     }
 
     @Override
     public String toString() {
         return "PostResponse{" +
-                "success=" + success +
-                ", message='" + message + '\'' +
+                "detail=" + detail +
                 '}';
     }
 
-    public String getMessage() {
-        return message;
+
+    public String getDetail() {
+        return detail;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 }

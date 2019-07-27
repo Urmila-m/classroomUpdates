@@ -15,13 +15,36 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.myapp.classroomupdates.Globals;
 import com.myapp.classroomupdates.activity.AfterLoginActivityStudent;
 import com.myapp.classroomupdates.activity.AfterLoginTeacherActivity;
 import com.myapp.classroomupdates.interfaces.MultipleEditTextWatcher;
 import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 import com.myapp.classroomupdates.R;
+import com.myapp.classroomupdates.model.ChangePasswordErrorModel;
+import com.myapp.classroomupdates.model.PostResponse;
+import com.myapp.classroomupdates.utility.NetworkUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.myapp.classroomupdates.Globals.apiInterface;
+import static com.myapp.classroomupdates.Globals.fromJsonToStudent;
+import static com.myapp.classroomupdates.Globals.fromJsonToTeacher;
+import static com.myapp.classroomupdates.Globals.getStringFromTIL;
 import static com.myapp.classroomupdates.Globals.isEmpty;
+import static com.myapp.classroomupdates.Globals.preferences;
+import static com.myapp.classroomupdates.Globals.showSnackbar;
 
 public class ChangePasswordFragment extends Fragment {
     private TextInputLayout tilCurrentPassword, tilNewPassword, tilConfirmPass;
@@ -70,23 +93,68 @@ public class ChangePasswordFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.e("TAG", "onClick: clicked" );
-                Log.e("TAG", "onClick: "+isValidData() );
                 if (isValidData()) {
-                    if (tilNewPassword.getEditText().getText().toString().equals(tilConfirmPass.getEditText().getText().toString())) {
-                        String currentPass = tilCurrentPassword.getEditText().getText().toString();
-                        String newPassword = tilNewPassword.getEditText().getText().toString();
-                        String confirmNewPass = tilNewPassword.getEditText().getText().toString();
-                        //TODO server ma change password
-                        if (getContext() instanceof AfterLoginActivityStudent) {
-//                            ((AfterLoginActivityStudent) getContext()).setFragment(frameLayout, new StudentHomePageFragment(), "0");
-                            startActivity(new Intent(getContext(), AfterLoginActivityStudent.class));
+                    if (getStringFromTIL(tilNewPassword).equals(getStringFromTIL(tilConfirmPass))) {
+                        String newPassword = getStringFromTIL(tilNewPassword);
+                        String currentPassword = getStringFromTIL(tilCurrentPassword);
+                        String password = null;
+                        if (preferences.getString("user_type", "").equals("Student")){
+                            password= fromJsonToStudent(preferences.getString("Student", "")).getPassword();
                         }
-                        else if (getContext() instanceof AfterLoginTeacherActivity){
-//                            ((AfterLoginTeacherActivity) getContext()).setFragment(frameLayout, new TeacherAttendFragment(), "0");
-                            startActivity(new Intent(getContext(), AfterLoginTeacherActivity.class));
-
+                        else if (preferences.getString("user_type", "").equals("Teacher")){
+                            password= fromJsonToTeacher(preferences.getString("Teacher", "")).getPassword();
                         }
-                    } else {
+                        if(currentPassword.equals(password)){
+                            if (NetworkUtils.isNetworkConnected(getContext())) {
+                                apiInterface.changeUserPassword("Token "+preferences.getString("token", ""), newPassword, newPassword)
+                                        .enqueue(new Callback<PostResponse>() {
+                                            @Override
+                                            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                                                if (response.isSuccessful()){
+                                                    Toast.makeText(getContext(), response.body().getDetail(), Toast.LENGTH_LONG).show();
+                                                    if (getContext() instanceof AfterLoginTeacherActivity) {
+                                                        ((AfterLoginTeacherActivity) getContext()).clearAllFragmentTransactions();
+                                                    }
+                                                    else if (getContext() instanceof AfterLoginActivityStudent){
+                                                        ((AfterLoginActivityStudent) getContext()).clearAllFragmentTransactions();
+                                                    }
+                                                    getActivity().recreate();
+                                                }
+                                                else {
+                                                    try {
+                                                        JSONObject jsonObject= new JSONObject(response.errorBody().string());
+                                                        JSONArray array= jsonObject.getJSONArray("new_password2");
+                                                        String[] arr= new String[array.length()];
+                                                        for( int i=0; i<array.length(); i++){
+                                                            arr[i]= array.getString(i);
+                                                        }
+                                                        String displayText="";
+                                                        for (String s:arr
+                                                             ) {
+                                                            displayText+=(s+"\n");
+                                                        }
+                                                        Toast.makeText(getContext(), displayText, Toast.LENGTH_SHORT).show();
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            }
+                                            @Override
+                                            public void onFailure(Call<PostResponse> call, Throwable t) {
+                                                Log.e("TAG", "onFailure: "+t.getMessage());
+                                                Toast.makeText(getContext(), "Something went wrong :(", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            } else
+                                showSnackbar(v, "Password change failed!");
+                        }
+                        else{
+                            Toast.makeText(getContext(), "Incorrect current password", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else {
                         Toast.makeText(getContext(), "Passwords don't match!!", Toast.LENGTH_SHORT).show();
                     }
                 }

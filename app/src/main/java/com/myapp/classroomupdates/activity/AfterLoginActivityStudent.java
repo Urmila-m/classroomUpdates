@@ -89,44 +89,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-
-        //All for the schedule. Hardcoded values
-//        sundayList= new ArrayList<>();
-//        mondayList= new ArrayList<>();
-//
-//        StudentScheduleModel schedule1= new StudentScheduleModel("10:15", "11:55", "Software Engineering(Theory)", "Lecture 3", "Aman Shakya");
-//        StudentScheduleModel schedule2= new StudentScheduleModel("11:55", "01:35", "DBMS(Theory)", "Lecture 4", "Ranjita Gurung");
-//        sundayList.add(schedule1);
-//        sundayList.add(schedule2);
-//        sundayList.add(schedule1);
-//        sundayList.add(schedule2);
-//
-//        mondayList.add(schedule2);
-//        mondayList.add(schedule1);
-//        mondayList.add(schedule1);
-//        mondayList.add(schedule1);
-//
-//        ScheduleFragment scheduleFragment1= new ScheduleFragment();
-//        Bundle b= new Bundle();
-//        b.putSerializable("scheduleList", (Serializable) sundayList);
-//        scheduleFragment1.setArguments(b);
-//
-//        ScheduleFragment scheduleFragment3= new ScheduleFragment();
-//        Bundle b3= new Bundle();
-//        b3.putSerializable("scheduleList", (Serializable) sundayList);
-//        scheduleFragment3.setArguments(b3);
-//
-//        ScheduleFragment scheduleFragment2= new ScheduleFragment();
-//        Bundle b2= new Bundle();
-//        b2.putSerializable("scheduleList", (Serializable) mondayList);
-//        scheduleFragment2.setArguments(b2);
-//
-//        fragmentList= new ArrayList<ScheduleFragment>();
-//
-//        fragmentList.add(scheduleFragment1);
-//        fragmentList.add(scheduleFragment2);
-//        fragmentList.add(scheduleFragment3);
-
+        navigationView.getMenu().getItem(0).setChecked(true);
     }
 
     @Override
@@ -159,14 +122,12 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         return super.onOptionsItemSelected(item);
     }
 
-
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+//        item.setChecked(true);
         if (feedbackTextView.getParent()!=null){
             ((ViewGroup)feedbackTextView.getParent()).removeView(feedbackTextView);
         }

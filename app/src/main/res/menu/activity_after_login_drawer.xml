@@ -29,13 +29,15 @@
 
     </group>
 
-    <item android:title="Settings">
+    <item android:title="@string/action_settings">
         <menu>
             <item
+                android:checkable="true"
                 android:id="@+id/nav_change_password"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="@string/change_password" />
             <item
+                android:checkable="true"
                 android:id="@+id/nav_log_out"
                 android:icon="@drawable/logout_icon"
                 android:title="@string/logout" />

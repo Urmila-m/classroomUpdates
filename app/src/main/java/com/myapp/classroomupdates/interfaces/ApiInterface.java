@@ -1,5 +1,6 @@
 package com.myapp.classroomupdates.interfaces;
 
+import com.google.gson.JsonElement;
 import com.myapp.classroomupdates.model.AttendanceModel;
 import com.myapp.classroomupdates.model.FeedbackModel;
 import com.myapp.classroomupdates.model.LoginResponseModel;
@@ -31,103 +32,11 @@ public interface ApiInterface {
     Call<List<ScheduleModel>> getUserRoutine(@Header("Authorization")String token,
                                              @Query("date") String date);
 
-//    @GET("")//api url
-//    @FormUrlEncoded
-//    Call<List<StudentScheduleModel>> getStudentDailySchedule(@Field("day") String day,
-//                                                      @Field("semester") String semester,
-//                                                      @Field("program") String program,
-//                                                      @Field("group") String group);
-//
-//    @GET("")
-//    Call<List<TeacherScheduleModel>> getteacherDailySchedule(@Field("day") String day,
-//                                                             @Field("email") String teacherEmail);
-//
-//    @GET("")
-//    @FormUrlEncoded
-//    Call<List<StudentHomeModel>> getStudentHome(@Field("day") String day,
-//                                                @Field("semester") String semester,
-//                                                @Field("program") String program,
-//                                                @Field("group") String group);
-
-    @GET("")
+    @POST("rest-auth/password/change/")
     @FormUrlEncoded
-    Call<LoginResponseModel> getStudentDetails(@Field("email") String email,
-                                               @Field("password") String password);
-
-//    @Headers({"Content-Type: application/json"})
-//    @POST("login/")
-//    @FormUrlEncoded
-//    Call<LoginResponseModel> getTeacherDetails(@Field("username") String email,
-//                                               @Field("password") String password);
-
-
-    @POST("login/")
-    @FormUrlEncoded
-    Call<ResponseBody> getTeacherDetails(@Field("username") String email,
-                                         @Field("password") String password);
-
-
-//    @POST("login/")
-//    @Headers("Content-Type: application/json")
-//    Call<LoginResponseModel> getTeacherDetailsBody(@Body TeacherModel requestBody);
-
-    @POST("")
-    @FormUrlEncoded
-    Call<PostResponse> changePassword(@Field("profession") String teacherOrStudent,
-                                      @Field("email") String email,
-                                      @Field("newPassword") String newPassword);
-//
-//    @POST("")
-//    @FormUrlEncoded
-//    Call<PostResponse> postTeacherAttend(@Field("attend") Boolean attend,
-//                                         @Field("time") String time,
-//                                         @Field("message") String message,
-//                                         @Field("email") String teacherEmail,
-//                                         @Field("subject") String subject,
-//                                         @Field("date") String date,
-//                                         @Field("semester") String semester,
-//                                         @Field("program") String program);
-
-
-//    @POST("")
-//    @FormUrlEncoded
-//    Call<PostResponse> postTeacherAttend(@Body TeacherAttendModel teacherAttendModel);
-
-    @GET("")
-    @FormUrlEncoded
-    Call<List<FeedbackModel>> getFeedback(@Field("email") String teacherEmail);//Filter using date may be, or subjects
-
-    @GET("")
-    @FormUrlEncoded
-    Call<AttendanceModel> getAttendance(@Field("email") String studentEmail,
-                                        @Field("subject") String subject);
-
-    @POST("")
-    @FormUrlEncoded
-    @Headers("Content-Type: application/json")
-    Call<PostResponse> sendFeedback(@Body FeedbackModel feedbackModelObject,
-                                    @Field("teacher") String email);
-
-    @POST("")
-    @FormUrlEncoded
-    Call<PostResponse> changePicture(@Field("encodedImageString") String encodedImageString,
-                                     @Field("email") String email,
-                                     @Field("profession") String teacherOrStudent);
-
-    @POST("")
-    @FormUrlEncoded
-    @Headers("Content-Type: application/json")
-    Call<PostResponse> registerStudent(@Body StudentModel studentObject);
-//
-//    @POST("")
-//    @FormUrlEncoded
-//    @Headers("Content-Type: application/json")
-//    Call<PostResponse> registerTeacher(@Body TeacherModel teacherObject);
-
-
-
-
-
+    Call<PostResponse> changeUserPassword(@Header("Authorization") String token,
+                                         @Field("new_password1") String new_password1,
+                                         @Field("new_password2") String new_password2);
 
 
 }

@@ -25,9 +25,9 @@ import com.myapp.classroomupdates.fragment.ChangePasswordFragment;
 import com.myapp.classroomupdates.fragment.ScheduleFragment;
 import com.myapp.classroomupdates.fragment.TeacherAttendFragment;
 import com.myapp.classroomupdates.fragment.TeacherProfileFragment;
-import com.myapp.classroomupdates.interfaces.OnDataRetrivedListener;
 import com.myapp.classroomupdates.model.ScheduleModel;
 import com.myapp.classroomupdates.model.TeacherModel;
+import com.myapp.classroomupdates.utility.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +43,7 @@ import static com.myapp.classroomupdates.Globals.editor;
 import static com.myapp.classroomupdates.Globals.fromJsonToTeacher;
 import static com.myapp.classroomupdates.Globals.getTodaysDateStringFormat;
 import static com.myapp.classroomupdates.Globals.preferences;
+import static com.myapp.classroomupdates.Globals.showSnackbar;
 
 public class AfterLoginTeacherActivity extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -88,13 +89,12 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
-//        task.getTeacherSchedule(getTodaysDay(), this);
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
     }
 
     @Override
@@ -115,12 +115,8 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -133,7 +129,7 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+//        item.setChecked(true);
         if (id!= R.id.nav_home){
             tabLayout.setVisibility(View.GONE);
             viewPager.setVisibility(View.GONE);
@@ -149,24 +145,28 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
             setFragment(frameLayout, new TeacherProfileFragment(), "0");
 
         } else if (id == R.id.nav_schedule) {
-            apiInterface.getUserRoutine(preferences.getString("token", ""), getTodaysDateStringFormat())
-                    .enqueue(new Callback<List<ScheduleModel>>() {
-                        @Override
-                        public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
-                            if (response.isSuccessful()){
-                                Log.e("TAG", "onResponse: successful" );
-                                sendRoutineResponseToFragment(response, new ScheduleFragment(), frameLayout);
+            if(NetworkUtils.isNetworkConnected(this)) {
+                apiInterface.getUserRoutine("Token " + preferences.getString("token", ""), getTodaysDateStringFormat())
+                        .enqueue(new Callback<List<ScheduleModel>>() {
+                            @Override
+                            public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
+                                if (response.isSuccessful()) {
+                                    Log.e("TAG", "onResponse: successful");
+                                    sendRoutineResponseToFragment(response, new ScheduleFragment(), frameLayout);
+                                } else {
+                                    Log.e("TAG", "onResponse:unsuccessful " + response.message());
+                                }
                             }
-                            else {
-                                Log.e("TAG", "onResponse:unsuccessful "+response.message());
-                            }
-                        }
 
-                        @Override
-                        public void onFailure(Call<List<ScheduleModel>> call, Throwable t) {
-                            Log.e("TAG", "onFailure: "+t.getMessage());
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<List<ScheduleModel>> call, Throwable t) {
+                                Log.e("TAG", "onFailure: " + t.getMessage());
+                            }
+                        });
+            }
+            else {
+                showSnackbar(navigationView, "Couldn't fetch routine");
+            }
         } else if (id == R.id.nav_feedback) {
 
         } else if (id == R.id.nav_change_password) {
