@@ -2,6 +2,7 @@ package com.myapp.classroomupdates.interfaces;
 
 import com.google.gson.JsonElement;
 import com.myapp.classroomupdates.model.AttendanceModel;
+import com.myapp.classroomupdates.model.CanGiveFeedbackModel;
 import com.myapp.classroomupdates.model.FeedbackModel;
 import com.myapp.classroomupdates.model.LoginResponseModel;
 import com.myapp.classroomupdates.model.PostResponse;
@@ -22,6 +23,22 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface ApiInterface {
+
+    @GET("feedback/")
+    Call<List<FeedbackModel>> getAllFeedback(@Header("Authorization")String token);
+
+    @GET("get_list_of_teachers/")
+    Call<List<LoginResponseModel>> getListOfTeachers(@Header("Authorization") String token);
+
+    @POST("feedback/")
+    @FormUrlEncoded
+    Call<FeedbackModel> giveFeedback(@Header("Authorization") String token,
+                                     @Field("teacher") int teacherId,
+                                     @Field("feedback_by") int studentId,
+                                     @Field("review") String review);
+
+    @GET("can_send_feedback/")
+    Call<CanGiveFeedbackModel> canGiveFeedback(@Header("Authorization") String token);
 
     @POST("login/")
     @FormUrlEncoded

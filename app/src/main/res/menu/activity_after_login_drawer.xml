@@ -27,6 +27,11 @@
             android:icon="@drawable/feedback_icon"
             android:title="@string/provide_feedback" />
 
+        <item
+            android:id="@+id/nav_my_feedback"
+            android:icon="@drawable/feedback_icon"
+            android:title="@string/my_feedback" />
+
     </group>
 
     <item android:title="@string/action_settings">

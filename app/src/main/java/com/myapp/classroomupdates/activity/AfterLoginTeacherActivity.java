@@ -37,7 +37,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.myapp.classroomupdates.Globals.GET_DAILY_TEACHER_SCHEDULE;
 import static com.myapp.classroomupdates.Globals.apiInterface;
 import static com.myapp.classroomupdates.Globals.editor;
 import static com.myapp.classroomupdates.Globals.fromJsonToTeacher;
@@ -168,6 +167,7 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
                 showSnackbar(navigationView, "Couldn't fetch routine");
             }
         } else if (id == R.id.nav_feedback) {
+            sendFeedbackToFragment(frameLayout, headerEmail);
 
         } else if (id == R.id.nav_change_password) {
             setFragment(frameLayout, new ChangePasswordFragment(), "0");

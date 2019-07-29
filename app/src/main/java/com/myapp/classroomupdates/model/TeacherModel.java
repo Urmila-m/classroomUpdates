@@ -18,7 +18,7 @@ public class TeacherModel implements Serializable {
 
         private String short_name;
 
-//        private String id;
+        private int id;
 
         private String department;
 
@@ -91,15 +91,15 @@ public class TeacherModel implements Serializable {
             this.short_name = short_name;
         }
 
-//        public String getId ()
-//        {
-//            return id;
-//        }
+        public int getId ()
+        {
+            return id;
+        }
 
-//        public void setId (String id)
-//        {
-//            this.id = id;
-//        }
+        public void setId (int id)
+        {
+            this.id = id;
+        }
 
         public String getDepartment ()
     {

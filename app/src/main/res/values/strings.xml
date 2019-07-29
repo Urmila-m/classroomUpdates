@@ -84,7 +84,7 @@
     <string name="question2">Was the teacher interactive?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="question3">Say something to the teacher(optional)</string>
+    <string name="question3">Say something to the teacher</string>
     <string name="attendance">Attendance</string>
     <string name="semester_not_ended">The semester hasn\'t ended yet. You can only give feedback at the end of semester</string>
     <string name="group">Group</string>
@@ -94,6 +94,9 @@
     <string name="teacher_department">Department of Electronics and Computer Engineering</string>
     <string name="today_schedule">Today\'s Schedule</string>
     <string name="sunday">Sunday</string>
+    <string name="to">To: </string>
+    <string name="test_msg2">This is just a test message. Hello everybody. How you people doing? I hope everyone is doing great!!</string>
+    <string name="my_feedback">My Feedbacks</string>
 
     <string-array name="program_array">
         <item>Computer</item>
@@ -101,6 +104,12 @@
         <item>Electronics</item>
         <item>Civil</item>
         <item>Mechanical</item>
+    </string-array>
+
+    <string-array name="teacher_list_for_feedback">
+        <item>Dr. Arun Timalsina</item>
+        <item>Dr.Basanta Joshi</item>
+        <item>Dr. Aman Shakya</item>
     </string-array>
 
 

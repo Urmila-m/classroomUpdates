@@ -23,6 +23,33 @@ public class StudentModel implements Serializable {
 
     private String group;
 
+    private int id;
+
+    public StudentModel(String password, String programme_name, boolean is_class_representative, String phone, String name, String batch, String roll_number, String email, String group, int id) {
+        this.password = password;
+        this.programme_name = programme_name;
+        this.is_class_representative = is_class_representative;
+        this.phone = phone;
+        this.name = name;
+        this.batch = batch;
+        this.roll_number = roll_number;
+        this.email = email;
+        this.group = group;
+        this.id = id;
+    }
+
+    public boolean isIs_class_representative() {
+        return is_class_representative;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getPassword ()
     {
         return password;
