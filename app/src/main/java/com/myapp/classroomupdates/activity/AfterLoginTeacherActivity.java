@@ -5,7 +5,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -20,16 +19,21 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.myapp.classroomupdates.R;
-import com.myapp.classroomupdates.adapter.StudentHomeViewPagerAdapter;
 import com.myapp.classroomupdates.fragment.ChangePasswordFragment;
 import com.myapp.classroomupdates.fragment.ScheduleFragment;
-import com.myapp.classroomupdates.fragment.TeacherAttendFragment;
+import com.myapp.classroomupdates.fragment.SendNoticeFragment;
 import com.myapp.classroomupdates.fragment.TeacherProfileFragment;
+import com.myapp.classroomupdates.model.ProgrammeModel;
 import com.myapp.classroomupdates.model.ScheduleModel;
 import com.myapp.classroomupdates.model.TeacherModel;
 import com.myapp.classroomupdates.utility.NetworkUtils;
 
-import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -43,6 +47,7 @@ import static com.myapp.classroomupdates.Globals.fromJsonToTeacher;
 import static com.myapp.classroomupdates.Globals.getTodaysDateStringFormat;
 import static com.myapp.classroomupdates.Globals.preferences;
 import static com.myapp.classroomupdates.Globals.showSnackbar;
+import static com.myapp.classroomupdates.Globals.showSthWentWrong;
 
 public class AfterLoginTeacherActivity extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -52,8 +57,7 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
     private Toolbar toolbar;
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private StudentHomeViewPagerAdapter adapter;
-    private TextView headerEmail;
+    private TextView headerEmail, noInternet;
     private CircleImageView headerImage;
 
     @Override
@@ -64,29 +68,30 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
         setViews();
         setUserDetails();
         setSupportActionBar(toolbar);
-//        setFragment(frameLayout, new TeacherAttendFragment(), "0");
 
-        TeacherAttendFragment fragment= new TeacherAttendFragment();
-        Bundle b= new Bundle();
-        b.putString("subject", "Software Engineering");
-        b.putString("startingTime", "12:00");
-        fragment.setArguments(b);
+        if(NetworkUtils.isNetworkConnected(this)) {
+            apiInterface.getUserRoutine("Token " + preferences.getString("token", ""), getTodaysDateStringFormat())
+                    .enqueue(new Callback<List<ScheduleModel>>() {
+                        @Override
+                        public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
+                            if (response.isSuccessful()) {
+                                Log.e("TAG", "onResponse: successful");
+                                sendRoutineResponseToFragment(response, new ScheduleFragment(), frameLayout);
+                            } else {
+                                Log.e("TAG", "onResponse:unsuccessful " + response.message());
+                            }
+                        }
 
-        TeacherAttendFragment fragment2= new TeacherAttendFragment();
-        Bundle b2= new Bundle();
-        b2.putString("subject", "Artificial Engineering");
-        b2.putString("startingTime", "14:00");
-        fragment2.setArguments(b2);
-
-        List<TeacherAttendFragment> list= new ArrayList<>();
-
-        list.add(fragment);
-        list.add(fragment2);
-        StudentHomeViewPagerAdapter adapter= new StudentHomeViewPagerAdapter(getSupportFragmentManager(), this, list);
-        viewPager.setVisibility(View.VISIBLE);
-        tabLayout.setVisibility(View.VISIBLE);
-        viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
+                        @Override
+                        public void onFailure(Call<List<ScheduleModel>> call, Throwable t) {
+                            Log.e("TAG", "onFailure: " + t.getMessage());
+                        }
+                    });
+        }
+        else {
+            noInternet.setVisibility(View.VISIBLE);
+            showSnackbar(navigationView, "Couldn't fetch routine");
+        }
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -130,8 +135,8 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
         int id = item.getItemId();
 //        item.setChecked(true);
         if (id!= R.id.nav_home){
-            tabLayout.setVisibility(View.GONE);
-            viewPager.setVisibility(View.GONE);
+//            tabLayout.setVisibility(View.GONE);
+//            viewPager.setVisibility(View.GONE);
         }
 
         if (id == R.id.nav_home) {
@@ -169,13 +174,17 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
         } else if (id == R.id.nav_feedback) {
             sendFeedbackToFragment(frameLayout, headerEmail);
 
-        } else if (id == R.id.nav_change_password) {
+        } else if(id== R.id.nav_send_notice){
+            getProgramsToNoticeFragment();
+
+        }else if (id == R.id.nav_change_password) {
             setFragment(frameLayout, new ChangePasswordFragment(), "0");
 
         } else if (id == R.id.nav_log_out) {
             editor.remove("token");
             editor.remove("Teacher");
             editor.remove("user_type");
+            editor.remove("id");
             editor.commit();
             startActivity(new Intent(this, BeforeLoginActivity.class));
         }
@@ -193,40 +202,11 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         headerImage= navigationView.getHeaderView(0).findViewById(R.id.header_imageView);
         headerEmail= navigationView.getHeaderView(0).findViewById(R.id.header_email);
-        tabLayout= frameLayout.findViewById(R.id.tab_layout_schedule);
-        viewPager= frameLayout.findViewById(R.id.viewpager_schedule);
-    }
+        noInternet= frameLayout.findViewById(R.id.tv_no_internet);
 
-//    @Override
-//    public void onDataRetrieved(Bundle bundle, String source_id) {
-//        if (source_id.equals(GET_DAILY_TEACHER_SCHEDULE)){
-//            List<TeacherScheduleModel> list= (List<TeacherScheduleModel>) bundle.getSerializable("DailyTeacherSchedule");
-//            List<TeacherAttendFragment> fragmentList= new ArrayList<>();
-//            ArrayList<String> subjectList= new ArrayList<>();
-//            ArrayList<String> startingTimeList= new ArrayList<>();
-//            for (TeacherScheduleModel s: list
-//                 ) {
-//               subjectList.add(s.getSubject());
-//               startingTimeList.add(s.getStartTime());
-//            }
-//
-//            for (int i=0; i<subjectList.size(); i++){
-//                TeacherAttendFragment fragment= new TeacherAttendFragment();
-//                Bundle b= new Bundle();
-//                b.putString("subject", subjectList.get(i));
-//                b.putString("startingTime", startingTimeList.get(i));
-//                fragment.setArguments(b);
-//                fragmentList.add(fragment);
-//            }
-//            adapter= new StudentHomeViewPagerAdapter(getSupportFragmentManager(), this, fragmentList);
-//            viewPager.setVisibility(View.VISIBLE);
-//            tabLayout.setVisibility(View.VISIBLE);
-//            tabLayout.setupWithViewPager(viewPager);
-//
-//            viewPager.setAdapter(adapter);
-//
-//         }
-//    }
+//        tabLayout= frameLayout.findViewById(R.id.tab_layout_schedule);
+//        viewPager= frameLayout.findViewById(R.id.viewpager_schedule);
+    }
 
     private void setUserDetails(){
         headerImage.setImageDrawable(getDrawable(R.drawable.portrait));
@@ -237,5 +217,48 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
 
     public FrameLayout getFrameLayout() {
         return frameLayout;
+    }
+
+    private void getProgramsToNoticeFragment(){
+        apiInterface.getAllPrograms("Token "+preferences.getString("token", ""))
+                .enqueue(new Callback<List<ProgrammeModel>>() {
+                    @Override
+                    public void onResponse(Call<List<ProgrammeModel>> call, Response<List<ProgrammeModel>> response) {
+                        if (response.isSuccessful()){
+                            HashMap<Integer, String> hashMap= new HashMap<>();
+                            for (ProgrammeModel m:response.body()
+                                 ) {
+                                hashMap.put(m.getId(), m.getName());
+                            }
+                            Bundle b= new Bundle();
+                            b.putSerializable("programList", hashMap);
+                            SendNoticeFragment fragment= new SendNoticeFragment();
+                            fragment.setArguments(b);
+                            setFragment(frameLayout, fragment, "0");
+                        }
+                        else {
+                            try {
+                                JSONObject jsonObject= new JSONObject(response.errorBody().string());
+                                JSONArray array= jsonObject.getJSONArray("review");
+                                String message="";
+                                for (int i=0; i<array.length(); i++){
+                                    message+= (array.getString(i)+"\n");
+                                }
+                                Log.e("TAG", "onResponse: "+message);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            showSthWentWrong(AfterLoginTeacherActivity.this);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<ProgrammeModel>> call, Throwable t) {
+                        Log.e("TAG", "onFailure: "+t.getMessage());
+                        showSnackbar(headerEmail, "");
+                    }
+                });
     }
 }

@@ -4,12 +4,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
+import android.util.Log;
 
 import com.myapp.classroomupdates.activity.AfterLoginActivityStudent;
 
@@ -64,11 +67,29 @@ public class BaseFragment extends Fragment {
         return imageByte;
     }
 
+    protected Bitmap byteToBitmap(byte[] byteArray){
+        Bitmap bitmap= BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        return bitmap;
+    }
+
+    private String byteArrayToString(byte[] byteArray){
+        String encodedString= Base64.encodeToString(byteArray, Base64.DEFAULT);
+        return encodedString;
+    }
+
+    protected String bitmapToEncodedString(Bitmap bitmap){
+        byte[] byteArray= bitmapToByte(bitmap);
+        String encodedString= byteArrayToString(byteArray);
+        return encodedString;
+    }
+
     public ImageDisplayFragment convertPathToFragment(Uri path) throws IOException {
         Bitmap imageSelected= MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), path);
         byte [] imageByte= bitmapToByte(imageSelected);
         Bundle imageBundle= new Bundle();
         imageBundle.putByteArray("imageByte", imageByte);
+        String encodedImageString= Base64.encodeToString(imageByte, Base64.DEFAULT);
+        Log.e("TAG", "convertPathToFragment: "+encodedImageString);
         ImageDisplayFragment fragment= new ImageDisplayFragment();
         fragment.setArguments(imageBundle);
         return fragment;

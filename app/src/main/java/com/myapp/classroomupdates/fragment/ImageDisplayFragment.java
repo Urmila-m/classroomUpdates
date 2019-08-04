@@ -12,6 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +26,23 @@ import com.myapp.classroomupdates.Globals;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.activity.AfterLoginActivityStudent;
 import com.myapp.classroomupdates.activity.AfterLoginTeacherActivity;
-import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
+import com.myapp.classroomupdates.model.PostResponse;
+
+import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.myapp.classroomupdates.Globals.apiInterface;
+import static com.myapp.classroomupdates.Globals.preferences;
+import static com.myapp.classroomupdates.Globals.showSnackbar;
+import static com.myapp.classroomupdates.Globals.showSthWentWrong;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ImageDisplayFragment extends Fragment {
+public class ImageDisplayFragment extends BaseFragment{
 
     private ImageView imageView;
     private Button button;
@@ -82,20 +95,37 @@ public class ImageDisplayFragment extends Fragment {
                 else {
                     Toast.makeText(getContext(), "No write permissions!!", Toast.LENGTH_SHORT).show();
                 }
-                //TODO upload image to server
-                if (getContext() instanceof AfterLoginActivityStudent) {
-                    ((AfterLoginActivityStudent) getContext()).setFragment(frameLayout, new StudentProfileFragment(), "0");
-                }
-                else if (getContext() instanceof AfterLoginTeacherActivity){
-                    ((AfterLoginTeacherActivity) getContext()).setFragment(frameLayout, new TeacherProfileFragment(), "0");
-                }
+                apiInterface.uploadImage("Token "+preferences.getString("token", ""), "data:image/png;base64,"+bitmapToEncodedString(bitmap))
+                        .enqueue(new Callback<PostResponse>() {
+                            @Override
+                            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                                if (response.isSuccessful()){
+                                    Toast.makeText(getContext(), response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                                    if (getContext() instanceof AfterLoginActivityStudent) {
+                                        ((AfterLoginActivityStudent) getContext()).setFragment(frameLayout, new StudentProfileFragment(), "0");
+                                    }
+                                    else if (getContext() instanceof AfterLoginTeacherActivity){
+                                        ((AfterLoginTeacherActivity) getContext()).setFragment(frameLayout, new TeacherProfileFragment(), "0");
+                                    }
+                                }
+                                else {
+                                    try {
+                                        Log.e("TAG", "onResponse: "+response.errorBody().string());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    showSthWentWrong(getContext());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<PostResponse> call, Throwable t) {
+                                Log.e("TAG", "onFailure: "+t.getMessage());
+                                showSnackbar(button, "");
+                            }
+                        });
             }
         });
-    }
-
-    private Bitmap byteToBitmap(byte[] byteArray){
-        Bitmap bitmap= BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-        return bitmap;
     }
 
     private boolean hasWritePermissions(){

@@ -1,7 +1,5 @@
 package com.myapp.classroomupdates.fragment;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,16 +13,10 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.myapp.classroomupdates.Globals;
 import com.myapp.classroomupdates.activity.AfterLoginActivityStudent;
 import com.myapp.classroomupdates.activity.AfterLoginTeacherActivity;
 import com.myapp.classroomupdates.interfaces.MultipleEditTextWatcher;
-import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 import com.myapp.classroomupdates.R;
-import com.myapp.classroomupdates.model.ChangePasswordErrorModel;
 import com.myapp.classroomupdates.model.PostResponse;
 import com.myapp.classroomupdates.utility.NetworkUtils;
 

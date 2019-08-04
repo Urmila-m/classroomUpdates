@@ -1,39 +1,27 @@
 package com.myapp.classroomupdates.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.myapp.classroomupdates.Globals;
 import com.myapp.classroomupdates.activity.AfterLoginActivityStudent;
 import com.myapp.classroomupdates.activity.AfterLoginTeacherActivity;
 import com.myapp.classroomupdates.activity.BeforeLoginActivity;
 import com.myapp.classroomupdates.interfaces.MultipleEditTextWatcher;
-import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.model.LoginResponseModel;
-import com.myapp.classroomupdates.model.StudentModel;
 import com.myapp.classroomupdates.utility.NetworkUtils;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +29,6 @@ import retrofit2.Response;
 
 import static com.myapp.classroomupdates.Globals.isEmpty;
 import static com.myapp.classroomupdates.Globals.apiInterface;
-import static com.myapp.classroomupdates.Globals.preferences;
 import static com.myapp.classroomupdates.Globals.saveUserToPreference;
 import static com.myapp.classroomupdates.Globals.showSnackbar;
 
@@ -97,12 +84,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             public void onResponse(Call<LoginResponseModel> call, Response<LoginResponseModel> response) {
                                 if (response.isSuccessful()) {
                                     if (response.body().getUser_type().equals("Student")){
-                                        saveUserToPreference(response.body().getStudent_detail(), response.body().getToken());
+                                        saveUserToPreference(response.body().getStudent_detail(), response.body().getToken(), response.body().getId());
                                         startActivity(new Intent(getContext(), AfterLoginActivityStudent.class));
                                     }
                                     else if (response.body().getUser_type().equals("Teacher")){
                                         Log.e("TAG", "onResponse: teacher");
-                                        saveUserToPreference(response.body().getTeacher_detail(), response.body().getToken());
+                                        saveUserToPreference(response.body().getTeacher_detail(), response.body().getToken(), response.body().getId());
                                         startActivity(new Intent(getContext(), AfterLoginTeacherActivity.class));
                                     }
                                 }

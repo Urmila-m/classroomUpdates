@@ -6,105 +6,148 @@
 
     <include layout="@layout/background_image_include"/>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        style="@style/BaseLayoutStyle">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tv_subject"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            style="@style/BaseLayoutStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/TitleTextStyle"
-            android:text="@string/subject"
-            android:gravity="center"/>
+            android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
             <TextView
-                android:id="@+id/expected"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_subject"
+                style="@style/TitleTextStyle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/expected_time"
+                android:gravity="center"
+                android:text="@string/subject" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/expected"
+                    style="@style/NormalTitleStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/expected_time" />
+
+                <TextView
+                    android:id="@+id/tv_expected_start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/expected"
+                    android:layout_margin="@dimen/padding_5"
+                    android:layout_toRightOf="@id/expected"
+                    android:text="@string/time_one"
+                    android:textSize="@dimen/normal_text_size" />
+
+                <TextView
+                    android:id="@+id/dash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="@dimen/padding_5"
+                    android:layout_toRightOf="@id/tv_expected_start_time"
+                    android:text="--" />
+
+                <TextView
+                    android:id="@+id/tv_expected_end_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/expected"
+                    android:layout_margin="@dimen/padding_5"
+                    android:layout_toRightOf="@id/dash"
+                    android:text="@string/time_one"
+                    android:textSize="@dimen/normal_text_size" />
+
+
+            </RelativeLayout>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base_padding">
+
+                <RadioButton
+                    android:id="@+id/rb_attend_teacher"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/attend" />
+
+                <RadioButton
+                    android:id="@+id/rb_no_attend_teacher"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/not_attend" />
+            </RadioGroup>
+
+            <!--message if not attending-->
+            <TextView
+                android:id="@+id/message_teacher"
                 style="@style/NormalTitleStyle"
-                />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/message"
+                android:visibility="gone" />
 
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_message_teacher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <android.support.design.widget.TextInputEditText
+                    style="@style/EditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/cant_attend" />
+            </android.support.design.widget.TextInputLayout>
+
+            <!--if attending-->
             <TextView
-                android:id="@+id/tv_expected_time"
+                android:id="@+id/start_time"
+                style="@style/NormalTitleStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/set_start_time" />
+
+            <TimePicker
+                android:id="@+id/tp_start_teacher"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/time_eg"
-                android:layout_toRightOf="@id/expected"
-                android:layout_alignBaseline="@id/expected"
-                android:textSize="@dimen/normal_text_size"/>
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/padding_10"
+                android:background="@color/transparent_white"
+                android:timePickerMode="spinner" />
 
-        </RelativeLayout>
-
-        <RadioGroup
-            android:layout_marginTop="@dimen/base_padding"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-
-            <RadioButton
-                android:id="@+id/rb_attend_teacher"
+            <TextView
+                android:id="@+id/end_time"
+                style="@style/NormalTitleStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/attend" />
+                android:text="@string/set_end_time" />
 
-            <RadioButton
-                android:id="@+id/rb_no_attend_teacher"
-                android:layout_width="match_parent"
+            <TimePicker
+                android:id="@+id/tp_end_teacher"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/not_attend" />
-        </RadioGroup>
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/padding_10"
+                android:background="@color/transparent_white"
+                android:timePickerMode="spinner" />
 
-        <!--message if not attending-->
-        <TextView
-            android:id="@+id/message_teacher"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/NormalTitleStyle"
-            android:text="@string/message"
-            android:visibility="gone"/>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_message_teacher"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <android.support.design.widget.TextInputEditText
+            <Button
+                android:id="@+id/btn_submit_teacher_attend"
+                style="@style/ButtonStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/EditTextStyle"
-                />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_height="@dimen/button_height"
+                android:text="@string/submit" />
 
-        <!--if attending-->
-        <TimePicker
-            android:id="@+id/tp_teacher"
-            android:layout_marginTop="@dimen/padding_10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:timePickerMode="spinner"
-            android:background="@color/transparent_white"
-            />
-
-        <Button
-            android:id="@+id/btn_submit_teacher_attend"
-            style="@style/ButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_height"
-            android:text="@string/submit" />
-
-    </LinearLayout>
-
-
-
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

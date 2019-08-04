@@ -22,22 +22,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.myapp.classroomupdates.R;
-import com.myapp.classroomupdates.adapter.StudentHomeViewPagerAdapter;
 import com.myapp.classroomupdates.fragment.ChangePasswordFragment;
 import com.myapp.classroomupdates.fragment.FeedbackFormFragment;
 import com.myapp.classroomupdates.fragment.ScheduleFragment;
-import com.myapp.classroomupdates.fragment.ShowFeedbackFragment;
 import com.myapp.classroomupdates.fragment.StudentHomePageFragment;
 import com.myapp.classroomupdates.fragment.StudentProfileFragment;
 import com.myapp.classroomupdates.model.CanGiveFeedbackModel;
-import com.myapp.classroomupdates.model.FeedbackModel;
 import com.myapp.classroomupdates.model.LoginResponseModel;
 import com.myapp.classroomupdates.model.ScheduleModel;
 import com.myapp.classroomupdates.model.StudentModel;
 import com.myapp.classroomupdates.utility.NetworkUtils;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,12 +79,6 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         list.add(fragment1);
         list.add(fragment2);
         list.add(fragment3);
-
-        StudentHomeViewPagerAdapter adapter= new StudentHomeViewPagerAdapter(getSupportFragmentManager(), list, this);
-        viewPager.setVisibility(View.VISIBLE);
-        tabLayout.setVisibility(View.VISIBLE);
-        viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -139,8 +129,8 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         }
 
         if (id!= R.id.nav_home){
-            tabLayout.setVisibility(View.GONE);
-            viewPager.setVisibility(View.GONE);
+//            tabLayout.setVisibility(View.GONE);
+//            viewPager.setVisibility(View.GONE);
         }
 
         if (id == R.id.nav_home) {
@@ -185,7 +175,6 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
 
         }
         else if (id== R.id.nav_provide_feedback){
-            Log.e("TAG", "onNavigationItemSelected: feedback" );
             apiInterface.canGiveFeedback("Token "+preferences.getString("token", ""))
                     .enqueue(new Callback<CanGiveFeedbackModel>() {
                         @Override
@@ -222,6 +211,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
             editor.remove("token");
             editor.remove("Student");
             editor.remove("user_type");
+            editor.remove("id");
             editor.commit();
             startActivity(new Intent(this, BeforeLoginActivity.class));
         }
@@ -234,8 +224,6 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         CoordinatorLayout cl= findViewById(R.id.include_app_bar);
         ConstraintLayout col= cl.findViewById(R.id.include_content);
         frameLayout= col.findViewById(R.id.fl_after_login);
-        tabLayout= frameLayout.findViewById(R.id.tab_layout_schedule);
-        viewPager= frameLayout.findViewById(R.id.viewpager_schedule);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         headerImage= navigationView.getHeaderView(0).findViewById(R.id.header_imageView);
@@ -261,7 +249,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                             for (LoginResponseModel m:response.body()
                             ) {
                                 if (m.getTeacher_detail()!=null) {
-                                    teacherMap.put(m.getTeacher_detail().getId(), m.getTeacher_detail().getName());
+                                    teacherMap.put(m.getTeacher_detail().getUser(), m.getTeacher_detail().getName());
                                 }
                             }
                             Bundle bundle= new Bundle();

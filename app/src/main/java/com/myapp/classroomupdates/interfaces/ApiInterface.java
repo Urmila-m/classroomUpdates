@@ -1,28 +1,48 @@
 package com.myapp.classroomupdates.interfaces;
 
-import com.google.gson.JsonElement;
-import com.myapp.classroomupdates.model.AttendanceModel;
+import com.myapp.classroomupdates.model.AttendClassRequestModel;
 import com.myapp.classroomupdates.model.CanGiveFeedbackModel;
+import com.myapp.classroomupdates.model.ClassResponseModel;
 import com.myapp.classroomupdates.model.FeedbackModel;
 import com.myapp.classroomupdates.model.LoginResponseModel;
+import com.myapp.classroomupdates.model.NoticeModel;
 import com.myapp.classroomupdates.model.PostResponse;
+import com.myapp.classroomupdates.model.ProgrammeModel;
 import com.myapp.classroomupdates.model.ScheduleModel;
-import com.myapp.classroomupdates.model.StudentModel;
+import com.myapp.classroomupdates.model.SetArrivalTimeModel;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface ApiInterface {
+
+    @POST("upload_image/")
+    @FormUrlEncoded
+    Call<PostResponse> uploadImage(@Header("Authorization") String token,
+                                   @Field("image") String base64EncodedImageString);
+
+    @POST("class-attending-detail/")
+    Call<ClassResponseModel> sendAttendDetails(@Header("Authorization") String token,
+                                               @Body AttendClassRequestModel requestModel);
+
+    @POST("arrival-time-detail/")
+    Call<SetArrivalTimeModel> setArrivalTime(@Header("Authorization") String token,
+                                             @Body SetArrivalTimeModel arrivalTimeModel);
+
+    @GET("programme/")
+    Call<List<ProgrammeModel>> getAllPrograms(@Header("Authorization")String token);
+
+    @POST("notice/")
+    Call<NoticeModel> sendNotice(@Header("Authorization") String token,
+                                 @Body NoticeModel model);
 
     @GET("feedback/")
     Call<List<FeedbackModel>> getAllFeedback(@Header("Authorization")String token);

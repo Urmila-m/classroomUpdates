@@ -3,8 +3,6 @@ package com.myapp.classroomupdates.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -19,15 +17,11 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.activity.AfterLoginActivityStudent;
-import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 import com.myapp.classroomupdates.model.FeedbackModel;
-import com.myapp.classroomupdates.model.LoginResponseModel;
-import com.myapp.classroomupdates.model.TeacherModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +38,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.myapp.classroomupdates.Globals.apiInterface;
-import static com.myapp.classroomupdates.Globals.fromJsonToStudent;
 import static com.myapp.classroomupdates.Globals.getStringFromTIL;
 import static com.myapp.classroomupdates.Globals.preferences;
 import static com.myapp.classroomupdates.Globals.showSnackbar;
@@ -128,10 +121,8 @@ public class FeedbackFormFragment extends Fragment {
                 String ans2= question2.isChecked()?"Yes":"No";
                 String feedbackToTeacher= getStringFromTIL(tilQuestion3);
 
-//  TODO              apiInterface.giveFeedback("Token "+preferences.getString("token", ""), selectedTeacherId,
-//                        fromJsonToStudent(preferences.getString("Student", "")).getId(), feedbackToTeacher)
-                apiInterface.giveFeedback("Token "+preferences.getString("token", ""), 19,
-                        9, feedbackToTeacher)
+                apiInterface.giveFeedback("Token "+preferences.getString("token", ""), selectedTeacherId,
+                        preferences.getInt("id", 0), feedbackToTeacher)
                         .enqueue(new Callback<FeedbackModel>() {
                             @Override
                             public void onResponse(Call<FeedbackModel> call, Response<FeedbackModel> response) {

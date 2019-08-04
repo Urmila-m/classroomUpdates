@@ -18,8 +18,13 @@
             android:title="@string/schedule" />
         <item
             android:id="@+id/nav_feedback"
-            android:icon="@drawable/feedback_icon"
-            android:title="Feedback" />
+            android:icon="@drawable/my_feedback_icon"
+            android:title="@string/feedback" />
+
+        <item
+            android:id="@+id/nav_send_notice"
+            android:icon="@drawable/send_notice_icon"
+            android:title="@string/send_notice" />
     </group>
 
     <item android:title="Settings">

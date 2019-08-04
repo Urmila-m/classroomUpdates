@@ -1,7 +1,6 @@
 package com.myapp.classroomupdates.fragment;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,9 +12,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.myapp.classroomupdates.activity.BeforeLoginActivity;
-import com.myapp.classroomupdates.interfaces.OnFragmentClickListener;
 import com.myapp.classroomupdates.R;
-import com.myapp.classroomupdates.utility.NetworkUtils;
 
 public class FirstPageFragment extends Fragment implements View.OnClickListener {
 

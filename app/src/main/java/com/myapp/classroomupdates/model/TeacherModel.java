@@ -6,25 +6,26 @@ import java.io.Serializable;
 import java.util.List;
 
 public class TeacherModel implements Serializable {
-        private String password;
+    private int id;
 
-        private String phone;
+    @SerializedName("department_name")
+    private String department;
 
-        private String subjects;
+    private String name;
 
-        private String name;
+    private String email;
 
-        private boolean is_full_timer;
+    private String short_name;
 
-        private String short_name;
+    private String phone;
 
-        private int id;
+    private boolean is_full_timer;
 
-        private String department;
+    private String subjects;
 
-        private String user;
+    private String password;
 
-        private String email;
+    private int user;
 
         public String getPassword ()
         {
@@ -116,12 +117,12 @@ public class TeacherModel implements Serializable {
             this.department = department;
         }
 
-        public String getUser ()
+        public int getUser ()
         {
             return user;
         }
 
-        public void setUser (String user)
+        public void setUser (int user)
         {
             this.user = user;
         }

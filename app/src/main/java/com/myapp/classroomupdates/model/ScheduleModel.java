@@ -16,7 +16,7 @@ public class ScheduleModel implements Serializable
 
     private boolean is_attending;
 
-//    private String id;
+    private int id;
 
     private String to_time;
 
@@ -88,15 +88,15 @@ public class ScheduleModel implements Serializable
         this.is_attending = is_attending;
     }
 
-//    public String getId ()
-//    {
-//        return id;
-//    }
-//
-//    public void setId (String id)
-//    {
-//        this.id = id;
-//    }
+    public int getId ()
+    {
+        return id;
+    }
+
+    public void setId (int id)
+    {
+        this.id = id;
+    }
 
     public String getTo_time ()
     {

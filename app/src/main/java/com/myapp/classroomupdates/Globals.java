@@ -1,18 +1,25 @@
 package com.myapp.classroomupdates;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.myapp.classroomupdates.interfaces.ApiInterface;
 import com.myapp.classroomupdates.model.StudentModel;
 import com.myapp.classroomupdates.model.TeacherModel;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,6 +31,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import retrofit2.Response;
 
 public class Globals extends Application {
     public static String firstInstall="firstInstall";
@@ -46,6 +55,10 @@ public class Globals extends Application {
         snackbar.getView().setBackgroundColor(view.getContext().getColor(R.color.grey));
         snackbar.setActionTextColor(view.getContext().getColor(R.color.yellow));
         snackbar.show();
+    }
+
+    public static void showSthWentWrong(Context context){
+        Toast.makeText(context, "Something went wrong :(", Toast.LENGTH_LONG).show();
     }
 
     public static void saveBitmapToCard(Bitmap imageSelected){
@@ -109,20 +122,21 @@ public class Globals extends Application {
 
     }
 
-    public static void saveUserToPreference(StudentModel student, String token){
+    public static void saveUserToPreference(StudentModel student, String token, int id){
         editor.putString("user_type", "Student");
+        editor.putInt("id", id);
         editor.putString("Student", toJson(student));
         editor.putString("token", token);
         editor.commit();
     }
 
-    public static void saveUserToPreference(TeacherModel teacher, String token){
+    public static void saveUserToPreference(TeacherModel teacher, String token, int id){
         editor.putString("user_type", "Teacher");
         editor.putString("Teacher", toJson(teacher));
+        editor.putInt("id", id);
         editor.putString("token", token);
         editor.commit();
     }
-
 
     public static String getTodaysDay(){
         Calendar calendar= Calendar.getInstance();

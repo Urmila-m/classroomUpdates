@@ -3,6 +3,24 @@ package com.myapp.classroomupdates.model;
 public class LoginResponseModel {
     String token;
     String user_type;
+    int id;
+
+    public LoginResponseModel(String token, String user_type, int id, StudentModel student_detail, TeacherModel teacher_detail) {
+        this.token = token;
+        this.user_type = user_type;
+        this.id = id;
+        this.student_detail = student_detail;
+        this.teacher_detail = teacher_detail;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     StudentModel student_detail;
     TeacherModel teacher_detail;
 
@@ -12,13 +30,6 @@ public class LoginResponseModel {
 
     public void setUser_type(String user_type) {
         this.user_type = user_type;
-    }
-
-    public LoginResponseModel(String token, String user_type, StudentModel student_detail, TeacherModel teacher_detail) {
-        this.token = token;
-        this.user_type= user_type;
-        this.student_detail = student_detail;
-        this.teacher_detail = teacher_detail;
     }
 
     @Override

@@ -22,28 +22,11 @@ public class RetrofitClient {
     static Retrofit retrofitObj;
 
     public static Retrofit getRetrofitObj(){
-//        final SharedPreferences preferences= Globals.context.getSharedPreferences("myPreference", Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor= preferences.edit();
-
-//        Interceptor interceptor= new Interceptor() {
-//            @Override
-//            public Response intercept(Chain chain) throws IOException {
-//                Request request= chain.request();
-//                request= request.newBuilder().addHeader("Authorization", preferences.getString("token", "")).build();
-//                Response response= chain.proceed(request);
-//                return response;
-//            }
-//        };
-
         OkHttpClient.Builder clientBuilder= new OkHttpClient.Builder();
         HttpLoggingInterceptor interceptor1= new HttpLoggingInterceptor();
         interceptor1.setLevel(HttpLoggingInterceptor.Level.BODY);
         clientBuilder.addInterceptor(interceptor1);
 
-//        OkHttpClient.Builder builder= new OkHttpClient.Builder();
-//        builder.addInterceptor(interceptor);
-//        builder.addInterceptor(interceptor1);
-//        OkHttpClient client= builder.build();
         Gson gson=new GsonBuilder()
                 .setLenient()
                 .create();
@@ -58,5 +41,4 @@ public class RetrofitClient {
         }
         return retrofitObj;
     }
-
 }

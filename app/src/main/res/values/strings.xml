@@ -97,6 +97,20 @@
     <string name="to">To: </string>
     <string name="test_msg2">This is just a test message. Hello everybody. How you people doing? I hope everyone is doing great!!</string>
     <string name="my_feedback">My Feedbacks</string>
+    <string name="send_notice">Send Notice</string>
+    <string name="select_year">Select year</string>
+    <string name="select_part">Select part</string>
+    <string name="notice">Notice</string>
+    <string name="your_notice">Notice details..</string>
+    <string name="send_sms">Send sms</string>
+    <string name="send_email">Send email?</string>
+    <string name="last_updated">Last Updated</string>
+    <string name="update">Update</string>
+    <string name="cant_attend">Default: Can\'t attend class.</string>
+    <string name="time_one">03:15</string>
+    <string name="set_start_time">Set start time</string>
+    <string name="set_end_time">Set end time</string>
+    <string name="no_internet_connection">No internet connection :(</string>
 
     <string-array name="program_array">
         <item>Computer</item>
@@ -110,6 +124,18 @@
         <item>Dr. Arun Timalsina</item>
         <item>Dr.Basanta Joshi</item>
         <item>Dr. Aman Shakya</item>
+    </string-array>
+
+    <string-array name="year_array">
+        <item>I</item>
+        <item>II</item>
+        <item>III</item>
+        <item>IV</item>
+    </string-array>
+
+    <string-array name="part_array">
+        <item>I</item>
+        <item>II</item>
     </string-array>
 
 

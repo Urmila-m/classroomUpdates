@@ -1,6 +1,8 @@
 package com.myapp.classroomupdates.model;
 
-public class RoutineOfModel {
+import java.io.Serializable;
+
+public class RoutineOfModel implements Serializable{
         private String year;
 
         private String part;

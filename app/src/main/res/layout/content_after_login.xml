@@ -13,26 +13,14 @@
         android:layout_height="match_parent"
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <android.support.design.widget.TabLayout
-                android:visibility="gone"
-                android:id="@+id/tab_layout_schedule"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:tabMode="scrollable"
-                />
-
-            <android.support.v4.view.ViewPager
-                android:visibility="gone"
-                android:layout_gravity="bottom"
-                android:id="@+id/viewpager_schedule"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+       <TextView
+           android:id="@+id/tv_no_internet"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           style="@style/NormalTitleStyle"
+           android:gravity="center"
+           android:text="@string/no_internet_connection"
+           android:visibility="gone"/>
     </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>
