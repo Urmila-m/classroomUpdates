@@ -3,9 +3,12 @@
     package="com.myapp.classroomupdates">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-feature android:required="true" android:name="android.hardware.camera2"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.camera2"
+        android:required="true" />
 
     <application
         android:name=".Globals"
@@ -15,34 +18,31 @@
         android:roundIcon="@mipmap/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.IntroSlideActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity
-            android:name=".activity.AfterLoginTeacherActivity"
-            android:label="@string/title_activity_after_login"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity
-            android:name=".activity.AfterLoginActivityStudent"
-            android:label="@string/title_activity_after_login"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity android:name=".activity.PreferenceInitializingActivity" />
-        <activity android:name=".activity.ChangeAttendingDetailsActivity"/>
-        <activity android:name=".activity.BeforeLoginActivity">
-
-        </activity>
-        <activity android:name=".activity.ImageUploadActivity"/>
-        <activity
-            android:name=".activity.SplashScreenActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".TestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.IntroSlideActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.AfterLoginTeacherActivity"
+            android:label="@string/title_activity_after_login"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.AfterLoginActivityStudent"
+            android:label="@string/title_activity_after_login"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".activity.PreferenceInitializingActivity" />
+        <activity android:name=".activity.ChangeAttendingDetailsActivity" />
+        <activity android:name=".activity.BeforeLoginActivity"></activity>
+        <activity android:name=".activity.ImageUploadActivity" />
+        <activity
+            android:name=".activity.SplashScreenActivity"
+            android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
     </application>

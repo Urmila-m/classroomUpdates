@@ -213,4 +213,14 @@ public class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private boolean isCR(){
         return fromJsonToStudent(preferences.getString("Student", "")).isIs_class_representative();
     }
+
+    public void clearList(){
+        list.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<ScheduleModel> modelList){
+        list.addAll(modelList);
+        notifyDataSetChanged();
+    }
 }

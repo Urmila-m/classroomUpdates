@@ -87,4 +87,14 @@ public class FeedbackAdapter extends RecyclerView.Adapter {
             textView= itemView.findViewById(R.id.tv_just_text_view);
         }
     }
+
+    public void clearList(){
+        list.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addListElements(List<FeedbackModel> feedbacklist){
+        list.addAll(feedbacklist);
+        notifyDataSetChanged();
+    }
 }
