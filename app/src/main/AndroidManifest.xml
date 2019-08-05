@@ -34,6 +34,7 @@
         <activity android:name=".activity.BeforeLoginActivity">
 
         </activity>
+        <activity android:name=".activity.ImageUploadActivity"/>
         <activity
             android:name=".activity.SplashScreenActivity"
             android:theme="@style/AppTheme.NoActionBar">

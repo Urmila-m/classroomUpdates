@@ -4,6 +4,7 @@ import com.myapp.classroomupdates.model.AttendClassRequestModel;
 import com.myapp.classroomupdates.model.CanGiveFeedbackModel;
 import com.myapp.classroomupdates.model.ClassResponseModel;
 import com.myapp.classroomupdates.model.FeedbackModel;
+import com.myapp.classroomupdates.model.ImageUploadResponseModel;
 import com.myapp.classroomupdates.model.LoginResponseModel;
 import com.myapp.classroomupdates.model.NoticeModel;
 import com.myapp.classroomupdates.model.PostResponse;
@@ -24,10 +25,13 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
+    @GET("get_routine_update_detail/")
+    Call<List<ScheduleModel>> getUpdatedRoutine(@Header("Authorization") String token);
+
     @POST("upload_image/")
     @FormUrlEncoded
-    Call<PostResponse> uploadImage(@Header("Authorization") String token,
-                                   @Field("image") String base64EncodedImageString);
+    Call<ImageUploadResponseModel> uploadImage(@Header("Authorization") String token,
+                                               @Field("image") String base64EncodedImageString);
 
     @POST("class-attending-detail/")
     Call<ClassResponseModel> sendAttendDetails(@Header("Authorization") String token,

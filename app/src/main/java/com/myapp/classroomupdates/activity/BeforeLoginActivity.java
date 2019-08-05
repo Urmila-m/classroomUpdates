@@ -28,12 +28,14 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity{
         else {
             if (preferences.contains("token") && preferences.getString("user_type", "").equals("Student")){
                 startActivity(new Intent(this, AfterLoginActivityStudent.class));
+                finish();
             }
             else if (preferences.contains("token") && preferences.getString("user_type", "").equals("Teacher")){
                 startActivity(new Intent(this, AfterLoginTeacherActivity.class));
-
+                finish();
             }
             else {
+//                getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
                 setFragment(frameLayout, new FirstPageFragment(), "0");
             }
         }

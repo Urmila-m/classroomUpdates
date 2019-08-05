@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/corner_radius"
+    app:cardElevation="@dimen/elevation"
+    app:cardUseCompatPadding="true"
+    android:background="@drawable/edit_text_background"
+    android:layout_margin="@dimen/elevation"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_5"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_10">
+
+            <TextView
+                android:id="@+id/tv_subject_updated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="@string/subject"
+                style="@style/NormalTitleStyle"
+                />
+            <LinearLayout
+                android:layout_below="@id/tv_subject_updated"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_batch_updated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/batch_eg"
+                    style="@style/NormalTitleStyle"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_room_updated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/lab4"
+                    style="@style/NormalTitleStyle"
+                    />
+            </LinearLayout>
+
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/expected_time"
+                    style="@style/NormalTitleStyle"
+                    />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/tv_expected_start_adapter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/time_one"
+                        style="@style/NormalTitleStyle"
+                        />
+
+                    <TextView
+                        android:id="@+id/dash_expected"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/dash"
+                        style="@style/NormalTitleStyle"
+                        android:layout_toRightOf="@id/tv_expected_start_adapter"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_expected_end_adapter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/time_one"
+                        style="@style/NormalTitleStyle"
+                        android:layout_toRightOf="@id/dash_expected"
+                        />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/stroke_width"
+                android:layout_height="match_parent"
+                android:background="@color/grey"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/updated_time"
+                    style="@style/NormalTitleStyle"
+                    />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/tv_updated_start_adapter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/time_one"
+                        style="@style/NormalTitleStyle"
+                        />
+
+                    <TextView
+                        android:id="@+id/dash_updated"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/dash"
+                        style="@style/NormalTitleStyle"
+                        android:layout_toRightOf="@id/tv_updated_start_adapter"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_updated_end_adapter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/time_one"
+                        style="@style/NormalTitleStyle"
+                        android:layout_toRightOf="@id/dash_updated"
+                        />
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <CheckBox
+                        android:id="@+id/chk_updated_routine_adapter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:clickable="false"
+                        />
+                    <TextView
+                        android:id="@+id/tv_updated_attending"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/attending"
+                        style="@style/NormalTitleStyle"
+                        android:layout_toRightOf="@id/chk_updated_routine_adapter"
+                        />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.design.card.MaterialCardView>

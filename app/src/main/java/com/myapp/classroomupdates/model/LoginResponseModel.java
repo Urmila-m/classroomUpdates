@@ -3,7 +3,18 @@ package com.myapp.classroomupdates.model;
 public class LoginResponseModel {
     String token;
     String user_type;
+    StudentModel student_detail;
+    TeacherModel teacher_detail;
     int id;
+    String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public LoginResponseModel(String token, String user_type, int id, StudentModel student_detail, TeacherModel teacher_detail) {
         this.token = token;
@@ -20,9 +31,6 @@ public class LoginResponseModel {
     public void setId(int id) {
         this.id = id;
     }
-
-    StudentModel student_detail;
-    TeacherModel teacher_detail;
 
     public String getUser_type() {
         return user_type;

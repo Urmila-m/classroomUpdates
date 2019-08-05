@@ -123,7 +123,7 @@ public class ChangeAttendingDetailsActivity extends PreferenceInitializingActivi
                 else {
                     String message= isEmpty(getStringFromTIL(tilMessage))?"Can't attend today.":getStringFromTIL(tilMessage);
                     Log.e("TAG", "onClick: "+message);
-                    requestModel= new AttendClassRequestModel(schedule.getId(), getTodaysDateStringFormat(),  false, "00:00:00", "00:00:00", message, false);
+                    requestModel= new AttendClassRequestModel(schedule.getId(), getTodaysDateStringFormat(),  false, schedule.getFrom_time(), schedule.getTo_time(), message, false);
 
                 }
                 apiInterface.sendAttendDetails("Token "+preferences.getString("token", ""), requestModel)

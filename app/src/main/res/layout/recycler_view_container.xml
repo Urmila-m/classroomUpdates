@@ -10,10 +10,17 @@
         android:background="@drawable/background3"
         android:alpha="0.6"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_container"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_feedback"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_recycler_view_day"/>
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_recycler_view_day"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

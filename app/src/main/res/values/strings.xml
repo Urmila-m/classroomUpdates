@@ -111,6 +111,7 @@
     <string name="set_start_time">Set start time</string>
     <string name="set_end_time">Set end time</string>
     <string name="no_internet_connection">No internet connection :(</string>
+    <string name="attending">Attending</string>
 
     <string-array name="program_array">
         <item>Computer</item>
@@ -138,6 +139,11 @@
         <item>II</item>
     </string-array>
 
-
+    <string name="set_attend_time">Set attend time</string>
+    <string name="refresh">Refresh</string>
+    <string name="schedule_updated">Schedule Updated</string>
+    <string name="lab4">Lab 4</string>
+    <string name="updated_time">Updated time:</string>
+    <string name="dash">--</string>
 
 </resources>

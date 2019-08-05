@@ -4,8 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,17 +23,14 @@ import android.widget.Toast;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.fragment.ChangePasswordFragment;
 import com.myapp.classroomupdates.fragment.FeedbackFormFragment;
-import com.myapp.classroomupdates.fragment.ScheduleFragment;
-import com.myapp.classroomupdates.fragment.StudentHomePageFragment;
 import com.myapp.classroomupdates.fragment.StudentProfileFragment;
+import com.myapp.classroomupdates.interfaces.OnDataRetrievedListener;
 import com.myapp.classroomupdates.model.CanGiveFeedbackModel;
 import com.myapp.classroomupdates.model.LoginResponseModel;
-import com.myapp.classroomupdates.model.ScheduleModel;
 import com.myapp.classroomupdates.model.StudentModel;
-import com.myapp.classroomupdates.utility.NetworkUtils;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -44,41 +40,31 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.myapp.classroomupdates.Globals.apiInterface;
-import static com.myapp.classroomupdates.Globals.editor;
 import static com.myapp.classroomupdates.Globals.fromJsonToStudent;
-import static com.myapp.classroomupdates.Globals.getTodaysDateStringFormat;
 import static com.myapp.classroomupdates.Globals.preferences;
 import static com.myapp.classroomupdates.Globals.showSnackbar;
 
 public class AfterLoginActivityStudent extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private FrameLayout frameLayout;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
     private DrawerLayout drawer;
     private View feedbackTextView;
     private Toolbar toolbar;
     private NavigationView navigationView;
-    private TextView headerEmail;
+    private TextView headerEmail, noInternet;
     private CircleImageView headerImage;
     private boolean IS_SEMESTER_END;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("TAG", "onCreate: ");
         setContentView(R.layout.activity_after_login_student);
 
         findView();
         setUserDetails();
         setSupportActionBar(toolbar);
-
-        List<StudentHomePageFragment> list= new ArrayList<>();
-        StudentHomePageFragment fragment1= new StudentHomePageFragment();
-        StudentHomePageFragment fragment2= new StudentHomePageFragment();
-        StudentHomePageFragment fragment3= new StudentHomePageFragment();
-        list.add(fragment1);
-        list.add(fragment2);
-        list.add(fragment3);
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -86,6 +72,44 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
+
+        setSchedule(frameLayout, noInternet);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        Log.e("TAG", "onPostResume: ");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e("TAG", "onStart: " );
+    }
+
+    @Override
+    protected void onStop() {
+        Log.e("TAG", "onStop: " );
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.e("TAG", "onDestroy: ");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e("TAG", "onResume: " );
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e("TAG", "onPause: ");
     }
 
     @Override
@@ -106,14 +130,10 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_refresh) {
+            //TODO refresh
         }
         return super.onOptionsItemSelected(item);
     }
@@ -124,96 +144,35 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 //        item.setChecked(true);
+        if (id != R.id.nav_home){
+            noInternet.setVisibility(View.GONE);
+        }
         if (feedbackTextView.getParent()!=null){
             ((ViewGroup)feedbackTextView.getParent()).removeView(feedbackTextView);
         }
 
-        if (id!= R.id.nav_home){
-//            tabLayout.setVisibility(View.GONE);
-//            viewPager.setVisibility(View.GONE);
-        }
-
         if (id == R.id.nav_home) {
-            finish();
-            startActivity(new Intent(this, AfterLoginActivityStudent.class));
+            setSchedule(frameLayout, noInternet);
 
         } else if (id == R.id.nav_profile) {
-            Log.e("TAG", "onNavigationItemSelected: profile");
-                setFragment(frameLayout, new StudentProfileFragment(), "0");
+            setFragment(frameLayout, new StudentProfileFragment(), "0");
 
         }
         else if (id == R.id.nav_my_feedback){
             sendFeedbackToFragment(frameLayout, headerEmail);
 
-        }else if (id == R.id.nav_schedule) {
-            //its a frame layout and to avoid the previous loaded fragment be displayed in background
-            clearAllFragmentTransactions();
-            if (NetworkUtils.isNetworkConnected(this)) {
-                apiInterface.getUserRoutine("Token " + preferences.getString("token", ""), getTodaysDateStringFormat())
-                        .enqueue(new Callback<List<ScheduleModel>>() {
-                            @Override
-                            public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
-                                if (response.isSuccessful()) {
-                                    sendRoutineResponseToFragment(response, new ScheduleFragment(), frameLayout);
-                                } else {
-                                    Log.e("TAG", "onResponse: " + response.message());
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<List<ScheduleModel>> call, Throwable t) {
-                                Log.e("TAG", "onFailure: " + t.getMessage());
-                            }
-                        });
-            }
-            else {
-                showSnackbar(headerEmail, "Unable to fetch routine!!");
-            }
-
-        } else if (id == R.id.nav_change_password) {
+        }
+        else if (id == R.id.nav_change_password) {
             setFragment(frameLayout, new ChangePasswordFragment(), "0");
 
         }
         else if (id== R.id.nav_provide_feedback){
-            apiInterface.canGiveFeedback("Token "+preferences.getString("token", ""))
-                    .enqueue(new Callback<CanGiveFeedbackModel>() {
-                        @Override
-                        public void onResponse(Call<CanGiveFeedbackModel> call, Response<CanGiveFeedbackModel> response) {
-                            if (response.isSuccessful()) {
-                                IS_SEMESTER_END= response.body().isCan_give_feedback();
-                                if (IS_SEMESTER_END) {
-                                    getTeacherListAndStartFragment();
-                                }
-                                else {
-                                    clearAllFragmentTransactions();
-                                    frameLayout.addView(feedbackTextView);//for displaying message that you cant give feedback if its not sem end
-                                }
-                            }
-                            else {
-                                try {
-                                    String s= response.errorBody().string();
-                                    Log.e("TAG", "onResponse: "+s);
-                                    Toast.makeText(AfterLoginActivityStudent.this, "Something went wrong :(", Toast.LENGTH_LONG).show();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                        @Override
-                        public void onFailure(Call<CanGiveFeedbackModel> call, Throwable t) {
-                            Log.e("TAG", "onFailure: "+t.getMessage());
-//                            Toast.makeText(AfterLoginActivityStudent.this, "", Toast.LENGTH_SHORT).show();
-                            showSnackbar(headerEmail, "");//should actually check what error, but considering the cause to be no internet connection.
-                        }
-                    });
+            handleFeedback();
         }
         else if (id == R.id.nav_log_out) {
-            editor.remove("token");
-            editor.remove("Student");
-            editor.remove("user_type");
-            editor.remove("id");
-            editor.commit();
-            startActivity(new Intent(this, BeforeLoginActivity.class));
+           logout("Student");
+           startActivity(new Intent(this, BeforeLoginActivity.class));
+
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -228,6 +187,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         navigationView = findViewById(R.id.nav_view);
         headerImage= navigationView.getHeaderView(0).findViewById(R.id.header_imageView);
         headerEmail= navigationView.getHeaderView(0).findViewById(R.id.header_email);
+        noInternet= frameLayout.findViewById(R.id.tv_no_internet);
         feedbackTextView= LayoutInflater.from(this).inflate(R.layout.just_a_text_view_layout, null);
     }
 
@@ -235,8 +195,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
     private void setUserDetails(){
         StudentModel student= fromJsonToStudent(preferences.getString("Student", ""));
         headerEmail.setText(student.getEmail());
-        headerImage.setImageResource(R.drawable.portrait);
-//        Picasso.get().load("jkdsjfk").placeholder(R.drawable.portrait).into(headerImage);
+        Picasso.get().load(preferences.getString("image", "http://")).placeholder(R.drawable.portrait).into(headerImage);
     }
 
     private void getTeacherListAndStartFragment(){
@@ -256,8 +215,8 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                             bundle.putSerializable("hashMap", teacherMap);
                             FeedbackFormFragment fragment= new FeedbackFormFragment();
                             fragment.setArguments(bundle);
-                            setFragment(frameLayout, fragment, "0");
-
+                            OnDataRetrievedListener listener= AfterLoginActivityStudent.this;
+                            listener.onDataRetrieved(fragment, frameLayout, "getListOfTeachers");
                         }
                         else {
                             try {
@@ -274,7 +233,56 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                     }
                 });
     }
+
+    private void handleFeedback(){
+        apiInterface.canGiveFeedback("Token "+preferences.getString("token", ""))
+                .enqueue(new Callback<CanGiveFeedbackModel>() {
+                    @Override
+                    public void onResponse(Call<CanGiveFeedbackModel> call, Response<CanGiveFeedbackModel> response) {
+                        if (response.isSuccessful()) {
+                            IS_SEMESTER_END= response.body().isCan_give_feedback();
+                            if (IS_SEMESTER_END) {
+                                OnDataRetrievedListener listener= AfterLoginActivityStudent.this;
+                                listener.onDataRetrieved(new Fragment(), frameLayout, "canGiveFeedback");
+//                                getTeacherListAndStartFragment();
+                            }
+                            else {
+                                clearAllFragmentTransactions();
+                                frameLayout.addView(feedbackTextView);//for displaying message that you cant give feedback if its not sem end
+                            }
+                        }
+                        else {
+                            try {
+                                String s= response.errorBody().string();
+                                Log.e("TAG", "onResponse: "+s);
+                                Toast.makeText(AfterLoginActivityStudent.this, "Something went wrong :(", Toast.LENGTH_LONG).show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<CanGiveFeedbackModel> call, Throwable t) {
+                        Log.e("TAG", "onFailure: "+t.getMessage());
+//                            Toast.makeText(AfterLoginActivityStudent.this, "", Toast.LENGTH_SHORT).show();
+                        showSnackbar(headerEmail, "");//should actually check what error, but considering the cause to be no internet connection.
+                    }
+                });
+    }
+
     public FrameLayout getFrameLayout() {
         return frameLayout;
+    }
+
+    @Override
+    public void onDataRetrieved(Fragment fragment, FrameLayout frameLayout, String source) {
+        super.onDataRetrieved(fragment, frameLayout, source);
+        if (source.equals("canGiveFeedback")){
+            getTeacherListAndStartFragment();
+
+        }
+        else if (source.equals("getListOfTeachers")) {
+            setFragment(frameLayout, fragment, "0");//TODO Cause problem
+        }
     }
 }

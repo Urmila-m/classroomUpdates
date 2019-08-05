@@ -5,7 +5,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.activity.AfterLoginActivityStudent;
+import com.myapp.classroomupdates.activity.ImageUploadActivity;
 import com.myapp.classroomupdates.model.StudentModel;
 import com.squareup.picasso.Picasso;
 
@@ -23,6 +26,7 @@ import java.io.IOException;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
+import static com.myapp.classroomupdates.Globals.convertPathToBundle;
 import static com.myapp.classroomupdates.Globals.fromJsonToStudent;
 import static com.myapp.classroomupdates.Globals.preferences;
 
@@ -70,9 +74,7 @@ public class StudentProfileFragment extends BaseFragment {
         tvProgram.setText(student.getProgramme_name());
         tvGroup.setText(student.getGroup());
 
-            //TODO to set image from server, use picasso
-//        Picasso.get().load("").placeholder(R.drawable.portrait).into(ivStudent);
-        ivStudent.setImageDrawable(getActivity().getDrawable(R.drawable.portrait));
+        Picasso.get().load(preferences.getString("image", "http://")).placeholder(R.drawable.portrait).into(ivStudent);
         ivStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,9 +88,13 @@ public class StudentProfileFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==1 && resultCode== RESULT_OK && data!=null){
             Uri path= data.getData();
+            Log.e("TAG", "onActivityResult: imageSelected");
             try {
-                ImageDisplayFragment fragment= convertPathToFragment(path);
-                ((AfterLoginActivityStudent)getContext()).setFragment(frameLayout, fragment, "0");
+//                ImageDisplayFragment fragment= convertPathToFragment(path);
+                Intent intent= new Intent(getContext(), ImageUploadActivity.class);
+                intent.putExtra("imageByte", convertPathToBundle(getContext(), path));
+                startActivity(intent);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -14,11 +14,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.TextView;
 
 import com.myapp.classroomupdates.Globals;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.adapter.ScheduleAdapter;
+import com.myapp.classroomupdates.adapter.UpdatedScheduleAdapter;
 import com.myapp.classroomupdates.model.ScheduleModel;
 
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ public class ScheduleFragment extends Fragment {
 
     RecyclerView recyclerView;
     TextView tvDay;
-    ScheduleAdapter adapter;
+    RecyclerView.Adapter adapter;
     ArrayList<ScheduleModel> list;
     LinearLayoutManager linearLayoutManager;
     Bundle bundle;
@@ -55,8 +57,14 @@ public class ScheduleFragment extends Fragment {
 //        Log.e("TAG", "onAttach: " );
         super.onAttach(context);
         if (getArguments()!=null){
+            Log.e("TAG", "onAttach: "+getArguments().getString("adapter") );
             bundle= getArguments();
-            list= (ArrayList<ScheduleModel>) bundle.getSerializable("scheduleList");
+            if (bundle.getString("adapter").equals("ScheduleAdapter")) {
+                list = (ArrayList<ScheduleModel>) bundle.getSerializable("scheduleList");
+            }
+            else if (bundle.getString("adapter").equals("UpdatedScheduleAdapter")){
+                list = (ArrayList<ScheduleModel>) bundle.getSerializable("updatedRoutineList");
+            }
         }
     }
 
@@ -69,7 +77,6 @@ public class ScheduleFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//        Log.e("TAG", "onViewCreated: ");
         super.onViewCreated(view, savedInstanceState);
         tvDay= view.findViewById(R.id.tv_recycler_view_day);
         recyclerView= view.findViewById(R.id.rv_per_day);
@@ -77,11 +84,16 @@ public class ScheduleFragment extends Fragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        Log.e("TAG", "onActivityCreated: ");
         super.onActivityCreated(savedInstanceState);
         tvDay.setText(getTodaysDay());
         linearLayoutManager= new LinearLayoutManager(getContext());
-        adapter=new ScheduleAdapter(getContext(), list);
+        if (bundle.getString("adapter").equals("ScheduleAdapter")) {
+            adapter = new ScheduleAdapter(getContext(), list);
+        }
+        else if (bundle.getString("adapter").equals("UpdatedScheduleAdapter")) {
+            Log.e("TAG", "onActivityCreated: updated schedule" );
+            adapter= new UpdatedScheduleAdapter(getContext(), list);
+        }
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
     }

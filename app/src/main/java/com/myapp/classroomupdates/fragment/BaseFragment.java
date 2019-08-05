@@ -88,8 +88,6 @@ public class BaseFragment extends Fragment {
         byte [] imageByte= bitmapToByte(imageSelected);
         Bundle imageBundle= new Bundle();
         imageBundle.putByteArray("imageByte", imageByte);
-        String encodedImageString= Base64.encodeToString(imageByte, Base64.DEFAULT);
-        Log.e("TAG", "convertPathToFragment: "+encodedImageString);
         ImageDisplayFragment fragment= new ImageDisplayFragment();
         fragment.setArguments(imageBundle);
         return fragment;

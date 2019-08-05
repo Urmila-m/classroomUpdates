@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,9 @@ import com.myapp.classroomupdates.Globals;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.activity.AfterLoginActivityStudent;
 import com.myapp.classroomupdates.activity.AfterLoginTeacherActivity;
-import com.myapp.classroomupdates.model.PostResponse;
+import com.myapp.classroomupdates.activity.PreferenceInitializingActivity;
+import com.myapp.classroomupdates.interfaces.OnDataRetrievedListener;
+import com.myapp.classroomupdates.model.ImageUploadResponseModel;
 
 import java.io.IOException;
 
@@ -35,6 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.myapp.classroomupdates.Globals.apiInterface;
+import static com.myapp.classroomupdates.Globals.editor;
 import static com.myapp.classroomupdates.Globals.preferences;
 import static com.myapp.classroomupdates.Globals.showSnackbar;
 import static com.myapp.classroomupdates.Globals.showSthWentWrong;
@@ -42,7 +44,7 @@ import static com.myapp.classroomupdates.Globals.showSthWentWrong;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ImageDisplayFragment extends BaseFragment{
+public class ImageDisplayFragment extends BaseFragment implements OnDataRetrievedListener {
 
     private ImageView imageView;
     private Button button;
@@ -57,9 +59,11 @@ public class ImageDisplayFragment extends BaseFragment{
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        bundle= getArguments();
-        byte[] byteArray= bundle.getByteArray("imageByte");
-        bitmap= byteToBitmap(byteArray);
+        if (getArguments()!=null) {
+            bundle = getArguments();
+            byte[] byteArray = bundle.getByteArray("imageByte");
+            bitmap = byteToBitmap(byteArray);
+        }
     }
 
     @Override
@@ -71,6 +75,7 @@ public class ImageDisplayFragment extends BaseFragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.e("TAG", "onViewCreated: " );
         imageView= view.findViewById(R.id.iv_change_image);
         button= view.findViewById(R.id.btn_change_image);
         if (getContext() instanceof AfterLoginActivityStudent) {
@@ -84,6 +89,7 @@ public class ImageDisplayFragment extends BaseFragment{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.e("TAG", "onActivityCreated: ");
         imageView.setImageBitmap(bitmap);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,18 +101,23 @@ public class ImageDisplayFragment extends BaseFragment{
                 else {
                     Toast.makeText(getContext(), "No write permissions!!", Toast.LENGTH_SHORT).show();
                 }
+                Log.e("TAG", "onClick: test test test" );
                 apiInterface.uploadImage("Token "+preferences.getString("token", ""), "data:image/png;base64,"+bitmapToEncodedString(bitmap))
-                        .enqueue(new Callback<PostResponse>() {
+                        .enqueue(new Callback<ImageUploadResponseModel>() {
                             @Override
-                            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                            public void onResponse(Call<ImageUploadResponseModel> call, Response<ImageUploadResponseModel> response) {
                                 if (response.isSuccessful()){
-                                    Toast.makeText(getContext(), response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), response.body().getDetail(), Toast.LENGTH_LONG).show();
+                                    editor.putString("image", response.body().getUrl()).commit();
+                                    OnDataRetrievedListener listener= ImageDisplayFragment.this;
+                                    Fragment fragment = null;
                                     if (getContext() instanceof AfterLoginActivityStudent) {
-                                        ((AfterLoginActivityStudent) getContext()).setFragment(frameLayout, new StudentProfileFragment(), "0");
+                                        fragment= new StudentHomePageFragment();
                                     }
                                     else if (getContext() instanceof AfterLoginTeacherActivity){
-                                        ((AfterLoginTeacherActivity) getContext()).setFragment(frameLayout, new TeacherProfileFragment(), "0");
+                                        fragment= new TeacherProfileFragment();
                                     }
+                                    listener.onDataRetrieved(fragment, frameLayout, "uploadImage");
                                 }
                                 else {
                                     try {
@@ -116,16 +127,18 @@ public class ImageDisplayFragment extends BaseFragment{
                                     }
                                     showSthWentWrong(getContext());
                                 }
+
                             }
 
                             @Override
-                            public void onFailure(Call<PostResponse> call, Throwable t) {
+                            public void onFailure(Call<ImageUploadResponseModel> call, Throwable t) {
+                                showSnackbar(button, "Image upload failed!");
                                 Log.e("TAG", "onFailure: "+t.getMessage());
-                                showSnackbar(button, "");
                             }
                         });
             }
         });
+
     }
 
     private boolean hasWritePermissions(){
@@ -141,5 +154,11 @@ public class ImageDisplayFragment extends BaseFragment{
         if ((ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions((Activity) getContext(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
         }
+    }
+
+    @Override
+    public void onDataRetrieved(Fragment fragment, FrameLayout frameLayout, String source) {
+        Log.e("TAG", "onDataRetrieved: ");
+        ((PreferenceInitializingActivity)getContext()).setFragment(frameLayout, fragment, "0");
     }
 }

@@ -2,9 +2,14 @@ package com.myapp.classroomupdates;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.util.Base64;
@@ -13,6 +18,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.myapp.classroomupdates.fragment.ImageDisplayFragment;
 import com.myapp.classroomupdates.interfaces.ApiInterface;
 import com.myapp.classroomupdates.model.StudentModel;
 import com.myapp.classroomupdates.model.TeacherModel;
@@ -21,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -122,18 +129,20 @@ public class Globals extends Application {
 
     }
 
-    public static void saveUserToPreference(StudentModel student, String token, int id){
+    public static void saveUserToPreference(StudentModel student, String token, int id, String image){
         editor.putString("user_type", "Student");
         editor.putInt("id", id);
         editor.putString("Student", toJson(student));
         editor.putString("token", token);
+        editor.putString("image", image);
         editor.commit();
     }
 
-    public static void saveUserToPreference(TeacherModel teacher, String token, int id){
+    public static void saveUserToPreference(TeacherModel teacher, String token, int id, String image){
         editor.putString("user_type", "Teacher");
         editor.putString("Teacher", toJson(teacher));
         editor.putInt("id", id);
+        editor.putString("image", image);
         editor.putString("token", token);
         editor.commit();
     }
@@ -172,6 +181,52 @@ public class Globals extends Application {
     public static TeacherModel fromJsonToTeacher(String json){
         TeacherModel teacher= gson.fromJson(json, TeacherModel.class);
         return teacher;
+    }
+
+    public static Bundle convertPathToBundle(Context context, Uri path) throws IOException {
+        Bitmap imageSelected= MediaStore.Images.Media.getBitmap(context.getContentResolver(), path);
+        byte [] imageByte= bitmapToByte(imageSelected);
+        Bundle imageBundle= new Bundle();
+        imageBundle.putString("imageByte", byteArrayToString(imageByte));
+        return imageBundle;
+    }
+
+    public Bundle convertIntentDataBundle(Intent data){
+        Bundle extras = data.getExtras();
+        Bitmap imageSelected = (Bitmap) extras.get("data");
+        byte[] imageByte= bitmapToByte(imageSelected);
+        Bundle imageBundle= new Bundle();
+        imageBundle.putByteArray("imageByte", imageByte);
+        return imageBundle;
+    }
+
+    private static byte[] bitmapToByte(Bitmap bitmap){
+        ByteArrayOutputStream stream= new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] imageByte= stream.toByteArray();
+        return imageByte;
+    }
+
+    public static Bitmap byteToBitmap(byte[] byteArray){
+        Bitmap bitmap= BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        return bitmap;
+    }
+
+    public static String byteArrayToString(byte[] byteArray){
+        String encodedString= Base64.encodeToString(byteArray, Base64.DEFAULT);
+        return encodedString;
+    }
+
+    public static String bitmapToEncodedString(Bitmap bitmap){
+        byte[] byteArray= bitmapToByte(bitmap);
+        String encodedString= byteArrayToString(byteArray);
+        return encodedString;
+    }
+
+    public static Bitmap encodedStringToBitmap(String encodedString){
+        byte[] byteArray= Base64.decode(encodedString, Base64.DEFAULT);
+        Bitmap bitmap= byteToBitmap(byteArray);
+        return bitmap;
     }
 
 }

@@ -84,14 +84,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             public void onResponse(Call<LoginResponseModel> call, Response<LoginResponseModel> response) {
                                 if (response.isSuccessful()) {
                                     if (response.body().getUser_type().equals("Student")){
-                                        saveUserToPreference(response.body().getStudent_detail(), response.body().getToken(), response.body().getId());
+                                        saveUserToPreference(response.body().getStudent_detail(), response.body().getToken(), response.body().getId(), response.body().getImage());
                                         startActivity(new Intent(getContext(), AfterLoginActivityStudent.class));
                                     }
                                     else if (response.body().getUser_type().equals("Teacher")){
                                         Log.e("TAG", "onResponse: teacher");
-                                        saveUserToPreference(response.body().getTeacher_detail(), response.body().getToken(), response.body().getId());
+                                        saveUserToPreference(response.body().getTeacher_detail(), response.body().getToken(), response.body().getId(), response.body().getImage());
                                         startActivity(new Intent(getContext(), AfterLoginTeacherActivity.class));
                                     }
+                                    ((BeforeLoginActivity)getContext()).finish();
                                 }
                                 else {
                                     Toast.makeText(getContext(), "Incorrect email or Password!!", Toast.LENGTH_LONG).show();

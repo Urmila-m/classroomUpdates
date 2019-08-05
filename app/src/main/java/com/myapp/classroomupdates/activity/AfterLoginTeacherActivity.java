@@ -4,9 +4,8 @@ import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
@@ -23,16 +22,20 @@ import com.myapp.classroomupdates.fragment.ChangePasswordFragment;
 import com.myapp.classroomupdates.fragment.ScheduleFragment;
 import com.myapp.classroomupdates.fragment.SendNoticeFragment;
 import com.myapp.classroomupdates.fragment.TeacherProfileFragment;
+import com.myapp.classroomupdates.interfaces.OnDataRetrievedListener;
 import com.myapp.classroomupdates.model.ProgrammeModel;
 import com.myapp.classroomupdates.model.ScheduleModel;
 import com.myapp.classroomupdates.model.TeacherModel;
 import com.myapp.classroomupdates.utility.NetworkUtils;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,7 +45,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.myapp.classroomupdates.Globals.apiInterface;
-import static com.myapp.classroomupdates.Globals.editor;
 import static com.myapp.classroomupdates.Globals.fromJsonToTeacher;
 import static com.myapp.classroomupdates.Globals.getTodaysDateStringFormat;
 import static com.myapp.classroomupdates.Globals.preferences;
@@ -55,8 +57,6 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
     private NavigationView navigationView;
     private DrawerLayout drawer;
     private Toolbar toolbar;
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
     private TextView headerEmail, noInternet;
     private CircleImageView headerImage;
 
@@ -68,30 +68,7 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
         setViews();
         setUserDetails();
         setSupportActionBar(toolbar);
-
-        if(NetworkUtils.isNetworkConnected(this)) {
-            apiInterface.getUserRoutine("Token " + preferences.getString("token", ""), getTodaysDateStringFormat())
-                    .enqueue(new Callback<List<ScheduleModel>>() {
-                        @Override
-                        public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
-                            if (response.isSuccessful()) {
-                                Log.e("TAG", "onResponse: successful");
-                                sendRoutineResponseToFragment(response, new ScheduleFragment(), frameLayout);
-                            } else {
-                                Log.e("TAG", "onResponse:unsuccessful " + response.message());
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<List<ScheduleModel>> call, Throwable t) {
-                            Log.e("TAG", "onFailure: " + t.getMessage());
-                        }
-                    });
-        }
-        else {
-            noInternet.setVisibility(View.VISIBLE);
-            showSnackbar(navigationView, "Couldn't fetch routine");
-        }
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -99,6 +76,14 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
+
+        setSchedule(frameLayout, noInternet);
+    }
+
+    @Override
+    public void onDataRetrieved(Fragment fragment, FrameLayout frameLayout, String source) {
+        super.onDataRetrieved(fragment, frameLayout, source);
+        setFragment(frameLayout, fragment, "0");
     }
 
     @Override
@@ -117,14 +102,13 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
         getMenuInflater().inflate(R.menu.after_login, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -133,44 +117,19 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-//        item.setChecked(true);
-        if (id!= R.id.nav_home){
-//            tabLayout.setVisibility(View.GONE);
-//            viewPager.setVisibility(View.GONE);
-        }
 
+        if (id!= R.id.nav_home){
+            noInternet.setVisibility(View.GONE);
+        }
         if (id == R.id.nav_home) {
-//            startActivity(new Intent(this, AfterLoginTeacherActivity.class));
-//            finish();
-            clearAllFragmentTransactions();
-            this.recreate();
+            setSchedule(frameLayout, noInternet);
 
         } else if (id == R.id.nav_profile) {
             setFragment(frameLayout, new TeacherProfileFragment(), "0");
 
         } else if (id == R.id.nav_schedule) {
-            if(NetworkUtils.isNetworkConnected(this)) {
-                apiInterface.getUserRoutine("Token " + preferences.getString("token", ""), getTodaysDateStringFormat())
-                        .enqueue(new Callback<List<ScheduleModel>>() {
-                            @Override
-                            public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
-                                if (response.isSuccessful()) {
-                                    Log.e("TAG", "onResponse: successful");
-                                    sendRoutineResponseToFragment(response, new ScheduleFragment(), frameLayout);
-                                } else {
-                                    Log.e("TAG", "onResponse:unsuccessful " + response.message());
-                                }
-                            }
+            getUpdatedRoutineListToFragment();
 
-                            @Override
-                            public void onFailure(Call<List<ScheduleModel>> call, Throwable t) {
-                                Log.e("TAG", "onFailure: " + t.getMessage());
-                            }
-                        });
-            }
-            else {
-                showSnackbar(navigationView, "Couldn't fetch routine");
-            }
         } else if (id == R.id.nav_feedback) {
             sendFeedbackToFragment(frameLayout, headerEmail);
 
@@ -181,11 +140,7 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
             setFragment(frameLayout, new ChangePasswordFragment(), "0");
 
         } else if (id == R.id.nav_log_out) {
-            editor.remove("token");
-            editor.remove("Teacher");
-            editor.remove("user_type");
-            editor.remove("id");
-            editor.commit();
+            logout("Teacher");
             startActivity(new Intent(this, BeforeLoginActivity.class));
         }
 
@@ -203,14 +158,10 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
         headerImage= navigationView.getHeaderView(0).findViewById(R.id.header_imageView);
         headerEmail= navigationView.getHeaderView(0).findViewById(R.id.header_email);
         noInternet= frameLayout.findViewById(R.id.tv_no_internet);
-
-//        tabLayout= frameLayout.findViewById(R.id.tab_layout_schedule);
-//        viewPager= frameLayout.findViewById(R.id.viewpager_schedule);
     }
 
     private void setUserDetails(){
-        headerImage.setImageDrawable(getDrawable(R.drawable.portrait));
-//        Picasso.get().load("").placeholder(R.drawable.portrait).into(headerImage);
+        Picasso.get().load(preferences.getString("image", "http://")).placeholder(R.drawable.portrait).into(headerImage);
         TeacherModel teacher= fromJsonToTeacher(preferences.getString("Teacher", ""));
         headerEmail.setText(teacher.getEmail());
     }
@@ -234,7 +185,8 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
                             b.putSerializable("programList", hashMap);
                             SendNoticeFragment fragment= new SendNoticeFragment();
                             fragment.setArguments(b);
-                            setFragment(frameLayout, fragment, "0");
+                            OnDataRetrievedListener listener= AfterLoginTeacherActivity.this;
+                            listener.onDataRetrieved(fragment, frameLayout, "getAllPrograms");
                         }
                         else {
                             try {
@@ -261,4 +213,37 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
                     }
                 });
     }
+
+    public void getUpdatedRoutineListToFragment(){
+        apiInterface.getUpdatedRoutine("Token "+preferences.getString("token", ""))
+                .enqueue(new Callback<List<ScheduleModel>>() {
+                    @Override
+                    public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
+                        if(response.isSuccessful()){
+                            Bundle bundle= new Bundle();
+                            bundle.putSerializable("updatedRoutineList", (Serializable) response.body());
+                            bundle.putString("adapter", "UpdatedScheduleAdapter");
+                            ScheduleFragment fragment= new ScheduleFragment();
+                            fragment.setArguments(bundle);
+                            OnDataRetrievedListener listener= AfterLoginTeacherActivity.this;
+                            listener.onDataRetrieved(fragment, frameLayout, "getUpdatedRoutine");
+                        }
+                        else {
+                            try {
+                                Log.e("TAG", "onResponse: "+response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            showSthWentWrong(AfterLoginTeacherActivity.this);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<ScheduleModel>> call, Throwable t) {
+                        showSnackbar(headerEmail, "");
+                        Log.e("TAG", "onFailure: "+t.getMessage());
+                    }
+                });
+    }
+
 }

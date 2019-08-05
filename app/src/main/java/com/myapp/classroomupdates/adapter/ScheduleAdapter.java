@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -75,19 +76,19 @@ public class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int i) {
         if (viewHolder instanceof ScheduleViewHolder) {
             ScheduleViewHolder h = (ScheduleViewHolder) viewHolder;
-            h.startTime.setText(list.get(i).getCorrected_from_time());
-            h.endTime.setText(list.get(i).getCorrected_to_time());
+            h.startTime.setText(list.get(i).getCorrected_from_time().substring(0, 5));
+            h.endTime.setText(list.get(i).getCorrected_to_time().substring(0, 5));
             h.location.setText(list.get(i).getRoom());
+            h.chkAttend.setChecked(list.get(i).getIs_attending());
             if (preferences.getString("user_type", "").equals("Student")) {
                 h.teacherOrBatch.setText(list.get(i).getTeachers());
                 h.subject.setText(list.get(i).getSubject());
                 if(!isCR()){
-                    h.updateDate.setVisibility(View.GONE);
-                    h.tvUpdatedDate.setVisibility(View.GONE);
                     h.btnUpdate.setVisibility(View.GONE);
                     h.viewBar.setVisibility(GONE);
                 }
                 else {
+                    h.btnUpdate.setText(context.getString(R.string.set_attend_time));
                     h.btnUpdate.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(final View v) {
@@ -181,9 +182,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     class ScheduleViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView startTime, endTime, subject, teacherOrBatch, location, tvUpdatedDate, updateDate;
+        private TextView startTime, endTime, subject, teacherOrBatch, location;
         private Button btnUpdate;
         private View viewBar;
+        private CheckBox chkAttend;
 
         private ScheduleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -192,10 +194,9 @@ public class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             subject= itemView.findViewById(R.id.tv_subject_student_schedule);
             teacherOrBatch= itemView.findViewById(R.id.tv_teacher_student_schedule);
             location= itemView.findViewById(R.id.tv_location_student_schedule);
-            updateDate= itemView.findViewById(R.id.last_updated);
-            tvUpdatedDate= itemView.findViewById(R.id.tv_last_updated_date);
             viewBar= itemView.findViewById(R.id.view_bar);
             btnUpdate= itemView.findViewById(R.id.btn_update_routine);
+            chkAttend= itemView.findViewById(R.id.chk_schedule_attending);
 
         }
     }
