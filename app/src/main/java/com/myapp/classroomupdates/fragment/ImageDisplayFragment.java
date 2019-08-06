@@ -28,9 +28,11 @@ import com.myapp.classroomupdates.activity.AfterLoginTeacherActivity;
 import com.myapp.classroomupdates.activity.PreferenceInitializingActivity;
 import com.myapp.classroomupdates.interfaces.OnDataRetrievedListener;
 import com.myapp.classroomupdates.model.ImageUploadResponseModel;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -112,7 +114,7 @@ public class ImageDisplayFragment extends BaseFragment implements OnDataRetrieve
                                     OnDataRetrievedListener listener= ImageDisplayFragment.this;
                                     Fragment fragment = null;
                                     if (getContext() instanceof AfterLoginActivityStudent) {
-                                        fragment= new StudentHomePageFragment();
+                                        fragment= new StudentProfileFragment();
                                     }
                                     else if (getContext() instanceof AfterLoginTeacherActivity){
                                         fragment= new TeacherProfileFragment();
@@ -159,6 +161,14 @@ public class ImageDisplayFragment extends BaseFragment implements OnDataRetrieve
     @Override
     public void onDataRetrieved(Fragment fragment, FrameLayout frameLayout, String source) {
         Log.e("TAG", "onDataRetrieved: ");
+        CircleImageView imageView= null;
+        if (getContext() instanceof AfterLoginTeacherActivity){
+            imageView= ((AfterLoginTeacherActivity)getContext()).getHeaderImage();
+        }
+        else if (getContext() instanceof AfterLoginActivityStudent){
+            imageView= ((AfterLoginActivityStudent)getContext()).getHeaderImage();
+        }
+        Picasso.get().load(preferences.getString("image", "http://")).placeholder(R.drawable.portrait).into(imageView);
         ((PreferenceInitializingActivity)getContext()).setFragment(frameLayout, fragment, "0");
     }
 }

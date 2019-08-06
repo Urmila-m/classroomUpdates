@@ -90,10 +90,11 @@ public class StudentProfileFragment extends BaseFragment {
             Uri path= data.getData();
             Log.e("TAG", "onActivityResult: imageSelected");
             try {
-//                ImageDisplayFragment fragment= convertPathToFragment(path);
-                Intent intent= new Intent(getContext(), ImageUploadActivity.class);
-                intent.putExtra("imageByte", convertPathToBundle(getContext(), path));
-                startActivity(intent);
+                ImageDisplayFragment fragment= convertPathToFragment(path);
+                ((AfterLoginActivityStudent) getContext()).setFragment(frameLayout, fragment, "0");
+//                Intent intent= new Intent(getContext(), ImageUploadActivity.class);
+//                intent.putExtra("imageByte", convertPathToBundle(getContext(), path));
+//                startActivity(intent);
 
             } catch (IOException e) {
                 e.printStackTrace();

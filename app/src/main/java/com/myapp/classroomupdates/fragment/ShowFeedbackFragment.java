@@ -30,11 +30,10 @@ import static com.myapp.classroomupdates.Globals.apiInterface;
 import static com.myapp.classroomupdates.Globals.preferences;
 import static com.myapp.classroomupdates.Globals.showSnackbar;
 
-public class ShowFeedbackFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class ShowFeedbackFragment extends BaseFragment{
 
     private RecyclerView recyclerView;
     private FeedbackAdapter adapter;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView.LayoutManager layoutManager;
     private List<FeedbackModel> list;
     private Handler handler;
@@ -52,15 +51,6 @@ public class ShowFeedbackFragment extends BaseFragment implements SwipeRefreshLa
         super.onCreate(savedInstanceState);
         adapter= new FeedbackAdapter(getContext(), list);
         layoutManager= new LinearLayoutManager(getContext());
-        handler= new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                Log.e("TAG", "handleMessage: ");
-                super.handleMessage(msg);
-                list= (List<FeedbackModel>) msg.getData().getSerializable("feedBackList");
-                adapter.notifyDataSetChanged();
-            }
-        };
     }
 
     @Nullable
@@ -73,7 +63,6 @@ public class ShowFeedbackFragment extends BaseFragment implements SwipeRefreshLa
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView= view.findViewById(R.id.rv_container);
-        swipeRefreshLayout= view.findViewById(R.id.srl_feedback);
     }
 
     @Override
@@ -81,62 +70,6 @@ public class ShowFeedbackFragment extends BaseFragment implements SwipeRefreshLa
         super.onActivityCreated(savedInstanceState);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-//        swipeRefreshLayout.setEnabled(true);
-        swipeRefreshLayout.setColorSchemeColors(getContext().getColor(android.R.color.holo_green_dark),
-                getContext().getColor(android.R.color.holo_red_dark),
-                getContext().getColor(android.R.color.holo_blue_dark),
-                getContext().getColor(R.color.yellow)
-                );
-        swipeRefreshLayout.setOnRefreshListener(this);
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                Log.e("TAG", "onRefresh: " );
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override public void run() {
-//                        // Stop animation (This will be after 3 seconds)
-//                        swipeRefreshLayout.setRefreshing(false);
-//                    }
-//                }, 4000);
-//                apiInterface.getAllFeedback("Token "+preferences.getString("token", ""))
-//                        .enqueue(new Callback<List<FeedbackModel>>() {
-//                            @Override
-//                            public void onResponse(Call<List<FeedbackModel>> call, Response<List<FeedbackModel>> response) {
-//                                if (response.isSuccessful()){
-//                                    Log.e("TAG", "onResponse: successful" );
-//                                    Bundle b= new Bundle();
-//                                    b.putSerializable("feedbackList", (Serializable) response.body());
-//                                    Message msg= new Message();
-//                                    msg.setData(b);
-//                                    handler.sendMessage(msg);
-//                                }
-//                                else {
-//                                    try {
-//                                        Log.e("TAG", "onResponse: "+response.errorBody().string());
-//                                    } catch (IOException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Call<List<FeedbackModel>> call, Throwable t) {
-//                                Log.e("TAG", "onFailure: "+t.getMessage());
-//                                showSnackbar(recyclerView, "Couldn;t fetch feedback");
-//                            }
-//                        });
-//            }
-//        });
     }
 
-    @Override
-    public void onRefresh() {
-        Log.e("TAG", "onRefresh: " );
-        new Handler().postDelayed(new Runnable() {
-            @Override public void run() {
-                // Stop animation (This will be after 3 seconds)
-                swipeRefreshLayout.setRefreshing(false);
-            }
-            }, 4000);
-    }
 }

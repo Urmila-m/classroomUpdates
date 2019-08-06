@@ -8,13 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import com.myapp.classroomupdates.adapter.ScheduleAdapter;
 import com.myapp.classroomupdates.interfaces.OnDataRetrievedListener;
 import com.myapp.classroomupdates.model.ScheduleModel;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -43,9 +46,13 @@ public class TestActivity extends AppCompatActivity implements SwipeRefreshLayou
         recyclerView= findViewById(R.id.rv);
         swipeRefreshLayout.setOnRefreshListener(this);
         manager= new LinearLayoutManager(this);
+        adapter= new ScheduleAdapter(this, new ArrayList<ScheduleModel>());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(manager);
         handler= new Handler(){
             @Override
             public void handleMessage(Message msg) {
+                Log.e("TAG", "handleMessage: ");
                 super.handleMessage(msg);
                 list= (List<ScheduleModel>) msg.getData().getSerializable("schedulelist");
                 adapter = new ScheduleAdapter(TestActivity.this, list);
@@ -54,7 +61,7 @@ public class TestActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
         };
 
-        apiInterface.getUserRoutine("Token "+preferences.getString("token",""), getTodaysDateStringFormat())
+        apiInterface.getUserRoutine("Token 8908aa77b7e0f7a58be41c7c59072e39d8a43e22", getTodaysDateStringFormat())
                 .enqueue(new Callback<List<ScheduleModel>>() {
                     @Override
                     public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
@@ -66,11 +73,18 @@ public class TestActivity extends AppCompatActivity implements SwipeRefreshLayou
                             message.setData(bundle);
                             handler.sendMessage(message);
                         }
+                        else {
+                            try {
+                                Log.e("TAG", "onResponse: "+response.errorBody().string() );
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<List<ScheduleModel>> call, Throwable t) {
-
+                        Log.e("TAG", "onFailure: ");
                     }
                 });
 
@@ -79,6 +93,7 @@ public class TestActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
+        Log.e("TAG", "onRefresh: ");
         apiInterface.getUserRoutine("Token "+preferences.getString("token",""), getTodaysDateStringFormat())
                 .enqueue(new Callback<List<ScheduleModel>>() {
                     @Override
