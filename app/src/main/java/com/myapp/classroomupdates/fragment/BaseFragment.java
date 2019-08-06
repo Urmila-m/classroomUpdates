@@ -83,7 +83,7 @@ public class BaseFragment extends Fragment {
         return encodedString;
     }
 
-    public ImageDisplayFragment convertPathToFragment(Uri path) throws IOException {
+    protected ImageDisplayFragment convertPathToFragment(Uri path) throws IOException {
         Bitmap imageSelected= MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), path);
         byte [] imageByte= bitmapToByte(imageSelected);
         Bundle imageBundle= new Bundle();
@@ -93,7 +93,7 @@ public class BaseFragment extends Fragment {
         return fragment;
     }
 
-    public ImageDisplayFragment convertIntentDataToFragment(Intent data){
+    protected ImageDisplayFragment convertIntentDataToFragment(Intent data){
         Bundle extras = data.getExtras();
         Bitmap imageSelected = (Bitmap) extras.get("data");
         byte[] imageByte= bitmapToByte(imageSelected);

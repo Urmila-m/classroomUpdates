@@ -6,6 +6,7 @@ import com.myapp.classroomupdates.model.ClassResponseModel;
 import com.myapp.classroomupdates.model.FeedbackModel;
 import com.myapp.classroomupdates.model.ImageUploadResponseModel;
 import com.myapp.classroomupdates.model.LoginResponseModel;
+import com.myapp.classroomupdates.model.MarksResponseModel;
 import com.myapp.classroomupdates.model.NoticeModel;
 import com.myapp.classroomupdates.model.PostResponse;
 import com.myapp.classroomupdates.model.ProgrammeModel;
@@ -24,6 +25,9 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface ApiInterface {
+
+    @GET("get_internal_marks/")
+    Call<List<MarksResponseModel>> getMarks(@Header("Authorization") String token);
 
     @GET("get_routine_update_detail/")
     Call<List<ScheduleModel>> getUpdatedRoutine(@Header("Authorization") String token);

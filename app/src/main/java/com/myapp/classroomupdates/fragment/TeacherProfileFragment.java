@@ -66,7 +66,6 @@ public class TeacherProfileFragment extends BaseFragment {
         tvSubjects.setText(teacher.getSubjects());
         tvTime.setText(time);
         tvDepartment.setText(teacher.getDepartment());
-//        iv_teacher.setImageResource(R.drawable.portrait);
         Picasso.get().load(preferences.getString("image", "http://")).placeholder(R.drawable.portrait).into(iv_teacher);
 
         iv_teacher.setOnClickListener(new View.OnClickListener() {

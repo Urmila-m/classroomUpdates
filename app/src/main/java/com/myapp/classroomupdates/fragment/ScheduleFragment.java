@@ -54,7 +54,6 @@ public class ScheduleFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-//        Log.e("TAG", "onAttach: " );
         super.onAttach(context);
         if (getArguments()!=null){
             Log.e("TAG", "onAttach: "+getArguments().getString("adapter") );
@@ -70,7 +69,6 @@ public class ScheduleFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        Log.e("TAG", "onCreateView: ");
         View view= inflater.inflate(R.layout.per_day_schedule, container, false);
         return view;
     }

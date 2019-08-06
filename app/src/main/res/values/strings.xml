@@ -139,11 +139,20 @@
         <item>II</item>
     </string-array>
 
-    <string name="set_attend_time">Set attend time</string>
+    <string name="set_attend_time">Set time</string>
     <string name="refresh">Refresh</string>
     <string name="schedule_updated">Schedule Updated</string>
     <string name="lab4">Lab 4</string>
     <string name="updated_time">Updated time:</string>
     <string name="dash">--</string>
-
+    <string name="theory">(Theory)</string>
+    <string name="marks_obtained">Marks Obtained:</string>
+    <string name="marks_example">56</string>
+    <string name="total_marks">Total Marks:</string>
+    <string name="pass_marks">Pass Marks:</string>
+    <string name="year">Year:</string>
+    <string name="year_example">IV</string>
+    <string name="part">Part:</string>
+    <string name="part_example">II</string>
+    <string name="my_marks">My Marks</string>
 </resources>

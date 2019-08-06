@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:elevation="@dimen/elevation"
+    android:clipToPadding="true"
+    app:cardCornerRadius="@dimen/corner_radius"
+    android:layout_margin="@dimen/padding_5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/padding_10">
+
+        <RelativeLayout
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/year"
+                style="@style/NormalTitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_th_pr_marks"
+                android:text="@string/year" />
+
+            <TextView
+                android:id="@+id/tv_year_marks"
+                style="@style/NormalTitleStyle"
+                android:layout_marginHorizontal="0dp"
+                android:layout_marginTop="@dimen/padding_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_th_pr_marks"
+                android:layout_toEndOf="@id/year"
+                android:text="@string/year_example" />
+
+            <TextView
+                android:id="@+id/part"
+                style="@style/NormalTitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_th_pr_marks"
+                android:layout_toEndOf="@id/tv_year_marks"
+                android:text="@string/part" />
+
+            <TextView
+                android:id="@+id/tv_part_marks"
+                style="@style/NormalTitleStyle"
+                android:layout_marginHorizontal="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_th_pr_marks"
+                android:layout_toEndOf="@id/part"
+                android:text="@string/part_example" />
+
+            <TextView
+                android:id="@+id/tv_subject_marks"
+                style="@style/NormalTitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/subject" />
+
+            <TextView
+                android:id="@+id/tv_th_pr_marks"
+                style="@style/NormalTitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_subject_marks"
+                android:text="@string/theory"
+
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5">
+
+            <TextView
+                android:id="@+id/marks_obtained"
+                style="@style/NormalTitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/total_marks"
+                android:layout_alignStart="@id/pass_marks"
+                android:text="@string/marks_obtained" />
+
+            <TextView
+                android:id="@+id/tv_marks_obtained"
+                style="@style/NormalTitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/total_marks"
+                android:layout_toEndOf="@id/marks_obtained"
+                android:text="@string/marks_example" />
+
+            <TextView
+                android:id="@+id/total_marks"
+                style="@style/NormalTitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pass_marks"
+                android:layout_alignStart="@id/pass_marks"
+                android:layout_centerVertical="true"
+                android:text="@string/total_marks" />
+
+            <TextView
+                android:id="@+id/tv_total_marks"
+                style="@style/NormalTitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pass_marks"
+                android:layout_alignStart="@+id/tv_marks_obtained"
+                android:layout_marginStart="-1dp"
+                android:text="@string/marks_example" />
+
+            <TextView
+                android:id="@+id/pass_marks"
+                style="@style/NormalTitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padding_10"
+                android:text="@string/pass_marks" />
+
+            <TextView
+                android:id="@+id/tv_pass_marks"
+                style="@style/NormalTitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/tv_marks_obtained"
+                android:layout_marginStart="-1dp"
+                android:text="@string/marks_example" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

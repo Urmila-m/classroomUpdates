@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.activity.AfterLoginActivityStudent;
+import com.myapp.classroomupdates.activity.PreferenceInitializingActivity;
+import com.myapp.classroomupdates.interfaces.OnDataRetrievedListener;
 import com.myapp.classroomupdates.model.FeedbackModel;
 
 import org.json.JSONArray;
@@ -45,7 +47,7 @@ import static com.myapp.classroomupdates.Globals.showSnackbar;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FeedbackFormFragment extends Fragment {
+public class FeedbackFormFragment extends Fragment implements OnDataRetrievedListener {
     private RadioButton question1, question2;
     private TextInputLayout tilQuestion3;
     private Button btnSubmit;
@@ -99,40 +101,34 @@ public class FeedbackFormFragment extends Fragment {
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, teacherList);
         spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onClick(final View v) {
+                ((PreferenceInitializingActivity)getContext()).dialog.show();
+                String ans1= question1.isChecked()?"Yes":"No";
+                String ans2= question2.isChecked()?"Yes":"No";
+                String feedbackToTeacher= getStringFromTIL(tilQuestion3);
 
-                String selected= spinner.getItemAtPosition(position).toString();
+                String selected= spinner.getSelectedItem().toString();
                 String[] firstSplit= selected.split("  ", 2);
                 String[] secondSplit= firstSplit[0].split(":", 2);
                 selectedTeacherName= firstSplit[1];
                 selectedTeacherId= Integer.parseInt(secondSplit[1]);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                String ans1= question1.isChecked()?"Yes":"No";
-                String ans2= question2.isChecked()?"Yes":"No";
-                String feedbackToTeacher= getStringFromTIL(tilQuestion3);
 
                 apiInterface.giveFeedback("Token "+preferences.getString("token", ""), selectedTeacherId,
                         preferences.getInt("id", 0), feedbackToTeacher)
                         .enqueue(new Callback<FeedbackModel>() {
                             @Override
                             public void onResponse(Call<FeedbackModel> call, Response<FeedbackModel> response) {
+                                ((PreferenceInitializingActivity)getContext()).dialog.dismiss();
                                 if (response.isSuccessful()){
                                     Toast.makeText(getContext(), "Feedback sent successfully!", Toast.LENGTH_SHORT).show();
-                                    ((AfterLoginActivityStudent)getContext()).clearAllFragmentTransactions();
-                                    getActivity().recreate();
+                                    OnDataRetrievedListener listener= FeedbackFormFragment.this;
+                                    listener.onDataRetrieved(new Fragment(), new FrameLayout(getContext()), "giveFeedback");
                                 }
                                 else {
                                     try {
+                                        Log.e("TAG", "onResponse: "+response.errorBody().string());
                                         JSONObject jsonObject= new JSONObject(response.errorBody().string());
                                         JSONArray array= jsonObject.getJSONArray("review");
                                         String message="";
@@ -150,11 +146,18 @@ public class FeedbackFormFragment extends Fragment {
 
                             @Override
                             public void onFailure(Call<FeedbackModel> call, Throwable t) {
+                                ((PreferenceInitializingActivity)getContext()).dialog.dismiss();
                                 Log.e("TAG", "onFailure: "+t.getMessage());
                                 showSnackbar(v, "Couldn't send feedback!");
                             }
                         });
             }
         });
+    }
+
+    @Override
+    public void onDataRetrieved(Fragment fragment, FrameLayout frameLayout, String source) {
+        ((AfterLoginActivityStudent)getContext()).clearAllFragmentTransactions();
+        getActivity().recreate();
     }
 }

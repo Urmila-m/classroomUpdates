@@ -15,8 +15,10 @@ import android.widget.Toast;
 
 import com.myapp.classroomupdates.activity.AfterLoginActivityStudent;
 import com.myapp.classroomupdates.activity.AfterLoginTeacherActivity;
+import com.myapp.classroomupdates.activity.PreferenceInitializingActivity;
 import com.myapp.classroomupdates.interfaces.MultipleEditTextWatcher;
 import com.myapp.classroomupdates.R;
+import com.myapp.classroomupdates.interfaces.OnDataRetrievedListener;
 import com.myapp.classroomupdates.model.PostResponse;
 import com.myapp.classroomupdates.utility.NetworkUtils;
 
@@ -38,7 +40,7 @@ import static com.myapp.classroomupdates.Globals.isEmpty;
 import static com.myapp.classroomupdates.Globals.preferences;
 import static com.myapp.classroomupdates.Globals.showSnackbar;
 
-public class ChangePasswordFragment extends Fragment {
+public class ChangePasswordFragment extends Fragment implements OnDataRetrievedListener {
     private TextInputLayout tilCurrentPassword, tilNewPassword, tilConfirmPass;
     private Button btnSave;
     private FrameLayout frameLayout;
@@ -98,19 +100,16 @@ public class ChangePasswordFragment extends Fragment {
                         }
                         if(currentPassword.equals(password)){
                             if (NetworkUtils.isNetworkConnected(getContext())) {
+                                ((PreferenceInitializingActivity)getContext()).dialog.show();
                                 apiInterface.changeUserPassword("Token "+preferences.getString("token", ""), newPassword, newPassword)
                                         .enqueue(new Callback<PostResponse>() {
                                             @Override
                                             public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                                                ((PreferenceInitializingActivity)getContext()).dialog.dismiss();
                                                 if (response.isSuccessful()){
                                                     Toast.makeText(getContext(), response.body().getDetail(), Toast.LENGTH_LONG).show();
-                                                    if (getContext() instanceof AfterLoginTeacherActivity) {
-                                                        ((AfterLoginTeacherActivity) getContext()).clearAllFragmentTransactions();
-                                                    }
-                                                    else if (getContext() instanceof AfterLoginActivityStudent){
-                                                        ((AfterLoginActivityStudent) getContext()).clearAllFragmentTransactions();
-                                                    }
-                                                    getActivity().recreate();
+                                                    OnDataRetrievedListener listener= ChangePasswordFragment.this;
+                                                    listener.onDataRetrieved(new Fragment(), new FrameLayout(getContext()), "changeUserPassword");
                                                 }
                                                 else {
                                                     try {
@@ -135,6 +134,7 @@ public class ChangePasswordFragment extends Fragment {
                                             }
                                             @Override
                                             public void onFailure(Call<PostResponse> call, Throwable t) {
+                                                ((PreferenceInitializingActivity)getContext()).dialog.dismiss();
                                                 Log.e("TAG", "onFailure: "+t.getMessage());
                                                 Toast.makeText(getContext(), "Something went wrong :(", Toast.LENGTH_SHORT).show();
                                             }
@@ -168,4 +168,15 @@ public class ChangePasswordFragment extends Fragment {
             return false;
     }
 
+
+    @Override
+    public void onDataRetrieved(Fragment fragment, FrameLayout frameLayout, String source) {
+        if (getContext() instanceof AfterLoginTeacherActivity) {
+            ((AfterLoginTeacherActivity) getContext()).clearAllFragmentTransactions();
+        }
+        else if (getContext() instanceof AfterLoginActivityStudent){
+            ((AfterLoginActivityStudent) getContext()).clearAllFragmentTransactions();
+        }
+        getActivity().recreate();
+    }
 }

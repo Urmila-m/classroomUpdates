@@ -24,6 +24,7 @@ import static com.myapp.classroomupdates.Globals.preferences;
 import static com.myapp.classroomupdates.Globals.showSnackbar;
 
 import com.myapp.classroomupdates.R;
+import com.myapp.classroomupdates.activity.PreferenceInitializingActivity;
 import com.myapp.classroomupdates.model.NoticeModel;
 import com.myapp.classroomupdates.model.ProgrammeModel;
 
@@ -52,7 +53,7 @@ public class SendNoticeFragment extends BaseFragment {
     private Button sendNotice;
 
     private String selectedProgramName;
-    private int selectedprogramId;
+    private int selectedProgramId;
 
     @Override
     public void onAttach(Context context) {
@@ -96,7 +97,7 @@ public class SendNoticeFragment extends BaseFragment {
                 String[] firstSplit= selected.split("  ", 2);
                 String[] secondSplit= firstSplit[0].split(":", 2);
                 selectedProgramName= firstSplit[1];
-                selectedprogramId= Integer.parseInt(secondSplit[1]);
+                selectedProgramId= Integer.parseInt(secondSplit[1]);
             }
 
             @Override
@@ -107,6 +108,7 @@ public class SendNoticeFragment extends BaseFragment {
         sendNotice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
+                ((PreferenceInitializingActivity)getContext()).dialog.show();
                 NoticeModel noticeModel= new NoticeModel();
                 noticeModel.setNoticeBy(fromJsonToTeacher(preferences.getString("Teacher", "")).getUser());
                 noticeModel.setMessage(getStringFromTIL(tilNoticeDetail));
@@ -114,11 +116,12 @@ public class SendNoticeFragment extends BaseFragment {
                 noticeModel.setYear(spPart.getSelectedItem().toString());
                 noticeModel.setSendEmail(true);
                 noticeModel.setSendSms(sendSms.isChecked());
-                noticeModel.setProgramme(selectedprogramId);
+                noticeModel.setProgramme(selectedProgramId);
                 apiInterface.sendNotice("Token "+preferences.getString("token", ""), noticeModel)
                         .enqueue(new Callback<NoticeModel>() {
                             @Override
                             public void onResponse(Call<NoticeModel> call, Response<NoticeModel> response) {
+                                ((PreferenceInitializingActivity)getContext()).dialog.dismiss();
                                 if (response.isSuccessful()){
                                     String msg= sendSms.isChecked()?"Notice is sent via email and sms.":"Notice is sent via email.";
                                     Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
@@ -145,6 +148,7 @@ public class SendNoticeFragment extends BaseFragment {
 
                             @Override
                             public void onFailure(Call<NoticeModel> call, Throwable t) {
+                                ((PreferenceInitializingActivity)getContext()).dialog.dismiss();
                                 Log.e("TAG", "onFailure: "+t.getMessage());
                                 showSnackbar(v, "Couldn't post the notice!");
                             }

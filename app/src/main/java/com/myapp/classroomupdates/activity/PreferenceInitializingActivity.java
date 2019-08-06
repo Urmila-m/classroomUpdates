@@ -1,15 +1,18 @@
 package com.myapp.classroomupdates.activity;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.fragment.ScheduleFragment;
 import com.myapp.classroomupdates.fragment.ShowFeedbackFragment;
 import com.myapp.classroomupdates.interfaces.OnDataRetrievedListener;
@@ -36,10 +39,16 @@ import static com.myapp.classroomupdates.Globals.preferences;
 import static com.myapp.classroomupdates.Globals.showSnackbar;
 
 public class PreferenceInitializingActivity extends AppCompatActivity implements OnDataRetrievedListener {
+    public AlertDialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        View view= LayoutInflater.from(this).inflate(R.layout.show_progress_layout, null);
+        dialog= new AlertDialog.Builder(this)
+                .setView(view)
+                .setCancelable(false)
+                .create();
     }
 
     public void setFragment(FrameLayout frameLayout, Fragment fragment, String backstack){
@@ -61,10 +70,12 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
     }
 
     public void sendFeedbackToFragment(final FrameLayout frameLayout, final View view){
+        dialog.show();
         apiInterface.getAllFeedback("Token "+preferences.getString("token", ""))
                 .enqueue(new Callback<List<FeedbackModel>>() {
                     @Override
                     public void onResponse(Call<List<FeedbackModel>> call, Response<List<FeedbackModel>> response) {
+                        dialog.dismiss();
                         if (response.isSuccessful()){
                             ShowFeedbackFragment fragment= new ShowFeedbackFragment();
                             Bundle bundle= new Bundle();
@@ -72,7 +83,6 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
                             fragment.setArguments(bundle);
                             OnDataRetrievedListener listener= PreferenceInitializingActivity.this;
                             listener.onDataRetrieved(fragment, frameLayout, "getAllFeedback");
-//                            setFragment(frameLayout, fragment, "0");//TODO cause problem
                         }
                         else {
                             try {
@@ -85,6 +95,7 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
 
                     @Override
                     public void onFailure(Call<List<FeedbackModel>> call, Throwable t) {
+                        dialog.dismiss();
                         Log.e("TAG", "onFailure: "+t.getMessage());
                         showSnackbar(view, "Couldn;t fetch feedback");
                     }
@@ -93,10 +104,12 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
 
     public void setSchedule(final FrameLayout frameLayout, final TextView noInternet){
         if (NetworkUtils.isNetworkConnected(this)) {
+            dialog.show();
             apiInterface.getUserRoutine("Token " + preferences.getString("token", ""), getTodaysDateStringFormat())
                     .enqueue(new Callback<List<ScheduleModel>>() {
                         @Override
                         public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
+                            dialog.dismiss();
                             noInternet.setVisibility(View.GONE);
                             if (response.isSuccessful()) {
                                 ArrayList<ScheduleModel> list = (ArrayList<ScheduleModel>) response.body();
@@ -114,7 +127,9 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
 
                         @Override
                         public void onFailure(Call<List<ScheduleModel>> call, Throwable t) {
+                            dialog.dismiss();
                             Log.e("TAG", "onFailure: " + t.getMessage());
+                            showSnackbar(frameLayout, "");
                         }
                     });
         }
@@ -137,7 +152,7 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
     @Override
     public void onDataRetrieved(Fragment fragment, FrameLayout frameLayout, String source) {
         if (source.equals("getAllFeedback")) {
-            setFragment(frameLayout, fragment, "0");//TODO cause problem
+            setFragment(frameLayout, fragment, "0");
         }
         else if (source.equals("getUserRoutine")){
             setFragment(frameLayout, fragment, "0");

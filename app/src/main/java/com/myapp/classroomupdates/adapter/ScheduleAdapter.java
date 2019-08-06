@@ -108,28 +108,14 @@ public class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                             int min= timePicker.getMinute();
                                             String arrivalTime= String.format("%02d", hr)+ ":"+String.format("%02d", min)+":00";
                                             SetArrivalTimeModel arrivalTimeModel= new SetArrivalTimeModel(list.get(i).getId(), getTodaysDateStringFormat(), arrivalTime);
-                                            apiInterface.setArrivalTime("Token "+preferences.getString("token", ""), arrivalTimeModel)
-                                                    .enqueue(new Callback<SetArrivalTimeModel>() {
-                                                        @Override
-                                                        public void onResponse(Call<SetArrivalTimeModel> call, Response<SetArrivalTimeModel> response) {
-                                                            if (response.isSuccessful()){
-                                                                Toast.makeText(context, "Arrival time saved!", Toast.LENGTH_SHORT).show();
-                                                            }
-                                                            else {
-                                                                try {
-                                                                    Log.e("TAG", "onResponse: "+response.errorBody().string());
-                                                                } catch (IOException e) {
-                                                                    e.printStackTrace();
-                                                                }
-                                                                showSthWentWrong(context);
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onFailure(Call<SetArrivalTimeModel> call, Throwable t) {
-                                                            showSnackbar(v, "Couldn't save.");
-                                                        }
-                                                    });
+                                            setArrivalTime(arrivalTimeModel, v);
+                                        }
+                                    })
+                                    .setNegativeButton("Didn't attend", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            SetArrivalTimeModel arrivalTimeModel= new SetArrivalTimeModel(list.get(i).getId(), getTodaysDateStringFormat(), "00:00:00");
+                                            setArrivalTime(arrivalTimeModel, v);
                                         }
                                     });
                             builder.show();
@@ -180,7 +166,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
     }
 
-    class ScheduleViewHolder extends RecyclerView.ViewHolder {
+    private class ScheduleViewHolder extends RecyclerView.ViewHolder {
 
         private TextView startTime, endTime, subject, teacherOrBatch, location;
         private Button btnUpdate;
@@ -212,6 +198,32 @@ public class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private boolean isCR(){
         return fromJsonToStudent(preferences.getString("Student", "")).isIs_class_representative();
+    }
+
+    private void setArrivalTime(SetArrivalTimeModel arrivalTimeModel, final View v){
+        apiInterface.setArrivalTime("Token "+preferences.getString("token", ""), arrivalTimeModel)
+                .enqueue(new Callback<SetArrivalTimeModel>() {
+                    @Override
+                    public void onResponse(Call<SetArrivalTimeModel> call, Response<SetArrivalTimeModel> response) {
+                        if (response.isSuccessful()){
+                            Toast.makeText(context, "Arrival time saved!", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            try {
+                                Log.e("TAG", "onResponse: "+response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            showSthWentWrong(context);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SetArrivalTimeModel> call, Throwable t) {
+                        showSnackbar(v, "Couldn't save.");
+                    }
+                });
+
     }
 
     public void clearList(){

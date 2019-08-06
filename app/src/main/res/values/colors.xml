@@ -6,7 +6,7 @@
     <color name="colorAccent">#79000E</color>
 
     <!--light theme colors-->
-    <color name="lightColorAccent">#9979000E</color>
+    <color name="lightColorAccent">#BB79000E</color>
     <color name="lightColorPrimary">#3300796B</color>
     <color name="mediumColorPrimary">#7700796B</color>
 
@@ -20,5 +20,5 @@
     <color name="white">#ffffff</color>
 
     <color name="status_bar_color_intro_slide">#0F262E</color>
-    <color name="red_color">#dd794D4C</color>
+    <color name="red_color">#dd79000E</color>
 </resources>

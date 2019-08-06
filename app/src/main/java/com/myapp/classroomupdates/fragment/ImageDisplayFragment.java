@@ -98,16 +98,18 @@ public class ImageDisplayFragment extends BaseFragment implements OnDataRetrieve
             public void onClick(View v) {
                 getExternalCardWritePermission();
                 if (hasWritePermissions()) {
-                    Globals.saveBitmapToCard(bitmap);
+                    Globals.saveBitmapToCard(bitmap, preferences.getString("token", "test"));
                 }
                 else {
                     Toast.makeText(getContext(), "No write permissions!!", Toast.LENGTH_SHORT).show();
                 }
                 Log.e("TAG", "onClick: test test test" );
+                ((PreferenceInitializingActivity)getContext()).dialog.show();
                 apiInterface.uploadImage("Token "+preferences.getString("token", ""), "data:image/png;base64,"+bitmapToEncodedString(bitmap))
                         .enqueue(new Callback<ImageUploadResponseModel>() {
                             @Override
                             public void onResponse(Call<ImageUploadResponseModel> call, Response<ImageUploadResponseModel> response) {
+                                ((PreferenceInitializingActivity)getContext()).dialog.dismiss();
                                 if (response.isSuccessful()){
                                     Toast.makeText(getContext(), response.body().getDetail(), Toast.LENGTH_LONG).show();
                                     editor.putString("image", response.body().getUrl()).commit();
@@ -134,6 +136,7 @@ public class ImageDisplayFragment extends BaseFragment implements OnDataRetrieve
 
                             @Override
                             public void onFailure(Call<ImageUploadResponseModel> call, Throwable t) {
+                                ((PreferenceInitializingActivity)getContext()).dialog.dismiss();
                                 showSnackbar(button, "Image upload failed!");
                                 Log.e("TAG", "onFailure: "+t.getMessage());
                             }
@@ -160,7 +163,7 @@ public class ImageDisplayFragment extends BaseFragment implements OnDataRetrieve
 
     @Override
     public void onDataRetrieved(Fragment fragment, FrameLayout frameLayout, String source) {
-        Log.e("TAG", "onDataRetrieved: ");
+        Log.e("TAG", "onDataRetrieved: "+fragment);
         CircleImageView imageView= null;
         if (getContext() instanceof AfterLoginTeacherActivity){
             imageView= ((AfterLoginTeacherActivity)getContext()).getHeaderImage();

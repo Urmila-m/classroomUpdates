@@ -171,10 +171,12 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
     }
 
     private void getProgramsToNoticeFragment(){
+        dialog.show();
         apiInterface.getAllPrograms("Token "+preferences.getString("token", ""))
                 .enqueue(new Callback<List<ProgrammeModel>>() {
                     @Override
                     public void onResponse(Call<List<ProgrammeModel>> call, Response<List<ProgrammeModel>> response) {
+                        dialog.dismiss();
                         if (response.isSuccessful()){
                             HashMap<Integer, String> hashMap= new HashMap<>();
                             for (ProgrammeModel m:response.body()
@@ -208,6 +210,7 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
 
                     @Override
                     public void onFailure(Call<List<ProgrammeModel>> call, Throwable t) {
+                        dialog.dismiss();
                         Log.e("TAG", "onFailure: "+t.getMessage());
                         showSnackbar(headerEmail, "");
                     }
@@ -215,10 +218,12 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
     }
 
     public void getUpdatedRoutineListToFragment(){
+        dialog.show();
         apiInterface.getUpdatedRoutine("Token "+preferences.getString("token", ""))
                 .enqueue(new Callback<List<ScheduleModel>>() {
                     @Override
                     public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
+                        dialog.dismiss();
                         if(response.isSuccessful()){
                             Bundle bundle= new Bundle();
                             bundle.putSerializable("updatedRoutineList", (Serializable) response.body());
@@ -240,6 +245,7 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
 
                     @Override
                     public void onFailure(Call<List<ScheduleModel>> call, Throwable t) {
+                        dialog.dismiss();
                         showSnackbar(headerEmail, "");
                         Log.e("TAG", "onFailure: "+t.getMessage());
                     }

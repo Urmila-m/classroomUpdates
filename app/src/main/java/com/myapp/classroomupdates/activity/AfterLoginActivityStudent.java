@@ -23,14 +23,17 @@ import android.widget.Toast;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.fragment.ChangePasswordFragment;
 import com.myapp.classroomupdates.fragment.FeedbackFormFragment;
+import com.myapp.classroomupdates.fragment.MarksFragment;
 import com.myapp.classroomupdates.fragment.StudentProfileFragment;
 import com.myapp.classroomupdates.interfaces.OnDataRetrievedListener;
 import com.myapp.classroomupdates.model.CanGiveFeedbackModel;
 import com.myapp.classroomupdates.model.LoginResponseModel;
+import com.myapp.classroomupdates.model.MarksResponseModel;
 import com.myapp.classroomupdates.model.StudentModel;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,6 +46,7 @@ import static com.myapp.classroomupdates.Globals.apiInterface;
 import static com.myapp.classroomupdates.Globals.fromJsonToStudent;
 import static com.myapp.classroomupdates.Globals.preferences;
 import static com.myapp.classroomupdates.Globals.showSnackbar;
+import static com.myapp.classroomupdates.Globals.showSthWentWrong;
 
 public class AfterLoginActivityStudent extends PreferenceInitializingActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -74,42 +78,6 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         navigationView.getMenu().getItem(0).setChecked(true);
 
         setSchedule(frameLayout, noInternet);
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        Log.e("TAG", "onPostResume: ");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.e("TAG", "onStart: " );
-    }
-
-    @Override
-    protected void onStop() {
-        Log.e("TAG", "onStop: " );
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.e("TAG", "onDestroy: ");
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e("TAG", "onResume: " );
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.e("TAG", "onPause: ");
     }
 
     public CircleImageView getHeaderImage() {
@@ -170,6 +138,9 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
             setFragment(frameLayout, new ChangePasswordFragment(), "0");
 
         }
+        else if (id == R.id.nav_marks){
+            getMyMarks();
+        }
         else if (id== R.id.nav_provide_feedback){
             handleFeedback();
         }
@@ -195,7 +166,6 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         feedbackTextView= LayoutInflater.from(this).inflate(R.layout.just_a_text_view_layout, null);
     }
 
-
     private void setUserDetails(){
         StudentModel student= fromJsonToStudent(preferences.getString("Student", ""));
         headerEmail.setText(student.getEmail());
@@ -207,6 +177,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                 .enqueue(new Callback<List<LoginResponseModel>>() {
                     @Override
                     public void onResponse(Call<List<LoginResponseModel>> call, Response<List<LoginResponseModel>> response) {
+                        dialog.dismiss();
                         if (response.isSuccessful()){
                             HashMap<Integer, String> teacherMap= new HashMap<>();
                             for (LoginResponseModel m:response.body()
@@ -233,12 +204,15 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
 
                     @Override
                     public void onFailure(Call<List<LoginResponseModel>> call, Throwable t) {
+                        dialog.dismiss();
+                        showSnackbar(headerEmail, "");
                         Log.e("TAG", "onFailure: "+t.getMessage());
                     }
                 });
     }
 
     private void handleFeedback(){
+        dialog.show();
         apiInterface.canGiveFeedback("Token "+preferences.getString("token", ""))
                 .enqueue(new Callback<CanGiveFeedbackModel>() {
                     @Override
@@ -248,14 +222,15 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                             if (IS_SEMESTER_END) {
                                 OnDataRetrievedListener listener= AfterLoginActivityStudent.this;
                                 listener.onDataRetrieved(new Fragment(), frameLayout, "canGiveFeedback");
-//                                getTeacherListAndStartFragment();
                             }
                             else {
+                                dialog.dismiss();
                                 clearAllFragmentTransactions();
                                 frameLayout.addView(feedbackTextView);//for displaying message that you cant give feedback if its not sem end
                             }
                         }
                         else {
+                            dialog.dismiss();
                             try {
                                 String s= response.errorBody().string();
                                 Log.e("TAG", "onResponse: "+s);
@@ -268,8 +243,42 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                     @Override
                     public void onFailure(Call<CanGiveFeedbackModel> call, Throwable t) {
                         Log.e("TAG", "onFailure: "+t.getMessage());
-//                            Toast.makeText(AfterLoginActivityStudent.this, "", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                         showSnackbar(headerEmail, "");//should actually check what error, but considering the cause to be no internet connection.
+                    }
+                });
+    }
+
+    private void getMyMarks(){
+        dialog.show();
+        apiInterface.getMarks("Token "+preferences.getString("token", ""))
+                .enqueue(new Callback<List<MarksResponseModel>>() {
+                    @Override
+                    public void onResponse(Call<List<MarksResponseModel>> call, Response<List<MarksResponseModel>> response) {
+                        dialog.dismiss();
+                        if (response.isSuccessful()){
+                            Bundle bundle= new Bundle();
+                            bundle.putSerializable("marksList", (Serializable) response.body());
+                            MarksFragment fragment= new MarksFragment();
+                            fragment.setArguments(bundle);
+                            OnDataRetrievedListener listener= AfterLoginActivityStudent.this;
+                            listener.onDataRetrieved(fragment, frameLayout, "getMarks");
+                        }
+                        else {
+                            try {
+                                Log.e("TAG", "onResponse: "+response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            showSthWentWrong(AfterLoginActivityStudent.this);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<MarksResponseModel>> call, Throwable t) {
+                        dialog.dismiss();
+                        Log.e("TAG", "onFailure: "+t.getMessage() );
+                        showSnackbar(headerEmail, "");
                     }
                 });
     }
@@ -285,8 +294,10 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
             getTeacherListAndStartFragment();
 
         }
-        else if (source.equals("getListOfTeachers")) {
-            setFragment(frameLayout, fragment, "0");//TODO Cause problem
+        else if (source.equals("getListOfTeachers")||source.equals("getMarks")) {
+            setFragment(frameLayout, fragment, "0");
         }
     }
+
+
 }

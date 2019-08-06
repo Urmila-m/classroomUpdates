@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.myapp.classroomupdates.activity.AfterLoginActivityStudent;
 import com.myapp.classroomupdates.activity.AfterLoginTeacherActivity;
 import com.myapp.classroomupdates.activity.BeforeLoginActivity;
+import com.myapp.classroomupdates.activity.PreferenceInitializingActivity;
 import com.myapp.classroomupdates.interfaces.MultipleEditTextWatcher;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.model.LoginResponseModel;
@@ -79,9 +80,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         Log.e("TAG", "onClick: valid data");
                         String email = tilEmail.getEditText().getText().toString();
                         String password = tilPassword.getEditText().getText().toString();
+                        ((PreferenceInitializingActivity)getActivity()).dialog.show();
                         apiInterface.getUserDetails(email, password).enqueue(new Callback<LoginResponseModel>() {
                             @Override
                             public void onResponse(Call<LoginResponseModel> call, Response<LoginResponseModel> response) {
+                                ((PreferenceInitializingActivity)getActivity()).dialog.dismiss();
                                 if (response.isSuccessful()) {
                                     if (response.body().getUser_type().equals("Student")){
                                         saveUserToPreference(response.body().getStudent_detail(), response.body().getToken(), response.body().getId(), response.body().getImage());
@@ -101,6 +104,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             @Override
                             public void onFailure(Call<LoginResponseModel> call, Throwable t) {
                                 Log.e("TAG", "onFailure: "+t.getMessage());
+                                ((PreferenceInitializingActivity)getActivity()).dialog.dismiss();
                             }
                         });
                     }
@@ -113,6 +117,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 }
                 else if(isEmpty(tilPassword.getEditText().getText().toString())){
                     Toast.makeText(getContext(), "Password can't be empty!!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getContext(), "Make sure there is no error!!", Toast.LENGTH_SHORT).show();
                 }
 
             } else if (v == forgotPassword) {
