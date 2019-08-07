@@ -35,7 +35,6 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity{
                 finish();
             }
             else {
-//                getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
                 setFragment(frameLayout, new FirstPageFragment(), "0");
             }
         }

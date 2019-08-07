@@ -20,6 +20,8 @@ import com.myapp.classroomupdates.interfaces.MultipleEditTextWatcher;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.interfaces.OnDataRetrievedListener;
 import com.myapp.classroomupdates.model.PostResponse;
+import com.myapp.classroomupdates.model.StudentModel;
+import com.myapp.classroomupdates.model.TeacherModel;
 import com.myapp.classroomupdates.utility.NetworkUtils;
 
 import org.json.JSONArray;
@@ -33,12 +35,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.myapp.classroomupdates.Globals.apiInterface;
+import static com.myapp.classroomupdates.Globals.editor;
 import static com.myapp.classroomupdates.Globals.fromJsonToStudent;
 import static com.myapp.classroomupdates.Globals.fromJsonToTeacher;
 import static com.myapp.classroomupdates.Globals.getStringFromTIL;
 import static com.myapp.classroomupdates.Globals.isEmpty;
 import static com.myapp.classroomupdates.Globals.preferences;
 import static com.myapp.classroomupdates.Globals.showSnackbar;
+import static com.myapp.classroomupdates.Globals.toJson;
 
 public class ChangePasswordFragment extends Fragment implements OnDataRetrievedListener {
     private TextInputLayout tilCurrentPassword, tilNewPassword, tilConfirmPass;
@@ -89,7 +93,7 @@ public class ChangePasswordFragment extends Fragment implements OnDataRetrievedL
                 Log.e("TAG", "onClick: clicked" );
                 if (isValidData()) {
                     if (getStringFromTIL(tilNewPassword).equals(getStringFromTIL(tilConfirmPass))) {
-                        String newPassword = getStringFromTIL(tilNewPassword);
+                        final String newPassword = getStringFromTIL(tilNewPassword);
                         String currentPassword = getStringFromTIL(tilCurrentPassword);
                         String password = null;
                         if (preferences.getString("user_type", "").equals("Student")){
@@ -108,6 +112,16 @@ public class ChangePasswordFragment extends Fragment implements OnDataRetrievedL
                                                 ((PreferenceInitializingActivity)getContext()).dialog.dismiss();
                                                 if (response.isSuccessful()){
                                                     Toast.makeText(getContext(), response.body().getDetail(), Toast.LENGTH_LONG).show();
+                                                    if (preferences.getString("user_type", "").equals("Student")){
+                                                        StudentModel student= fromJsonToStudent(preferences.getString("Student", ""));
+                                                        student.setPassword(newPassword);
+                                                        editor.putString("Student", toJson(student)).commit();
+                                                    }
+                                                    else if (preferences.getString("user_type", "").equals("Teacher")){
+                                                        TeacherModel teacher = fromJsonToTeacher(preferences.getString("Teacher", ""));
+                                                        teacher.setPassword(newPassword);
+                                                        editor.putString("Teacher", toJson(teacher)).commit();
+                                                    }
                                                     OnDataRetrievedListener listener= ChangePasswordFragment.this;
                                                     listener.onDataRetrieved(new Fragment(), new FrameLayout(getContext()), "changeUserPassword");
                                                 }

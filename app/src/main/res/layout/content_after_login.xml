@@ -24,7 +24,9 @@
            style="@style/NormalTitleStyle"
            android:gravity="center"
            android:text="@string/no_internet_connection"
-           android:visibility="gone"/>
+           android:visibility="gone"
+           />
+
     </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

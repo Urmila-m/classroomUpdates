@@ -131,7 +131,7 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
             getUpdatedRoutineListToFragment();
 
         } else if (id == R.id.nav_feedback) {
-            sendFeedbackToFragment(frameLayout, headerEmail);
+            sendFeedbackToFragment(frameLayout, headerEmail, noInternet);
 
         } else if(id== R.id.nav_send_notice){
             getProgramsToNoticeFragment();
@@ -178,6 +178,7 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
                     public void onResponse(Call<List<ProgrammeModel>> call, Response<List<ProgrammeModel>> response) {
                         dialog.dismiss();
                         if (response.isSuccessful()){
+                            hideNoInternetLayout(noInternet);
                             HashMap<Integer, String> hashMap= new HashMap<>();
                             for (ProgrammeModel m:response.body()
                                  ) {
@@ -191,6 +192,7 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
                             listener.onDataRetrieved(fragment, frameLayout, "getAllPrograms");
                         }
                         else {
+                            showNoInternetlayout("Something went wrong :(", noInternet);
                             try {
                                 JSONObject jsonObject= new JSONObject(response.errorBody().string());
                                 JSONArray array= jsonObject.getJSONArray("review");
@@ -211,6 +213,7 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
                     @Override
                     public void onFailure(Call<List<ProgrammeModel>> call, Throwable t) {
                         dialog.dismiss();
+                        showNoInternetlayout("No internet connections..", noInternet);
                         Log.e("TAG", "onFailure: "+t.getMessage());
                         showSnackbar(headerEmail, "");
                     }
@@ -224,6 +227,7 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
                     @Override
                     public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
                         dialog.dismiss();
+                        hideNoInternetLayout(noInternet);
                         if(response.isSuccessful()){
                             Bundle bundle= new Bundle();
                             bundle.putSerializable("updatedRoutineList", (Serializable) response.body());
@@ -234,6 +238,7 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
                             listener.onDataRetrieved(fragment, frameLayout, "getUpdatedRoutine");
                         }
                         else {
+                            showNoInternetlayout("Something went wrong :(", noInternet);
                             try {
                                 Log.e("TAG", "onResponse: "+response.errorBody().string());
                             } catch (IOException e) {
@@ -246,6 +251,7 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
                     @Override
                     public void onFailure(Call<List<ScheduleModel>> call, Throwable t) {
                         dialog.dismiss();
+                        showNoInternetlayout("No internet connections", noInternet);
                         showSnackbar(headerEmail, "");
                         Log.e("TAG", "onFailure: "+t.getMessage());
                     }

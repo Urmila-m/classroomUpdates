@@ -126,10 +126,12 @@ public class ChangeAttendingDetailsActivity extends PreferenceInitializingActivi
                     requestModel= new AttendClassRequestModel(schedule.getId(), getTodaysDateStringFormat(),  false, schedule.getFrom_time(), schedule.getTo_time(), message, false);
 
                 }
+                dialog.show();
                 apiInterface.sendAttendDetails("Token "+preferences.getString("token", ""), requestModel)
                         .enqueue(new Callback<ClassResponseModel>() {
                             @Override
                             public void onResponse(Call<ClassResponseModel> call, Response<ClassResponseModel> response) {
+                                dialog.dismiss();
                                 if (response.isSuccessful()){
                                     Toast.makeText(ChangeAttendingDetailsActivity.this, "Routine updated!!", Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(ChangeAttendingDetailsActivity.this, AfterLoginTeacherActivity.class));
@@ -147,6 +149,7 @@ public class ChangeAttendingDetailsActivity extends PreferenceInitializingActivi
 
                             @Override
                             public void onFailure(Call<ClassResponseModel> call, Throwable t) {
+                                dialog.dismiss();
                                 Log.e("TAG", "onFailure: "+t.getMessage());
                                 showSnackbar(v, "Couldn't update routine.");
                             }

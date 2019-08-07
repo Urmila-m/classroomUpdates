@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.myapp.classroomupdates.Globals;
 import com.myapp.classroomupdates.R;
 import com.myapp.classroomupdates.fragment.ScheduleFragment;
 import com.myapp.classroomupdates.fragment.ShowFeedbackFragment;
@@ -69,7 +70,7 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
         }
     }
 
-    public void sendFeedbackToFragment(final FrameLayout frameLayout, final View view){
+    public void sendFeedbackToFragment(final FrameLayout frameLayout, final View view, final TextView noInternet){
         dialog.show();
         apiInterface.getAllFeedback("Token "+preferences.getString("token", ""))
                 .enqueue(new Callback<List<FeedbackModel>>() {
@@ -77,12 +78,14 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
                     public void onResponse(Call<List<FeedbackModel>> call, Response<List<FeedbackModel>> response) {
                         dialog.dismiss();
                         if (response.isSuccessful()){
+                            hideNoInternetLayout(noInternet);
                             ShowFeedbackFragment fragment= new ShowFeedbackFragment();
                             Bundle bundle= new Bundle();
                             bundle.putSerializable("feedbackList", (Serializable) response.body());
                             fragment.setArguments(bundle);
                             OnDataRetrievedListener listener= PreferenceInitializingActivity.this;
                             listener.onDataRetrieved(fragment, frameLayout, "getAllFeedback");
+
                         }
                         else {
                             try {
@@ -90,6 +93,7 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
+                            showNoInternetlayout("Something went wrong :(", noInternet);
                         }
                     }
 
@@ -98,19 +102,22 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
                         dialog.dismiss();
                         Log.e("TAG", "onFailure: "+t.getMessage());
                         showSnackbar(view, "Couldn;t fetch feedback");
+                        showNoInternetlayout("No internet connection..", noInternet);
                     }
                 });
     }
 
     public void setSchedule(final FrameLayout frameLayout, final TextView noInternet){
         if (NetworkUtils.isNetworkConnected(this)) {
-            dialog.show();
+            if (!dialog.isShowing()) {
+                dialog.show();
+            }
             apiInterface.getUserRoutine("Token " + preferences.getString("token", ""), getTodaysDateStringFormat())
                     .enqueue(new Callback<List<ScheduleModel>>() {
                         @Override
                         public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
                             dialog.dismiss();
-                            noInternet.setVisibility(View.GONE);
+                            hideNoInternetLayout(noInternet);
                             if (response.isSuccessful()) {
                                 ArrayList<ScheduleModel> list = (ArrayList<ScheduleModel>) response.body();
                                 Bundle b = new Bundle();
@@ -121,6 +128,7 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
                                 OnDataRetrievedListener listener= PreferenceInitializingActivity.this;  //listener required because commiting a transaction inside an async thread
                                 listener.onDataRetrieved(fragment, frameLayout, "getUserRoutine"); //throws exception as the thread has no knowledge of the activity state
                             } else {
+                                showNoInternetlayout("Something went wrong :(", noInternet);
                                 Log.e("TAG", "onResponse: " + response.message());
                             }
                         }
@@ -134,7 +142,7 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
                     });
         }
         else {
-            noInternet.setVisibility(View.VISIBLE);
+            showNoInternetlayout("No internet connection..", noInternet);
             showSnackbar(frameLayout, "Unable to fetch routine!!");
         }
     }
@@ -148,6 +156,17 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
         editor.commit();
         finish();
     }
+
+    public void showNoInternetlayout(String message, TextView noInternet){
+        clearAllFragmentTransactions();
+        noInternet.setVisibility(View.VISIBLE);
+        noInternet.setText(message);
+    }
+
+    public static void hideNoInternetLayout(TextView noInternet){
+        noInternet.setVisibility(View.GONE);
+    }
+
 
     @Override
     public void onDataRetrieved(Fragment fragment, FrameLayout frameLayout, String source) {

@@ -84,8 +84,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         apiInterface.getUserDetails(email, password).enqueue(new Callback<LoginResponseModel>() {
                             @Override
                             public void onResponse(Call<LoginResponseModel> call, Response<LoginResponseModel> response) {
-                                ((PreferenceInitializingActivity)getActivity()).dialog.dismiss();
                                 if (response.isSuccessful()) {
+                                    ((PreferenceInitializingActivity)getActivity()).dialog.dismiss();
                                     if (response.body().getUser_type().equals("Student")){
                                         saveUserToPreference(response.body().getStudent_detail(), response.body().getToken(), response.body().getId(), response.body().getImage());
                                         startActivity(new Intent(getContext(), AfterLoginActivityStudent.class));
@@ -98,6 +98,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                     ((BeforeLoginActivity)getContext()).finish();
                                 }
                                 else {
+                                    ((PreferenceInitializingActivity)getActivity()).dialog.dismiss();
                                     Toast.makeText(getContext(), "Incorrect email or Password!!", Toast.LENGTH_LONG).show();
                                 }
                             }

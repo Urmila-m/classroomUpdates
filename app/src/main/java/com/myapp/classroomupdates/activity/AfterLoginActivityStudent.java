@@ -131,7 +131,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
 
         }
         else if (id == R.id.nav_my_feedback){
-            sendFeedbackToFragment(frameLayout, headerEmail);
+            sendFeedbackToFragment(frameLayout, headerEmail, noInternet);
 
         }
         else if (id == R.id.nav_change_password) {
@@ -179,6 +179,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                     public void onResponse(Call<List<LoginResponseModel>> call, Response<List<LoginResponseModel>> response) {
                         dialog.dismiss();
                         if (response.isSuccessful()){
+                            hideNoInternetLayout(noInternet);
                             HashMap<Integer, String> teacherMap= new HashMap<>();
                             for (LoginResponseModel m:response.body()
                             ) {
@@ -194,6 +195,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                             listener.onDataRetrieved(fragment, frameLayout, "getListOfTeachers");
                         }
                         else {
+                            showNoInternetlayout("Something went wrong :(", noInternet);
                             try {
                                 Log.e("TAG", "onResponse: "+response.errorBody().string());
                             } catch (IOException e) {
@@ -206,6 +208,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                     public void onFailure(Call<List<LoginResponseModel>> call, Throwable t) {
                         dialog.dismiss();
                         showSnackbar(headerEmail, "");
+                        showNoInternetlayout("No internet connection..", noInternet);
                         Log.e("TAG", "onFailure: "+t.getMessage());
                     }
                 });
@@ -218,6 +221,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                     @Override
                     public void onResponse(Call<CanGiveFeedbackModel> call, Response<CanGiveFeedbackModel> response) {
                         if (response.isSuccessful()) {
+                            hideNoInternetLayout(noInternet);
                             IS_SEMESTER_END= response.body().isCan_give_feedback();
                             if (IS_SEMESTER_END) {
                                 OnDataRetrievedListener listener= AfterLoginActivityStudent.this;
@@ -231,6 +235,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                         }
                         else {
                             dialog.dismiss();
+                            showNoInternetlayout("something went wrong :(", noInternet);
                             try {
                                 String s= response.errorBody().string();
                                 Log.e("TAG", "onResponse: "+s);
@@ -244,6 +249,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                     public void onFailure(Call<CanGiveFeedbackModel> call, Throwable t) {
                         Log.e("TAG", "onFailure: "+t.getMessage());
                         dialog.dismiss();
+                        showNoInternetlayout("No internet connection..", noInternet);
                         showSnackbar(headerEmail, "");//should actually check what error, but considering the cause to be no internet connection.
                     }
                 });
@@ -257,6 +263,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                     public void onResponse(Call<List<MarksResponseModel>> call, Response<List<MarksResponseModel>> response) {
                         dialog.dismiss();
                         if (response.isSuccessful()){
+                            hideNoInternetLayout(noInternet);
                             Bundle bundle= new Bundle();
                             bundle.putSerializable("marksList", (Serializable) response.body());
                             MarksFragment fragment= new MarksFragment();
@@ -265,6 +272,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                             listener.onDataRetrieved(fragment, frameLayout, "getMarks");
                         }
                         else {
+                            showNoInternetlayout("Something went wrong :(", noInternet);
                             try {
                                 Log.e("TAG", "onResponse: "+response.errorBody().string());
                             } catch (IOException e) {
@@ -279,6 +287,7 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
                         dialog.dismiss();
                         Log.e("TAG", "onFailure: "+t.getMessage() );
                         showSnackbar(headerEmail, "");
+                        showNoInternetlayout("No internet connection..", noInternet);
                     }
                 });
     }
@@ -298,6 +307,5 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
             setFragment(frameLayout, fragment, "0");
         }
     }
-
 
 }

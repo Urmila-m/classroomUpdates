@@ -44,14 +44,15 @@ public class MarksAdapter extends RecyclerView.Adapter {
             h.textView.setText("No marks records yet.");
         }
         else if (viewHolder instanceof MarksViewHolder){
+            String thOrPr= list.get(i).getThPr().equals("th")?"( Theory )":"( Practical )";
+            String fullMarks= list.get(i).getFullMarks()+"";
+            String passMarks= Float.toString((float) (list.get(i).getFullMarks()*0.4));
             MarksViewHolder h= (MarksViewHolder) viewHolder;
             h.year.setText(list.get(i).getYear());
             h.part.setText(list.get(i).getPart());
-            String thOrPr= list.get(i).getThPr().equals("th")?"( Theory )":"( Practical )";
-            String fullMarks= list.get(i).getFullMarks()+"";
             h.thPr.setText(thOrPr);
-//            h.passMarks.setText(list.get(i).getPassMarks());
             h.totalMarks.setText(fullMarks);
+            h.passMarks.setText(passMarks);
             h.marksObtained.setText(list.get(i).getMarks());
             h.subject.setText(list.get(i).getSubject());
         }

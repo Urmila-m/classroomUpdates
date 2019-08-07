@@ -206,7 +206,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     @Override
                     public void onResponse(Call<SetArrivalTimeModel> call, Response<SetArrivalTimeModel> response) {
                         if (response.isSuccessful()){
-                            Toast.makeText(context, "Arrival time saved!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Saved arrival detail!", Toast.LENGTH_SHORT).show();
                         }
                         else {
                             try {
