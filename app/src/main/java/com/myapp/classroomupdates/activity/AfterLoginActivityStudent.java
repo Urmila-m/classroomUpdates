@@ -122,15 +122,15 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         clearAllFragmentTransactions();
+        if (adapter!=null) {
+            adapter.clearAll();
+        }
         if (id != R.id.nav_home){
             Log.e("TAG", "onNavigationItemSelected: hide viewpager" );
             noInternet.setVisibility(View.GONE);
             linearLayout.setVisibility(View.GONE);
             viewPager.setVisibility(View.GONE);
             tabLayout.setVisibility(View.GONE);
-            if (adapter!=null) {
-                adapter.clearAll();
-            }
         }
         if (feedbackTextView.getParent()!=null){
             ((ViewGroup)feedbackTextView.getParent()).removeView(feedbackTextView);

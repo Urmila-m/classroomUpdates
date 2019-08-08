@@ -66,9 +66,9 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
     private Toolbar toolbar;
     private TextView headerEmail, noInternet;
     private CircleImageView headerImage;
-    private LinearLayout linearLayout;
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
+    private LinearLayout linearLayout, linearLayoutUpdated;
+    private ViewPager viewPager, viewPagerUpdated;
+    private TabLayout tabLayout, tabLayoutUpdated;
     private TreeMap<Date, ScheduleFragment> fragmentList;
     private ScheduleViewPagerAdapter mAdapter;
 
@@ -103,12 +103,12 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
             int i= Integer.parseInt(source.substring(source.length()-1));
             fragmentList.put(getDateObject(i), (ScheduleFragment) fragment);
             if (fragmentList.size()==7) {
-                linearLayout.setVisibility(View.VISIBLE);
-                viewPager.setVisibility(View.VISIBLE);
-                tabLayout.setVisibility(View.VISIBLE);
+                linearLayoutUpdated.setVisibility(View.VISIBLE);
+                viewPagerUpdated.setVisibility(View.VISIBLE);
+                tabLayoutUpdated.setVisibility(View.VISIBLE);
                 mAdapter = new ScheduleViewPagerAdapter(getSupportFragmentManager(), this, fragmentList);
-                tabLayout.setupWithViewPager(viewPager);
-                viewPager.setAdapter(mAdapter);
+                tabLayoutUpdated.setupWithViewPager(viewPagerUpdated);
+                viewPagerUpdated.setAdapter(mAdapter);
             }
         }
     }
@@ -146,21 +146,22 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
         int id = item.getItemId();
 
         clearAllFragmentTransactions();
-        if (id!= R.id.nav_home || id!= R.id.nav_schedule){
+        if (adapter!=null) {
+            adapter.clearAll();
+        }
+        if(mAdapter!=null) {
+            mAdapter.clearAll();
+        }
+        if (id!= R.id.nav_home){
             noInternet.setVisibility(View.GONE);
             linearLayout.setVisibility(View.GONE);
             viewPager.setVisibility(View.GONE);
             tabLayout.setVisibility(View.GONE);
         }
-        if (id!= R.id.nav_home){
-            if (adapter!=null) {
-                adapter.clearAll();
-            }
-        }
         if(id!=R.id.nav_schedule){
-            if(mAdapter!=null) {
-                mAdapter.clearAll();
-            }
+            linearLayoutUpdated.setVisibility(View.GONE);
+            viewPagerUpdated.setVisibility(View.GONE);
+            tabLayoutUpdated.setVisibility(View.GONE);
         }
         if (id == R.id.nav_home) {
             setSchedule(frameLayout, noInternet);
@@ -199,6 +200,9 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
         linearLayout= frameLayout.findViewById(R.id.ll_schedule);
         viewPager= linearLayout.findViewById(R.id.vp_schedule);
         tabLayout= linearLayout.findViewById(R.id.tl_schedule);
+        linearLayoutUpdated= frameLayout.findViewById(R.id.ll_schedule_updated);
+        viewPagerUpdated= linearLayoutUpdated.findViewById(R.id.vp_schedule_updated);
+        tabLayoutUpdated= linearLayoutUpdated.findViewById(R.id.tl_schedule_updated);
         headerImage= navigationView.getHeaderView(0).findViewById(R.id.header_imageView);
         headerEmail= navigationView.getHeaderView(0).findViewById(R.id.header_email);
         noInternet= frameLayout.findViewById(R.id.tv_no_internet);
@@ -273,7 +277,9 @@ public class AfterLoginTeacherActivity extends PreferenceInitializingActivity im
                     .enqueue(new Callback<List<ScheduleModel>>() {
                         @Override
                         public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
-                            dialog.dismiss();
+                            if(finalI== 6) {
+                                dialog.dismiss();
+                            }
                             hideNoInternetLayout(noInternet);
                             if (response.isSuccessful()) {
                                 Bundle bundle = new Bundle();
