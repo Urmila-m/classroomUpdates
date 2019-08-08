@@ -3,7 +3,7 @@
 
     <!--edit text hints-->
     <string name="enter_name">Enter your name</string>
-    <string name="enter_email">Enter your pcampus email</string>
+    <string name="enter_email">Enter your email</string>
     <string name="password_criteria">at least 8 characters long</string>
     <string name="retype_password">Re-type your password</string>
     <string name="enter_new_pass">Enter your new password</string>
@@ -155,4 +155,5 @@
     <string name="part">Part:</string>
     <string name="part_example">II</string>
     <string name="my_marks">My Marks</string>
+    <string name="empty_string" />
 </resources>

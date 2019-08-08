@@ -15,12 +15,14 @@ import com.myapp.classroomupdates.model.ScheduleModel;
 import java.util.List;
 
 public class UpdatedScheduleAdapter extends RecyclerView.Adapter {
-    List<ScheduleModel> list;
-    Context context;
+    private List<ScheduleModel> list;
+    private Context context;
+    private String date;
 
-    public UpdatedScheduleAdapter(Context context, List<ScheduleModel> list) {
+    public UpdatedScheduleAdapter(Context context, List<ScheduleModel> list, String date) {
         this.list = list;
         this.context = context;
+        this.date= date;
     }
 
     @NonNull

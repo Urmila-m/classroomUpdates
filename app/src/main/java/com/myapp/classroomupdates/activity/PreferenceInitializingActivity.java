@@ -3,17 +3,22 @@ package com.myapp.classroomupdates.activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.myapp.classroomupdates.Globals;
 import com.myapp.classroomupdates.R;
+import com.myapp.classroomupdates.adapter.ScheduleViewPagerAdapter;
 import com.myapp.classroomupdates.fragment.ScheduleFragment;
 import com.myapp.classroomupdates.fragment.ShowFeedbackFragment;
 import com.myapp.classroomupdates.interfaces.OnDataRetrievedListener;
@@ -27,7 +32,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,12 +42,15 @@ import retrofit2.Response;
 
 import static com.myapp.classroomupdates.Globals.apiInterface;
 import static com.myapp.classroomupdates.Globals.editor;
+import static com.myapp.classroomupdates.Globals.getDateObject;
 import static com.myapp.classroomupdates.Globals.getTodaysDateStringFormat;
 import static com.myapp.classroomupdates.Globals.preferences;
 import static com.myapp.classroomupdates.Globals.showSnackbar;
 
 public class PreferenceInitializingActivity extends AppCompatActivity implements OnDataRetrievedListener {
     public AlertDialog dialog;
+    private TreeMap<Date, ScheduleFragment> list;
+    protected ScheduleViewPagerAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +60,7 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
                 .setView(view)
                 .setCancelable(false)
                 .create();
+        list= new TreeMap<>();
     }
 
     public void setFragment(FrameLayout frameLayout, Fragment fragment, String backstack){
@@ -108,38 +119,46 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
     }
 
     public void setSchedule(final FrameLayout frameLayout, final TextView noInternet){
+        list.clear();
         if (NetworkUtils.isNetworkConnected(this)) {
             if (!dialog.isShowing()) {
                 dialog.show();
             }
-            apiInterface.getUserRoutine("Token " + preferences.getString("token", ""), getTodaysDateStringFormat())
-                    .enqueue(new Callback<List<ScheduleModel>>() {
-                        @Override
-                        public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
-                            dialog.dismiss();
-                            hideNoInternetLayout(noInternet);
-                            if (response.isSuccessful()) {
-                                ArrayList<ScheduleModel> list = (ArrayList<ScheduleModel>) response.body();
-                                Bundle b = new Bundle();
-                                ScheduleFragment fragment= new ScheduleFragment();
-                                b.putSerializable("scheduleList", list);
-                                b.putString("adapter", "ScheduleAdapter");
-                                fragment.setArguments(b);
-                                OnDataRetrievedListener listener= PreferenceInitializingActivity.this;  //listener required because commiting a transaction inside an async thread
-                                listener.onDataRetrieved(fragment, frameLayout, "getUserRoutine"); //throws exception as the thread has no knowledge of the activity state
-                            } else {
-                                showNoInternetlayout("Something went wrong :(", noInternet);
-                                Log.e("TAG", "onResponse: " + response.message());
+            for (int i = 0; i<7; i++) {
+                final int finalI = i;
+                apiInterface.getUserRoutine("Token " + preferences.getString("token", ""), getTodaysDateStringFormat(i))
+                        .enqueue(new Callback<List<ScheduleModel>>() {
+                            @Override
+                            public void onResponse(Call<List<ScheduleModel>> call, Response<List<ScheduleModel>> response) {
+                                hideNoInternetLayout(noInternet);
+                                if (response.isSuccessful()) {
+                                    if (finalI==6) {
+                                        dialog.dismiss();
+                                    }
+                                    Log.e("TAG", "onResponse: Schedule"+finalI);
+                                    ArrayList<ScheduleModel> list = (ArrayList<ScheduleModel>) response.body();
+                                    Bundle b = new Bundle();
+                                    ScheduleFragment fragment = new ScheduleFragment();
+                                    b.putSerializable("scheduleList", list);
+                                    b.putString("date", getTodaysDateStringFormat(finalI));
+                                    b.putString("adapter", "ScheduleAdapter");
+                                    fragment.setArguments(b);
+                                    OnDataRetrievedListener listener = PreferenceInitializingActivity.this;  //listener required because commiting a transaction inside an async thread
+                                    listener.onDataRetrieved(fragment, frameLayout, "getUserRoutine"+ finalI); //throws exception as the thread has no knowledge of the activity state
+                                } else {
+                                    showNoInternetlayout("Something went wrong :(", noInternet);
+                                    Log.e("TAG", "onResponse: " + response.message());
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<List<ScheduleModel>> call, Throwable t) {
-                            dialog.dismiss();
-                            Log.e("TAG", "onFailure: " + t.getMessage());
-                            showSnackbar(frameLayout, "");
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<List<ScheduleModel>> call, Throwable t) {
+                                dialog.dismiss();
+                                Log.e("TAG", "onFailure: " + t.getMessage());
+                                showSnackbar(frameLayout, "");
+                            }
+                        });
+            }
         }
         else {
             showNoInternetlayout("No internet connection..", noInternet);
@@ -173,8 +192,23 @@ public class PreferenceInitializingActivity extends AppCompatActivity implements
         if (source.equals("getAllFeedback")) {
             setFragment(frameLayout, fragment, "0");
         }
-        else if (source.equals("getUserRoutine")){
-            setFragment(frameLayout, fragment, "0");
+        else if (source.startsWith("getUserRoutine")){
+            int i= Integer.parseInt(source.substring(source.length()-1));
+            list.put(getDateObject(i), (ScheduleFragment) fragment);
+            Log.e("TAG", "onDataRetrieved: "+list.size());
+        }
+
+        if (list.size()==7){
+            Log.e("TAG", "onDataRetrieved: viewpager set" );
+            LinearLayout layout= frameLayout.findViewById(R.id.ll_schedule);
+            ViewPager viewPager= layout.findViewById(R.id.vp_schedule);
+            TabLayout tabLayout= layout.findViewById(R.id.tl_schedule);
+            layout.setVisibility(View.VISIBLE);
+            viewPager.setVisibility(View.VISIBLE);
+            tabLayout.setVisibility(View.VISIBLE);
+            adapter= new ScheduleViewPagerAdapter(getSupportFragmentManager(), this, list);
+            tabLayout.setupWithViewPager(viewPager);
+            viewPager.setAdapter(adapter);
         }
     }
 }

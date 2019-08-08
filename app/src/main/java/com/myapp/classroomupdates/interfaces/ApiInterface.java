@@ -30,7 +30,8 @@ public interface ApiInterface {
     Call<List<MarksResponseModel>> getMarks(@Header("Authorization") String token);
 
     @GET("get_routine_update_detail/")
-    Call<List<ScheduleModel>> getUpdatedRoutine(@Header("Authorization") String token);
+    Call<List<ScheduleModel>> getUpdatedRoutine(@Header("Authorization") String token,
+                                                @Query("date") String date);
 
     @POST("upload_image/")
     @FormUrlEncoded

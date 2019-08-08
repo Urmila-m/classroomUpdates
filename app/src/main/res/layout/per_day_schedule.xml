@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     >
 
     <ImageView
@@ -10,19 +10,11 @@
         android:background="@drawable/background3"
         android:alpha="0.6"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_recycler_view_day"
-        android:text="@string/sunday"
-        style="@style/TitleTextStyle"
-        android:gravity="center"
-        />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_per_day"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_recycler_view_day"/>
+        />
+    <!--android:layout_below="@id/tv_recycler_view_day"-->
 
 </RelativeLayout>

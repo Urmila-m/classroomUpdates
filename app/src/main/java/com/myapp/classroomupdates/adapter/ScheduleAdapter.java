@@ -44,10 +44,12 @@ public class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private List<ScheduleModel> list;
     private Context context;
+    private String date;
 
-    public ScheduleAdapter(Context context, List<ScheduleModel> list) {
+    public ScheduleAdapter(Context context, List<ScheduleModel> list, String date) {
         this.context=context;
         this.list= list;
+        this.date= date;
     }
 
     @Override
@@ -88,39 +90,45 @@ public class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     h.viewBar.setVisibility(GONE);
                 }
                 else {
-                    h.btnUpdate.setText(context.getString(R.string.set_attend_time));
-                    h.btnUpdate.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View v) {
-                            final View view= LayoutInflater.from(context).inflate(R.layout.set_arrival_time_layout, null);
-                            final TimePicker timePicker= view.findViewById(R.id.tp_set_arrival_time);
-                            String[] firstSplit= list.get(i).getCorrected_from_time().split(":", 2);
-                            String[] secondSplit= firstSplit[1].split(":", 2);
-                            timePicker.setHour(Integer.parseInt(firstSplit[0]));
-                            timePicker.setMinute(Integer.parseInt(secondSplit[0]));
-                            AlertDialog.Builder builder= new AlertDialog.Builder(context)
-                                    .setView(view)
-                                    .setTitle("Set arrival time")
-                                    .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            int hr= timePicker.getHour();
-                                            int min= timePicker.getMinute();
-                                            String arrivalTime= String.format("%02d", hr)+ ":"+String.format("%02d", min)+":00";
-                                            SetArrivalTimeModel arrivalTimeModel= new SetArrivalTimeModel(list.get(i).getId(), getTodaysDateStringFormat(), arrivalTime);
-                                            setArrivalTime(arrivalTimeModel, v);
-                                        }
-                                    })
-                                    .setNegativeButton("Didn't attend", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            SetArrivalTimeModel arrivalTimeModel= new SetArrivalTimeModel(list.get(i).getId(), getTodaysDateStringFormat(), "00:00:00");
-                                            setArrivalTime(arrivalTimeModel, v);
-                                        }
-                                    });
-                            builder.show();
-                        }
-                    });
+                    if (date.equals(getTodaysDateStringFormat(0))) {
+                        h.btnUpdate.setText(context.getString(R.string.set_attend_time));
+                        h.btnUpdate.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(final View v) {
+                                final View view = LayoutInflater.from(context).inflate(R.layout.set_arrival_time_layout, null);
+                                final TimePicker timePicker = view.findViewById(R.id.tp_set_arrival_time);
+                                String[] firstSplit = list.get(i).getCorrected_from_time().split(":", 2);
+                                String[] secondSplit = firstSplit[1].split(":", 2);
+                                timePicker.setHour(Integer.parseInt(firstSplit[0]));
+                                timePicker.setMinute(Integer.parseInt(secondSplit[0]));
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                                        .setView(view)
+                                        .setTitle("Set arrival time")
+                                        .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                int hr = timePicker.getHour();
+                                                int min = timePicker.getMinute();
+                                                String arrivalTime = String.format("%02d", hr) + ":" + String.format("%02d", min) + ":00";
+                                                SetArrivalTimeModel arrivalTimeModel = new SetArrivalTimeModel(list.get(i).getId(), getTodaysDateStringFormat(0), arrivalTime);
+                                                setArrivalTime(arrivalTimeModel, v);
+                                            }
+                                        })
+                                        .setNegativeButton("Didn't attend", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                SetArrivalTimeModel arrivalTimeModel = new SetArrivalTimeModel(list.get(i).getId(), getTodaysDateStringFormat(0), "00:00:00");
+                                                setArrivalTime(arrivalTimeModel, v);
+                                            }
+                                        });
+                                builder.show();
+                            }
+                        });
+                    }
+                    else {
+                        h.btnUpdate.setVisibility(View.GONE);
+                        h.viewBar.setVisibility(GONE);
+                    }
                 }
             }
             else if (preferences.getString("user_type", "").equals("Teacher")){
@@ -144,6 +152,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         Intent intent= new Intent(context, ChangeAttendingDetailsActivity.class);
                         Bundle b=new Bundle();
                         b.putSerializable("schedule", list.get(i));
+                        b.putString("scheduleDate", date);
                         intent.putExtra("schedule", b);
                         context.startActivity(intent);
                     }

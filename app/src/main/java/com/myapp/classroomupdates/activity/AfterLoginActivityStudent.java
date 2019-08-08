@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +61,9 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
     private TextView headerEmail, noInternet;
     private CircleImageView headerImage;
     private boolean IS_SEMESTER_END;
+    private LinearLayout linearLayout;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,15 +121,23 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-//        item.setChecked(true);
+        clearAllFragmentTransactions();
         if (id != R.id.nav_home){
+            Log.e("TAG", "onNavigationItemSelected: hide viewpager" );
             noInternet.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.GONE);
+            viewPager.setVisibility(View.GONE);
+            tabLayout.setVisibility(View.GONE);
+            if (adapter!=null) {
+                adapter.clearAll();
+            }
         }
         if (feedbackTextView.getParent()!=null){
             ((ViewGroup)feedbackTextView.getParent()).removeView(feedbackTextView);
         }
 
         if (id == R.id.nav_home) {
+            Log.e("TAG", "onNavigationItemSelected: home");
             setSchedule(frameLayout, noInternet);
 
         } else if (id == R.id.nav_profile) {
@@ -163,6 +177,9 @@ public class AfterLoginActivityStudent extends PreferenceInitializingActivity im
         headerImage= navigationView.getHeaderView(0).findViewById(R.id.header_imageView);
         headerEmail= navigationView.getHeaderView(0).findViewById(R.id.header_email);
         noInternet= frameLayout.findViewById(R.id.tv_no_internet);
+        linearLayout= frameLayout.findViewById(R.id.ll_schedule);
+        viewPager= linearLayout.findViewById(R.id.vp_schedule);
+        tabLayout= linearLayout.findViewById(R.id.tl_schedule);
         feedbackTextView= LayoutInflater.from(this).inflate(R.layout.just_a_text_view_layout, null);
     }
 

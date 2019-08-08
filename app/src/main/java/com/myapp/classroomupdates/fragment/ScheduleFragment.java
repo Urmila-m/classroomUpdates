@@ -37,11 +37,11 @@ import static com.myapp.classroomupdates.Globals.preferences;
 public class ScheduleFragment extends Fragment {
 
     RecyclerView recyclerView;
-    TextView tvDay;
     RecyclerView.Adapter adapter;
     ArrayList<ScheduleModel> list;
     LinearLayoutManager linearLayoutManager;
     Bundle bundle;
+    String scheduleDate;
 
     public ScheduleFragment() {
         // Required empty public constructor
@@ -58,6 +58,7 @@ public class ScheduleFragment extends Fragment {
         if (getArguments()!=null){
             Log.e("TAG", "onAttach: "+getArguments().getString("adapter") );
             bundle= getArguments();
+            scheduleDate= bundle.getString("date");
             if (bundle.getString("adapter").equals("ScheduleAdapter")) {
                 list = (ArrayList<ScheduleModel>) bundle.getSerializable("scheduleList");
             }
@@ -76,23 +77,28 @@ public class ScheduleFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tvDay= view.findViewById(R.id.tv_recycler_view_day);
         recyclerView= view.findViewById(R.id.rv_per_day);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        tvDay.setText(getTodaysDay());
         linearLayoutManager= new LinearLayoutManager(getContext());
         if (bundle.getString("adapter").equals("ScheduleAdapter")) {
-            adapter = new ScheduleAdapter(getContext(), list);
+            adapter = new ScheduleAdapter(getContext(), list, scheduleDate);
         }
         else if (bundle.getString("adapter").equals("UpdatedScheduleAdapter")) {
             Log.e("TAG", "onActivityCreated: updated schedule" );
-            adapter= new UpdatedScheduleAdapter(getContext(), list);
+            adapter= new UpdatedScheduleAdapter(getContext(), list, scheduleDate);
         }
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public String toString() {
+        return "ScheduleFragment{" +
+                "adapter=" + adapter +
+                '}';
     }
 }

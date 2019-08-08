@@ -26,9 +26,8 @@
             android:id="@+id/til_batch_student_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/lightColorAccent"
             app:errorEnabled="true"
-            app:hintEnabled="true"
+            app:hintEnabled="false"
             app:passwordToggleEnabled="true"
             app:errorTextAppearance="@style/ErrorTextAppearanceStyle"
             >
@@ -38,6 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/edit_text_height"
                 android:hint="@string/batch_eg"
+                android:textColorHint="@color/lightColorAccent"
                 />
         </android.support.design.widget.TextInputLayout>
 
@@ -64,9 +64,8 @@
             android:id="@+id/til_roll_student_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/lightColorAccent"
             app:errorEnabled="true"
-            app:hintEnabled="true"
+            app:hintEnabled="false"
             app:passwordToggleEnabled="true"
             app:errorTextAppearance="@style/ErrorTextAppearanceStyle"
             >
@@ -76,6 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/edit_text_height"
                 android:hint="@string/bct520"
+                android:textColorHint="@color/lightColorAccent"
                 />
         </android.support.design.widget.TextInputLayout>
 
@@ -88,9 +88,8 @@
             android:id="@+id/til_group_student_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/lightColorAccent"
             app:errorEnabled="true"
-            app:hintEnabled="true"
+            app:hintEnabled="false"
             app:passwordToggleEnabled="true"
             app:errorTextAppearance="@style/ErrorTextAppearanceStyle"
             >
@@ -100,6 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/edit_text_height"
                 android:hint="@string/example_group"
+                android:textColorHint="@color/lightColorAccent"
                 />
         </android.support.design.widget.TextInputLayout>
 

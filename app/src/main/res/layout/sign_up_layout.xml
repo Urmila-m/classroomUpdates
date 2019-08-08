@@ -37,9 +37,8 @@
                 android:id="@+id/til_email_sign_up"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/lightColorAccent"
                 app:errorEnabled="true"
-                app:hintEnabled="true"
+                app:hintEnabled="false"
                 app:errorTextAppearance="@style/ErrorTextAppearanceStyle"
                 >
 
@@ -48,6 +47,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/edit_text_height"
                     android:hint="@string/enter_email"
+                    android:textColorHint="@color/lightColorAccent"
                     android:inputType="textEmailAddress" />
             </android.support.design.widget.TextInputLayout>
 
@@ -60,9 +60,8 @@
                 android:id="@+id/til_name_sign_up"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/lightColorAccent"
                 app:errorEnabled="true"
-                app:hintEnabled="true"
+                app:hintEnabled="false"
                 app:errorTextAppearance="@style/ErrorTextAppearanceStyle"
                 >
 
@@ -71,6 +70,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/edit_text_height"
                     android:hint="@string/enter_name"
+                    android:textColorHint="@color/lightColorAccent"
                     />
             </android.support.design.widget.TextInputLayout>
 
@@ -83,9 +83,8 @@
                 android:id="@+id/til_password_sign_up"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/lightColorAccent"
                 app:errorEnabled="true"
-                app:hintEnabled="true"
+                app:hintEnabled="false"
                 app:passwordToggleEnabled="true"
                 app:errorTextAppearance="@style/ErrorTextAppearanceStyle"
                 >
@@ -95,6 +94,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/edit_text_height"
                     android:hint="@string/password_criteria"
+                    android:textColorHint="@color/lightColorAccent"
                     android:inputType="textPassword"
                     />
 
@@ -109,9 +109,8 @@
                 android:id="@+id/til_confirm_pass_sign_up"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/lightColorAccent"
                 app:errorEnabled="true"
-                app:hintEnabled="true"
+                app:hintEnabled="false"
                 app:passwordToggleEnabled="true"
                 app:errorTextAppearance="@style/ErrorTextAppearanceStyle"
                 >
@@ -121,6 +120,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/edit_text_height"
                     android:hint="@string/retype_password"
+                    android:textColorHint="@color/lightColorAccent"
                     android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>

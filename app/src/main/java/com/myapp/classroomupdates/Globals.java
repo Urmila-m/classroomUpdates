@@ -37,6 +37,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -159,12 +160,24 @@ public class Globals extends Application {
         return day;
     }
 
-    public static String getTodaysDateStringFormat(){
-        Calendar calendar= Calendar.getInstance();
-        Date currentDate= calendar.getTime();
-        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
-        String date= dateFormat.format(currentDate);
+    public static String getDay(Date date){
+        String day= null;
+        SimpleDateFormat dateFormat2= new SimpleDateFormat("EEE");
+        day= dateFormat2.format(date);
+        return day;
+    }
+
+    public static String getTodaysDateStringFormat(int i){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String date = dateFormat.format(getDateObject(i));
         return date;
+    }
+
+    public static Date getDateObject(int i){
+        Calendar calendar= Calendar.getInstance();
+        calendar.add(Calendar.DATE, i);
+        Date currentDate = calendar.getTime();
+        return currentDate;
     }
 
     public static String toJson(StudentModel student){

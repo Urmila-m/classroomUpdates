@@ -43,6 +43,7 @@ public class ChangeAttendingDetailsActivity extends PreferenceInitializingActivi
     private TimePicker startTimePicker, endTimePicker;
     private ScheduleModel schedule;
     private AttendClassRequestModel requestModel;
+    private String date;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class ChangeAttendingDetailsActivity extends PreferenceInitializingActivi
         setContentView(R.layout.teacher_attend);
 
         if (getIntent().getExtras()!=null){
+            date= getIntent().getBundleExtra("schedule").getString("scheduleDate");
             schedule= (ScheduleModel) getIntent().getBundleExtra("schedule").getSerializable("schedule");
         }
 
@@ -117,13 +119,13 @@ public class ChangeAttendingDetailsActivity extends PreferenceInitializingActivi
                     int endMin= endTimePicker.getMinute();
                     String endTime= String.format("%02d", endHr)+":"+ String.format("%02d", endMin)+":00";
                     Log.e("TAG", "onClick: starttime:"+startTime+"endTime:"+endTime);
-                    requestModel= new AttendClassRequestModel(schedule.getId(), getTodaysDateStringFormat(),  true, startTime, endTime, "", false);
+                    requestModel= new AttendClassRequestModel(schedule.getId(), date,  true, startTime, endTime, "", false);
                 }
 
                 else {
                     String message= isEmpty(getStringFromTIL(tilMessage))?"Can't attend today.":getStringFromTIL(tilMessage);
                     Log.e("TAG", "onClick: "+message);
-                    requestModel= new AttendClassRequestModel(schedule.getId(), getTodaysDateStringFormat(),  false, schedule.getFrom_time(), schedule.getTo_time(), message, false);
+                    requestModel= new AttendClassRequestModel(schedule.getId(), date,  false, schedule.getFrom_time(), schedule.getTo_time(), message, false);
 
                 }
                 dialog.show();
